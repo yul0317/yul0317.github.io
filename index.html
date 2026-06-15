@@ -1,0 +1,2587 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>4페이즈 타임라인 트레이너</title>
+  <style>
+    :root {
+      --bg: #f6f7f9;
+      --panel: #ffffff;
+      --ink: #20242b;
+      --muted: #68707d;
+      --line: #d9dee7;
+      --accent: #2f6f73;
+      --accent-2: #b74f38;
+      --warn: #8d6b10;
+      --good: #1f7a4d;
+      --bad: #b23b3b;
+      --shadow: 0 12px 30px rgba(22, 31, 45, .09);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: "Segoe UI", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+      font-size: 13px;
+      line-height: 1.38;
+    }
+
+    button {
+      font: inherit;
+    }
+
+    .shell {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background: #1f252c;
+      color: #fff;
+      border-bottom: 1px solid rgba(255, 255, 255, .12);
+    }
+
+    .topbar {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 12px 0 10px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 20px;
+      align-items: end;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(20px, 3vw, 30px);
+      letter-spacing: 0;
+      line-height: 1.15;
+    }
+
+    .subtitle {
+      margin: 4px 0 0;
+      color: #c6ced8;
+      font-size: 13px;
+    }
+
+    .meta {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .pill {
+      border: 1px solid rgba(255, 255, 255, .2);
+      color: #eef3f8;
+      padding: 4px 8px;
+      border-radius: 999px;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    nav {
+      background: #28303a;
+    }
+
+    .tabs {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      display: flex;
+      gap: 2px;
+    }
+
+    .tab {
+      appearance: none;
+      border: 0;
+      background: transparent;
+      color: #d5dbe3;
+      padding: 9px 14px;
+      min-width: 104px;
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+    }
+
+    .tab[aria-selected="true"] {
+      color: #fff;
+      border-color: #71c5bf;
+      background: rgba(255, 255, 255, .06);
+    }
+
+    main {
+      width: min(1180px, calc(100% - 32px));
+      margin: 12px auto 18px;
+      flex: 1;
+    }
+
+    .panel {
+      display: none;
+    }
+
+    .panel.active {
+      display: block;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .summary {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 10px;
+      box-shadow: var(--shadow);
+    }
+
+    .summary b {
+      display: block;
+      font-size: 14px;
+      margin-bottom: 3px;
+    }
+
+    .summary span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .icon-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .icon {
+      width: 24px;
+      height: 24px;
+      object-fit: contain;
+      vertical-align: middle;
+      image-rendering: auto;
+    }
+
+    .icon.large {
+      width: 34px;
+      height: 34px;
+    }
+
+    .icon.small {
+      width:18px;
+      height:18px;
+    }
+
+    .legend {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px;
+      margin: 10px 0 12px;
+    }
+
+    .legend-item {
+      display: grid;
+      grid-template-columns: 34px 1fr;
+      gap: 8px;
+      align-items: center;
+      min-height: 48px;
+      padding: 7px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+    }
+
+    .legend-item b {
+      display: block;
+      font-size: 12px;
+      line-height: 1.25;
+    }
+
+    .legend-item span {
+      display: block;
+      color: var(--muted);
+      font-size: 11px;
+      margin-top: 2px;
+    }
+
+    .section {
+      margin-top: 14px;
+      padding-top: 2px;
+    }
+
+    h2 {
+      margin: 0 0 8px;
+      font-size: 18px;
+      letter-spacing: 0;
+    }
+
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .flow-item {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 9px;
+    }
+
+    .flow-time {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 68px;
+      height: 24px;
+      border-radius: 999px;
+      background: #eef5f5;
+      color: var(--accent);
+      font-weight: 700;
+      font-size: 12px;
+      margin-bottom: 6px;
+    }
+
+    .flow-title {
+      margin: 0 0 6px;
+      font-weight: 700;
+    }
+
+    .flow-copy {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .stage-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+
+    .stage {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 9px;
+      display: grid;
+      gap: 6px;
+    }
+
+    .stage-head {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .stage-title {
+      margin: 0;
+      font-weight: 800;
+    }
+
+    .stage-time {
+      color: var(--accent);
+      font-weight: 800;
+      font-size: 12px;
+      white-space: nowrap;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .stage p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .stage strong {
+      color: var(--ink);
+    }
+
+    .stage-images {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 8px;
+      align-items: start;
+    }
+
+    .stage-image {
+      width: 100%;
+      max-height: 260px;
+      object-fit: contain;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #f7f9fb;
+    }
+
+    .rule-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .rule {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 8px;
+    }
+
+    .rule b {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .rule span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .example-table {
+      width: 100%;
+      border-collapse: collapse;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      font-size: 12px;
+    }
+
+    .example-table th,
+    .example-table td {
+      border: 1px solid var(--line);
+      padding: 5px 7px;
+      text-align: center;
+      vertical-align: middle;
+    }
+
+    .example-table th {
+      background: #f3f6f8;
+      color: var(--ink);
+      font-weight: 800;
+    }
+
+    .example-table td {
+      color: var(--muted);
+    }
+
+    .example-table .result {
+      color: var(--ink);
+      font-weight: 700;
+    }
+
+    .timeline {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 84px 128px 1fr 190px;
+      gap: 10px;
+      align-items: center;
+      padding: 8px 10px;
+      border-top: 1px solid var(--line);
+    }
+
+    .row:first-child {
+      border-top: 0;
+    }
+
+    .row.key {
+      background: #f2f7f6;
+    }
+
+    .row.danger {
+      background: #fff5f2;
+    }
+
+    .time {
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .event {
+      font-weight: 700;
+    }
+
+    .note {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .tag {
+      justify-self: start;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 3px 7px;
+      color: #4c5663;
+      background: #fff;
+      font-size: 11px;
+      white-space: nowrap;
+    }
+
+    .tag.icons {
+      display: inline-flex;
+      gap: 5px;
+      align-items: center;
+      padding: 3px 6px;
+    }
+
+    .callouts {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .callout {
+      border-left: 5px solid var(--accent);
+      background: var(--panel);
+      padding: 9px 10px;
+      border-radius: 8px;
+      border-top: 1px solid var(--line);
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .callout.warn {
+      border-left-color: var(--accent-2);
+    }
+
+    .callout b {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .callout p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .quiz-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 240px;
+      gap: 12px;
+      align-items: start;
+    }
+
+    .question {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 10px;
+      margin-bottom: 9px;
+      box-shadow: var(--shadow);
+    }
+
+    .question h3 {
+      margin: 0 0 8px;
+      font-size: 14px;
+    }
+
+    .choices {
+      display: grid;
+      gap: 6px;
+    }
+
+    .choice {
+      width: 100%;
+      text-align: left;
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: 8px;
+      padding: 8px 9px;
+      cursor: pointer;
+      color: var(--ink);
+    }
+
+    .choice:hover {
+      border-color: #9ab9b7;
+      background: #f7fbfb;
+    }
+
+    .choice.selected {
+      border-color: var(--accent);
+      background: #eef8f7;
+    }
+
+    .choice.correct {
+      border-color: var(--good);
+      background: #edf8f1;
+    }
+
+    .choice.wrong {
+      border-color: var(--bad);
+      background: #fff0f0;
+    }
+
+    .explain {
+      display: none;
+      margin: 8px 0 0;
+      padding: 8px 9px;
+      border-radius: 8px;
+      background: #f4f6f8;
+      color: #4d5662;
+      font-size: 12px;
+    }
+
+    .explain.show {
+      display: block;
+    }
+
+    .scorebox {
+      position: sticky;
+      top: 8px;
+      background: #222a32;
+      color: #fff;
+      border-radius: 8px;
+      padding: 12px;
+      box-shadow: var(--shadow);
+    }
+
+    .score {
+      font-size: 34px;
+      font-weight: 800;
+      line-height: 1;
+      margin: 6px 0;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .scorebox p {
+      margin: 0 0 10px;
+      color: #cbd3dc;
+      font-size: 12px;
+    }
+
+    .actions {
+      display: grid;
+      gap: 6px;
+    }
+
+    .primary {
+      border: 0;
+      border-radius: 8px;
+      background: #71c5bf;
+      color: #102226;
+      font-weight: 800;
+      padding: 8px 10px;
+      cursor: pointer;
+    }
+
+    .secondary {
+      border: 1px solid rgba(255, 255, 255, .24);
+      border-radius: 8px;
+      background: transparent;
+      color: #fff;
+      padding: 8px 10px;
+      cursor: pointer;
+    }
+
+    .mini-list {
+      margin: 8px 0 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 5px;
+      color: #dce5ec;
+      font-size: 12px;
+    }
+
+    .red {
+      color:var(--bad) !important;
+    }
+
+    .mini {
+      font-size: 10px;
+    }
+
+    .sim-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 260px;
+      gap: 12px;
+      align-items: start;
+    }
+
+    .sim-main {
+      display: grid;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .sim-card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+      box-shadow: var(--shadow);
+      display: grid;
+      gap: 10px;
+    }
+
+    .sim-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .sim-title {
+      margin: 0;
+      font-size: 17px;
+      font-weight: 800;
+    }
+
+    .sim-time {
+      color: var(--accent);
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .sim-prompt {
+      margin: 0;
+      color: var(--ink);
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    .sim-facts {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 7px;
+    }
+
+    .sim-side {
+      display: grid;
+      gap: 12px;
+      align-items: start;
+    }
+
+    .buff-panel {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow-x: auto;
+      background: #fff;
+    }
+
+    .sim-status-slot {
+      min-width: 0;
+    }
+
+    .buff-panel-title {
+      margin: 0;
+      padding: 9px 12px;
+      background: #edf4f5;
+      border-bottom: 1px solid var(--line);
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--ink);
+    }
+
+    .buff-table-grid {
+      display: grid;
+      grid-template-columns: 42px repeat(6, minmax(92px, 1fr));
+    }
+
+    .buff-table-grid .cell {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      min-height: 38px;
+      padding: 6px;
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      font-size: 12px;
+      color: var(--warn);
+      background: #fff;
+    }
+
+    .buff-table-grid .head,
+    .buff-table-grid .row-label {
+      color: var(--ink);
+      font-weight: 800;
+      background: #f7f9fb;
+    }
+
+    .buff-table-grid .resolved {
+      opacity: .38;
+      filter: grayscale(.4);
+    }
+
+    .buff-slot-grid {
+      display: grid;
+      grid-template-columns: 64px repeat(6, minmax(96px, 1fr));
+      min-width: 640px;
+    }
+
+    .buff-slot-title {
+      height: 44px;
+      padding: 5px;
+      background: #eaf1f2;
+      color: var(--ink);
+      font-weight: 800;
+      font-size: 11px;
+      line-height: 1.25;
+      text-align: center;
+      border-bottom: 1px solid var(--line);
+      border-right: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .buff-corner {
+      background: #f7f9fb;
+    }
+
+    .buff-row-label {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4px 3px;
+      background: #f7f9fb;
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      color: var(--ink);
+      font-size: 10px;
+      font-weight: 800;
+      line-height: 1.2;
+      text-align: center;
+    }
+
+    .buff-value {
+      display: grid;
+      align-content: center;
+      justify-items: center;
+      gap: 4px;
+      padding: 4px;
+      min-width: 0;
+      min-height: 30px;
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .buff-value.debuffs {
+      min-height: 46px;
+    }
+
+    .buff-value.release-merged {
+      grid-row: span 2;
+      min-height: 76px;
+    }
+
+    .buff-slot-grid > :nth-child(7n) {
+      border-right: 0;
+    }
+
+    .buff-entry {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      color: var(--warn);
+      font-size: 11px;
+      white-space: nowrap;
+    }
+
+    .buff-entry.resolved {
+      opacity: .38;
+      filter: grayscale(.4);
+    }
+
+    .buff-remain {
+      color: var(--warn);
+      font-size: 11px;
+      margin-left: 2px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .buff-release-list {
+      display: grid;
+      gap: 4px;
+      width: 100%;
+    }
+
+    .buff-release-entry {
+      display: grid;
+      grid-template-columns: 22px 1fr 34px;
+      gap: 4px;
+      align-items: center;
+      color: var(--warn);
+      font-size: 11px;
+      white-space: nowrap;
+    }
+
+    .buff-release-entry.resolved {
+      opacity: .38;
+      filter: grayscale(.4);
+    }
+
+    .buff-release-entry .buff-remain {
+      margin-left: 0;
+      text-align: right;
+    }
+
+    .timeline-panel {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+
+    .timeline-row {
+      display: grid;
+      grid-template-columns: 120px 1fr;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .timeline-row:last-child {
+      border-bottom: 0;
+    }
+
+    .timeline-label {
+      padding: 9px 12px;
+      color: var(--ink);
+      font-weight: 800;
+      background: #f7f9fb;
+      border-right: 1px solid var(--line);
+    }
+
+    .timeline-items {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      padding: 8px;
+    }
+
+    .timeline-chip {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 4px 8px;
+      color: var(--warn);
+      background: #fff;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .timeline-chip.resolved {
+      opacity: .38;
+      filter: grayscale(.4);
+    }
+
+    .sim-choices {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 7px;
+    }
+
+    .sim-choice {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      padding: 8px 9px;
+      text-align: left;
+      cursor: pointer;
+      color: var(--ink);
+      font-weight: 700;
+    }
+
+    .sim-choice:hover {
+      border-color: #9ab9b7;
+      background: #f7fbfb;
+    }
+
+    .sim-choice.correct {
+      border-color: var(--good);
+      background: #edf8f1;
+    }
+
+    .sim-choice.wrong {
+      border-color: var(--bad);
+      background: #fff0f0;
+    }
+
+    .sim-result {
+      min-height: 34px;
+      border-radius: 8px;
+      background: #f4f6f8;
+      color: #4d5662;
+      padding: 8px 9px;
+      font-size: 12px;
+    }
+
+    .sim-log {
+      margin: 8px 0 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 5px;
+      color: #dce5ec;
+      font-size: 11px;
+    }
+
+    .sim-log li {
+      border-top: 1px solid rgba(255, 255, 255, .16);
+      padding-top: 5px;
+    }
+
+    @media (max-width: 860px) {
+      .topbar,
+      .quiz-layout,
+      .sim-layout,
+      .summary-grid,
+      .flow,
+      .legend,
+      .stage-grid,
+      .rule-list,
+      .callouts {
+        grid-template-columns: 1fr;
+      }
+
+      .meta {
+        justify-content: flex-start;
+      }
+
+      .tabs {
+        overflow-x: auto;
+      }
+
+      .row {
+        grid-template-columns: 74px 1fr;
+        gap: 6px 12px;
+      }
+
+      .tag {
+        grid-column: 2;
+      }
+
+      .scorebox {
+        position: static;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header>
+      <div class="topbar">
+        <div>
+          <h1>4페이즈 타임라인 트레이너</h1>
+          <p class="subtitle">케프카 4페이즈 디버프 해제와 처리 순서 정리</p>
+        </div>
+        <div class="meta" aria-label="핵심 구간">
+          <span class="pill">01:11~02:05 처리</span>
+          <span class="pill">02:14 전멸기</span>
+        </div>
+      </div>
+      <nav aria-label="페이지 탭">
+        <div class="tabs">
+          <button class="tab" type="button" aria-selected="true" data-tab="guide">설명</button>
+          <button class="tab" type="button" aria-selected="false" data-tab="quiz">퀴즈</button>
+          <button class="tab" type="button" aria-selected="false" data-tab="simulation">시뮬레이션</button>
+        </div>
+      </nav>
+    </header>
+
+    <main>
+      <section id="guide" class="panel active" aria-labelledby="guide-tab">
+        <div class="legend" aria-label="디버프 아이콘 범례">
+          <div class="legend-item">
+            <img class="icon large" src="img/진실.png" alt="진실">
+            <div><b>진실</b><span>기믹을 보이는 그대로 처리</span></div>
+          </div>
+          <div class="legend-item">
+            <img class="icon large" src="img/거짓.png" alt="거짓">
+            <div><b>거짓</b><span>기믹 판정을 반대로 처리</span></div>
+          </div>
+          <div class="legend-item">
+            <img class="icon large" src="img/물.webp" alt="물">
+            <div><b>물</b><span>진짜: 쉐어 / 가짜: 개인 원형</span></div>
+          </div>
+          <div class="legend-item">
+            <img class="icon large" src="img/번개.webp" alt="번개">
+            <div><b>번개</b><span>진짜: 개인 원형 / 가짜: 쉐어</span></div>
+          </div>
+          <div class="legend-item">
+            <img class="icon large" src="img/가속도 폭탄.webp" alt="가속도 폭탄">
+            <div><b>가속도 폭탄</b><span>진짜: 멈춤 / 가짜: 움직임</span></div>
+          </div>
+          <div class="legend-item">
+            <img class="icon large" src="img/저주의 외침.webp" alt="저주의 외침">
+            <div><b>저주의 외침</b><span>진짜: 뒤돌기 / 가짜: 바라보기</span></div>
+          </div>
+          <div class="legend-item">
+            <img class="icon large" src="img/혼돈의 불.webp" alt="혼돈의 불">
+            <div><b>혼돈의 불</b><span>진짜 원형 / 가짜 도넛</span></div>
+          </div>
+          <div class="legend-item">
+            <img class="icon large" src="img/혼돈의 물.webp" alt="혼돈의 물">
+            <div><b>혼돈의 물</b><span>진짜 도넛 / 가짜 원형</span></div>
+          </div>
+          <div class="legend-item">
+            <img class="icon large" src="img/알라그 필드.webp" alt="알라그 필드">
+            <div><b>알라그 필드</b><span>상처 디버프와 다른 색 맞기</span></div>
+          </div>
+          <div class="legend-item">
+            <img class="icon large" src="img/죽음 초월.webp" alt="죽음 초월">
+            <div><b>죽음 초월</b><span>상처 디버프와 같은 색 맞기</span></div>
+          </div>
+          <div class="legend-item">
+            <img class="icon large" src="img/산자의 상처.webp" alt="산자의 상처">
+            <div><b>산자의 상처</b><span>진짜: 산자 / 가짜: 죽은자</span></div>
+          </div>
+          <div class="legend-item">
+            <img class="icon large" src="img/죽은자의 상처.webp" alt="죽은자의 상처">
+            <div><b>죽은자의 상처</b><span>진짜: 죽은자 / 가짜: 산자</span></div>
+          </div>
+        </div>
+
+        <div class="section">
+          <h2>1~16단계</h2>
+          <div class="stage-grid">
+            <article class="stage">
+              <div class="stage-head">
+                <p class="stage-title">1. 알쏭달쏭 마법</p>
+                <span class="stage-time">00:25</span>
+              </div>
+              <div class="icon-strip">
+                <img class="icon" src="img/진실.png" alt="진실">
+                <img class="icon" src="img/거짓.png" alt="거짓">
+              </div>
+              <p>직선 선더가와 부채꼴 블리자가가 나온다. 참/거짓을 확인해서 직선장판과 부채꼴 장판을 피한다.</p>
+            </article>
+
+            <article class="stage">
+              <div class="stage-head">
+                <p class="stage-title">2. 그랜드 크로스 1회차</p>
+                <span class="stage-time">00:29</span>
+              </div>
+              <div class="icon-strip">
+                <img class="icon" src="img/물.webp" alt="물">
+                <img class="icon" src="img/번개.webp" alt="번개">
+                <img class="icon" src="img/저주의 외침.webp" alt="저주의 외침">
+                <img class="icon" src="img/가속도 폭탄.webp" alt="가속도 폭탄">
+              </div>
+              <p>물 2명, 번개 2명, 마안 2명, 가속도 폭탄 4명이 부여된다. 탱힐/딜러조에 물, 번개, 마안이 각각 1개씩 들어간다.</p>
+              <p><strong>진짜면 번개, 가짜면 물디버프에게 1,2 마커를 부여, 추후 산개 대상자가 됨.</strong></p>
+              <p><strong class="red">* 물/번 디버프 시간이 1m 이하면 첫번째 / 1m 이상이면 두번째 그러므로 1m 이하면 공 1,2 징 / 이상이면 속 1,2 징으로 처리 가능 </strong></p>
+            </article>
+
+            <article class="stage">
+              <div class="stage-head">
+                <p class="stage-title">3. 카오스 화염 또는 해일</p>
+                <span class="stage-time">00:35</span>
+              </div>
+              <div class="icon-strip">
+                <img class="icon" src="img/혼돈의 불.webp" alt="혼돈의 불">
+                <img class="icon" src="img/혼돈의 물.webp" alt="혼돈의 물">
+              </div>
+              <p>전원에게 혼돈의 불 또는 혼돈의 물이 부여된다. 혼돈의 불은 <strong>진짜 원형 / 가짜 도넛</strong>, 혼돈의 물은 <strong>진짜 도넛 / 가짜 원형</strong>이다.</p>
+            </article>
+
+            <article class="stage">
+              <div class="stage-head">
+                <p class="stage-title">4. 알쏭달쏭 마법 2회차</p>
+                <span class="stage-time">00:40</span>
+              </div>
+              <div class="icon-strip">
+                <img class="icon" src="img/진실.png" alt="진실">
+                <img class="icon" src="img/거짓.png" alt="거짓">
+              </div>
+              <p>두 번째 직선/부채꼴 패턴이다. 첫 번째와 마찬가지로 참/거짓을 확인해서 직선장판과 부채꼴 장판을 즉시 피한다.</p>
+            </article>
+
+            <article class="stage">
+              <div class="stage-head">
+                <p class="stage-title">5. 그랜드 크로스 2회차</p>
+                <span class="stage-time">00:44</span>
+              </div>
+              <div class="icon-strip">
+                <img class="icon" src="img/물.webp" alt="물">
+                <img class="icon" src="img/번개.webp" alt="번개">
+                <img class="icon" src="img/저주의 외침.webp" alt="저주의 외침">
+                <img class="icon" src="img/가속도 폭탄.webp" alt="가속도 폭탄">
+              </div>
+              <p>1회차와 같은 종류가 다시 부여된다. 머리 위 속박 1/2 마커를 확인한다. 디버프 시간은 섞일 수 있으므로 회차보다 남은 시간을 우선한다.</p>
+            </article>
+
+            <article class="stage">
+              <div class="stage-head">
+                <p class="stage-title">6. 카오스 반대 공격</p>
+                <span class="stage-time">00:49</span>
+              </div>
+              <div class="icon-strip">
+                <img class="icon" src="img/혼돈의 불.webp" alt="혼돈의 불">
+                <img class="icon" src="img/혼돈의 물.webp" alt="혼돈의 물">
+              </div>
+              <p>3번과 다른 혼돈 디버프를 부여한다. 단, 실제 실행 순서는 화염/해일 시전 순서와 관계없이 <strong>혼돈의 불 → 혼돈의 물</strong>로 기억한다.</p>
+            </article>
+
+            <article class="stage">
+              <div class="stage-head">
+                <p class="stage-title">7. 알쏭달쏭 마법 3회차</p>
+                <span class="stage-time">00:55</span>
+              </div>
+              <div class="icon-strip">
+                <img class="icon" src="img/진실.png" alt="진실">
+                <img class="icon" src="img/거짓.png" alt="거짓">
+              </div>
+              <p>세 번째 직선/부채꼴 패턴이다. 1회차, 2회차와 동일하게 참/거짓을 확인해서 선더가 직선장판과 블리자가 부채꼴 장판을 즉시 피한다.</p>
+            </article>
+
+            <article class="stage">
+              <div class="stage-head">
+                <p class="stage-title">8. 그랜드 크로스 3회차</p>
+                <span class="stage-time">00:59</span>
+              </div>
+              <div class="icon-strip">
+                <img class="icon" src="img/산자의 상처.webp" alt="산자의 상처">
+                <img class="icon" src="img/죽은자의 상처.webp" alt="죽은자의 상처">
+                <img class="icon" src="img/알라그 필드.webp" alt="알라그 필드">
+                <img class="icon" src="img/죽음 초월.webp" alt="죽음 초월">
+              </div>
+              <p>산자의 상처 또는 죽은자의 상처와, 알라그 필드 또는 죽음 초월이 동시에 부여된다. 여기서는 디버프의 진짜/가짜보다 <strong>부여된 상처 색상과 종류</strong>를 확인한다.</p>
+            </article>
+
+            <article class="stage">
+              <div class="stage-head">
+                <p class="stage-title">9. 무의 범람</p>
+                <span class="stage-time">01:11</span>
+              </div>
+              <div class="icon-strip">
+                <img class="icon" src="img/산자의 상처.webp" alt="산자의 상처">
+                <img class="icon" src="img/죽은자의 상처.webp" alt="죽은자의 상처">
+                <img class="icon" src="img/알라그 필드.webp" alt="알라그 필드">
+                <img class="icon" src="img/죽음 초월.webp" alt="죽음 초월">
+              </div>
+              <p>네오 엑스데스가 랜덤 위치로 이동해 좌/우 산자/죽은자의 상처공격을 시전한다. </p>
+              <p><strong>알라그 필드(<img class="icon small" src="img/알라그 필드.webp" alt="알라그 필드">)는 상처(<img class="icon small" src="img/죽은자의 상처.webp" alt="죽은자의 상처">, <img class="icon small" src="img/산자의 상처.webp" alt="산자의 상처">) 색과 <span class="red">다른 색</span></strong></p>
+              <p><strong>죽음 초월(<img class="icon small" src="img/죽음 초월.webp" alt="죽음 초월">)은 상처(<img class="icon small" src="img/죽은자의 상처.webp" alt="죽은자의 상처">, <img class="icon small" src="img/산자의 상처.webp" alt="산자의 상처">) 색과 <span class="red">같은 색</span></strong></p>
+              <p><strong>*주의: 무의 범람이 가짜면 반대로 처리. 다른색 -> 같은색 / 같은색 -> 다른색</strong></p>
+              <div class="stage-images">
+                <img class="stage-image" src="img/무의범람_진짜.png" alt="무의범람 진짜">
+                <img class="stage-image" src="img/무의범람_가짜.png" alt="무의범람 가짜">
+              </div>
+            </article>
+
+            <article class="stage">
+              <div class="stage-head">
+                <p class="stage-title">10. 빠른 물/번개/가속도</p>
+                <span class="stage-time">01:21</span>
+              </div>
+              <div class="icon-strip">
+                <img class="icon" src="img/물.webp" alt="물">
+                <img class="icon" src="img/번개.webp" alt="번개">
+                <img class="icon" src="img/가속도 폭탄.webp" alt="가속도 폭탄">
+              </div>
+              <p>탱힐 산개 대상자는 9시, 탱힐 본대는 12시, 딜러 산개 대상자는 3시, 딜러 본대는 6시. 가속도 폭탄도 동시에 멈춤/움직임으로 처리한다.</p>
+              <p class="red">* 공격 or 속박 징 대상자는 산개 / 진짜면 번개, 가짜면 물 디버프 대상자</p>
+              <div class="stage-images">
+                <img class="stage-image" src="img/빠른_물_번개_가속_디버프처리.png" alt="빠른 물 번개 가속 디버프 처리">
+              </div>
+            </article>
+
+            <article class="stage">
+              <div class="stage-head">
+                <p class="stage-title">11. 마력 충전 + 빠른 마안 + 선더가</p>
+                <span class="stage-time">01:20~01:30</span>
+              </div>
+              <div class="icon-strip">
+                <img class="icon" src="img/저주의 외침.webp" alt="저주의 외침">
+                <img class="icon" src="img/진실.png" alt="진실">
+                <img class="icon" src="img/거짓.png" alt="거짓">
+              </div>
+              <p>마력 충전을 시전, 앞으로 나오는 선더가/블리자가 기억해야함. 북쪽 탱힐/남쪽 딜러 기준으로 산개한다. 선더가 직선이 나오면서, 빠른 마안 대상자는 히트박스 안으로 들어가 유도하며, 마안은 <strong>진짜면 뒤돌기 / 가짜면 바라보기</strong>다.</p>
+              <div class="stage-images">
+                <img class="stage-image" src="img/마안_선더가_처리_1.png" alt="마안 선더가 처리 1">
+                <img class="stage-image" src="img/마안_선더가_처리_2.png" alt="마안 선더가 처리 2">
+                <img class="stage-image" src="img/마안_선더가_처리_3.png" alt="마안 선더가 처리 3">
+                <img class="stage-image" src="img/마안_선더가_처리_4.png" alt="마안 선더가 처리 4">
+              </div>
+            </article>
+
+            <article class="stage">
+              <div class="stage-head">
+                <p class="stage-title">12. 혼돈의 불 + 알테마</p>
+                <span class="stage-time">01:39~01:41</span>
+              </div>
+              <div class="icon-strip">
+                <img class="icon" src="img/혼돈의 불.webp" alt="혼돈의 불">
+                <img class="icon" src="img/진실.png" alt="진실">
+                <img class="icon" src="img/거짓.png" alt="거짓">
+              </div>
+              <p>빠른 마안 처리 후 모두 중앙에 모여 혼돈의 불을 설치한다. <strong>진짜 혼돈의 불은 히트박스 밖, 가짜는 히트박스 안에서 피한다. 이후 느린 물/번개 산개 준비를 바로 한다.</strong></p>
+              <div class="stage-images">
+                <img class="stage-image" src="img/혼돈의불설치_중앙모임.png" alt="혼돈의 불 설치 중앙모임">
+                <img class="stage-image" src="img/혼돈의불_발동_진짜.png" alt="혼돈의 불 발동 진짜">
+                <img class="stage-image" src="img/혼돈의불_발동_가짜.png" alt="혼돈의 불 발동 가짜">
+              </div>
+            </article>
+
+            <article class="stage">
+              <div class="stage-head">
+                <p class="stage-title">13. 느린 물/번개/가속도 + 블리자가</p>
+                <span class="stage-time">01:46~01:47</span>
+              </div>
+              <div class="icon-strip">
+                <img class="icon" src="img/물.webp" alt="물">
+                <img class="icon" src="img/번개.webp" alt="번개">
+                <img class="icon" src="img/가속도 폭탄.webp" alt="가속도 폭탄">
+              </div>
+              <p>혼돈의 불 이후 블리자가 부채꼴 패턴이 등장한다. 참/거짓을 확인해 안전지대를 밟으면서 두 번째 쉐어/산개를 처리한다.</p>
+              <p>탱힐 산개 대상자는 9시, 탱힐 본대는 12시, 딜러 산개 대상자는 3시, 딜러 본대는 6시. 가속도 폭탄도 동시에 멈춤/움직임으로 처리한다.</p>
+              <p class="red">* 공격 or 속박 징 대상자는 산개 / 진짜면 번개, 가짜면 물 디버프 대상자</p>
+              <div class="stage-images">
+                <img class="stage-image" src="img/느린_물_번개_가속_디버프처리.png" alt="느린 물 번개 가속 디버프 처리">
+              </div>
+            </article>
+
+            <article class="stage">
+              <div class="stage-head">
+                <p class="stage-title">14. 늦은 마안</p>
+                <span class="stage-time">01:54</span>
+              </div>
+              <div class="icon-strip">
+                <img class="icon" src="img/저주의 외침.webp" alt="저주의 외침">
+                <img class="icon" src="img/진실.png" alt="진실">
+                <img class="icon" src="img/거짓.png" alt="거짓">
+              </div>
+              <p>늦은 마안 대상자가 히트박스 안으로 이동한다. 빠른 마안과 동일하게 진짜면 뒤돌고, 가짜면 바라본다.</p>
+              <div class="stage-images">
+                <img class="stage-image" src="img/늦은_마안_처리.png" alt="늦은 마안 처리">
+              </div>
+            </article>
+
+            <article class="stage">
+              <div class="stage-head">
+                <p class="stage-title">15. 마력 방출 + 혼돈의 물</p>
+                <span class="stage-time">02:00~02:05</span>
+              </div>
+              <div class="icon-strip">
+                <img class="icon" src="img/혼돈의 물.webp" alt="혼돈의 물">
+                <img class="icon" src="img/진실.png" alt="진실">
+                <img class="icon" src="img/거짓.png" alt="거짓">
+              </div>
+              <p>마력 충전 이후 기억했던 선더가와 블리자가가 전조 없이 방출된다. </p>
+              <table class="example-table" aria-label="마력 방출 예시">
+                <tbody>
+                  <tr>
+                    <th colspan="6">예시</th>
+                  </tr>
+                  <tr>
+                    <th colspan="2">저장</th>
+                    <th colspan="2">방출</th>
+                    <th colspan="2">결과</th>
+                  </tr>
+                  <tr>
+                    <th>선더가<br/><span class="mini">직선</span></th>
+                    <th>블리자가<br/><span class="mini">부채꼴</span></th>
+                    <th>위 고리<br/><span class="mini">직선</span></th>
+                    <th>밑 고리<br/><span class="mini">부채꼴</span></th>
+                    <th>선더가<br/><span class="mini">직선</span></th>
+                    <th>블리자가<br/><span class="mini">부채꼴</span></th>
+                  </tr>
+                  <tr>
+                    <td><img class="icon small" src="img/진실.png" alt="진짜"></td>
+                    <td><img class="icon small" src="img/진실.png" alt="진짜"></td>
+                    <td><img class="icon small" src="img/진실.png" alt="진짜"></td>
+                    <td><img class="icon small" src="img/진실.png" alt="진짜"></td>
+                    <td class="result">피하기</td>
+                    <td class="result">피하기</td>
+                  </tr>
+                  <tr>
+                    <td><img class="icon small" src="img/진실.png" alt="진짜"></td>
+                    <td><img class="icon small" src="img/진실.png" alt="진짜"></td>
+                    <td><img class="icon small" src="img/거짓.png" alt="가짜"></td>
+                    <td><img class="icon small" src="img/거짓.png" alt="가짜"></td>
+                    <td class="result">밟기</td>
+                    <td class="result">밟기</td>
+                  </tr>
+                  <tr>
+                    <td><img class="icon small" src="img/진실.png" alt="진짜"></td>
+                    <td><img class="icon small" src="img/거짓.png" alt="가짜"></td>
+                    <td><img class="icon small" src="img/진실.png" alt="진짜"></td>
+                    <td><img class="icon small" src="img/진실.png" alt="진짜"></td>
+                    <td class="result">피하기</td>
+                    <td class="result">밟기</td>
+                  </tr>
+                  <tr>
+                    <td><img class="icon small" src="img/거짓.png" alt="가짜"></td>
+                    <td><img class="icon small" src="img/진실.png" alt="진짜"></td>
+                    <td><img class="icon small" src="img/진실.png" alt="진짜"></td>
+                    <td><img class="icon small" src="img/거짓.png" alt="가짜"></td>
+                    <td class="result">밟기</td>
+                    <td class="result">밟기</td>
+                  </tr>
+                  <tr>
+                    <td><img class="icon small" src="img/거짓.png" alt="가짜"></td>
+                    <td><img class="icon small" src="img/거짓.png" alt="가짜"></td>
+                    <td><img class="icon small" src="img/거짓.png" alt="가짜"></td>
+                    <td><img class="icon small" src="img/진실.png" alt="진짜"></td>
+                    <td class="result">피하기</td>
+                    <td class="result">밟기</td>
+                  </tr>
+                  <tr>
+                    <td><img class="icon small" src="img/거짓.png" alt="가짜"></td>
+                    <td><img class="icon small" src="img/거짓.png" alt="가짜"></td>
+                    <td><img class="icon small" src="img/거짓.png" alt="가짜"></td>
+                    <td><img class="icon small" src="img/거짓.png" alt="가짜"></td>
+                    <td class="result">피하기</td>
+                    <td class="result">피하기</td>
+                  </tr>
+                </tbody>
+              </table>
+              <p><strong>동시에 중앙에 혼돈의 물을 설치하고, 진짜 도넛은 히트박스 안, 가짜 원형은 히트박스 밖에서 처리한다.</strong></p>
+              <div class="stage-images">
+                <img class="stage-image" src="img/혼돈의물_설치_중앙모임.png" alt="혼돈의 물 설치 중앙모임">
+                <img class="stage-image" src="img/혼돈의물_발동_진짜.png" alt="혼돈의 물 발동 진짜">
+                <img class="stage-image" src="img/혼돈의물_발동_가짜.png" alt="혼돈의 물 발동 가짜">
+              </div>
+            </article>
+
+            <article class="stage">
+              <div class="stage-head">
+                <p class="stage-title">16. 전멸기 / 5페이즈 전환</p>
+                <span class="stage-time">02:09~02:14</span>
+              </div>
+              <p>보스 체력을 25% 미만으로 깎으면 두근두근 알테마 후 5페이즈로 전환한다. 실패하면 타겟 불가능 상태가 되고 심판의 빛 전멸기를 시전한다.</p>
+            </article>
+          </div>
+
+          <div class="rule-list" aria-label="엑셀 주의사항">
+            <div class="rule"><b>디버프 시간 우선</b><span>1/2회차 그랜드 크로스는 처리 순서가 섞일 수 있다. 예: 2회차 물/번개/가속도 → 1회차 마안 → 1회차 물/번개/가속도 → 2회차 마안.</span></div>
+            <div class="rule"><b>가속도 폭탄</b><span>각자 1번씩 처리한다. 빠른 또는 느린 물/번개와 함께 오며, 진짜면 멈춤, 가짜면 움직임으로 기억한다.</span></div>
+            <div class="rule"><b>기본 위치</b><span>탱힐은 북서쪽/12시 쪽, 딜러는 남동쪽/6시 쪽을 기준으로 처리한다.</span></div>
+            <div class="rule"><b>디버프형 경감</b><span>엑셀 원문 기준 디버프형 경감이 되지 않으므로 공생기와 회복 타이밍을 신경 쓴다.</span></div>
+          </div>
+        </div>
+
+        <div class="section">
+          <h2>처리 타임라인</h2>
+          <div class="timeline" aria-label="4페이즈 처리 타임라인">
+            <div class="row">
+              <div class="time">00:25</div>
+              <div class="event">알쏭달쏭 마법</div>
+              <div class="note">참/거짓을 확인해서 선더가 직선장판과 블리자가 부채꼴 장판을 즉시 피한다.</div>
+              <div class="tag icons">
+                <img class="icon" src="img/진실.png" alt="진실">
+                <img class="icon" src="img/거짓.png" alt="거짓">
+              </div>
+            </div>
+            <div class="row">
+              <div class="time">00:29</div>
+              <div class="event">그랜드 크로스 1</div>
+              <div class="note">물/번개/마안/가속도 폭탄 1회차 부여.</div>
+              <div class="tag icons">
+                <img class="icon" src="img/물.webp" alt="물">
+                <img class="icon" src="img/번개.webp" alt="번개">
+                <img class="icon" src="img/저주의 외침.webp" alt="저주의 외침">
+                <img class="icon" src="img/가속도 폭탄.webp" alt="가속도 폭탄">
+              </div>
+            </div>
+            <div class="row">
+              <div class="time">00:35</div>
+              <div class="event">화염 / 해일</div>
+              <div class="note">혼돈의 불/물 중 하나를 부여한다.</div>
+              <div class="tag icons">
+                <img class="icon" src="img/혼돈의 불.webp" alt="혼돈의 불">
+                <img class="icon" src="img/혼돈의 물.webp" alt="혼돈의 물">
+              </div>
+            </div>
+            <div class="row">
+              <div class="time">00:40</div>
+              <div class="event">알쏭달쏭 마법</div>
+              <div class="note">참/거짓을 확인해서 두 번째 선더가 직선장판과 블리자가 부채꼴 장판을 즉시 피한다.</div>
+              <div class="tag icons">
+                <img class="icon" src="img/진실.png" alt="진실">
+                <img class="icon" src="img/거짓.png" alt="거짓">
+              </div>
+            </div>
+            <div class="row">
+              <div class="time">00:44</div>
+              <div class="event">그랜드 크로스 2</div>
+              <div class="note">물/번개/마안/가속도 폭탄 2회차 부여.</div>
+              <div class="tag icons">
+                <img class="icon" src="img/물.webp" alt="물">
+                <img class="icon" src="img/번개.webp" alt="번개">
+                <img class="icon" src="img/저주의 외침.webp" alt="저주의 외침">
+                <img class="icon" src="img/가속도 폭탄.webp" alt="가속도 폭탄">
+              </div>
+            </div>
+            <div class="row">
+              <div class="time">00:49</div>
+              <div class="event">화염 / 해일</div>
+              <div class="note">앞쪽과 다른 혼돈 디버프를 부여한다.</div>
+              <div class="tag icons">
+                <img class="icon" src="img/혼돈의 불.webp" alt="혼돈의 불">
+                <img class="icon" src="img/혼돈의 물.webp" alt="혼돈의 물">
+              </div>
+            </div>
+            <div class="row">
+              <div class="time">00:55</div>
+              <div class="event">알쏭달쏭 마법</div>
+              <div class="note">참/거짓을 확인해서 세 번째 선더가 직선장판과 블리자가 부채꼴 장판을 즉시 피한다.</div>
+              <div class="tag icons">
+                <img class="icon" src="img/진실.png" alt="진실">
+                <img class="icon" src="img/거짓.png" alt="거짓">
+              </div>
+            </div>
+            <div class="row">
+              <div class="time">00:59</div>
+              <div class="event">그랜드 크로스 3</div>
+              <div class="note">암흑광 계열과 알라그 필드/죽음 초월 계열을 확인한다.</div>
+              <div class="tag icons">
+                <img class="icon" src="img/산자의 상처.webp" alt="산자의 상처">
+                <img class="icon" src="img/죽은자의 상처.webp" alt="죽은자의 상처">
+                <img class="icon" src="img/알라그 필드.webp" alt="알라그 필드">
+                <img class="icon" src="img/죽음 초월.webp" alt="죽음 초월">
+              </div>
+            </div>
+            <div class="row key">
+              <div class="time">01:11</div>
+              <div class="event">무의 범람</div>
+              <div class="note">기준은 본인의 산자의 상처/죽은자의 상처 색상이다. 알라그 필드는 상처와 다른 색, 죽음 초월은 상처와 같은 색을 맞는다.</div>
+              <div class="tag icons">
+                <img class="icon" src="img/산자의 상처.webp" alt="산자의 상처">
+                <img class="icon" src="img/죽은자의 상처.webp" alt="죽은자의 상처">
+                <img class="icon" src="img/알라그 필드.webp" alt="알라그 필드">
+                <img class="icon" src="img/죽음 초월.webp" alt="죽음 초월">
+              </div>
+            </div>
+            <div class="row key">
+              <div class="time">01:12</div>
+              <div class="event">암흑광</div>
+              <div class="note">산 자의 암흑광과 죽은 자의 암흑광 판정. 무의 범람에서 맞은 색으로 상처 디버프를 해제한다.</div>
+              <div class="tag icons">
+                <img class="icon" src="img/산자의 상처.webp" alt="산자의 상처">
+                <img class="icon" src="img/죽은자의 상처.webp" alt="죽은자의 상처">
+              </div>
+            </div>
+            <div class="row key">
+              <div class="time">01:16</div>
+              <div class="event">데스 서지</div>
+              <div class="note">알라그 필드 대상자는 무의 범람에서 다른 색을 맞아 즉사급 피해 조건을 처리한다.</div>
+              <div class="tag icons">
+                <img class="icon" src="img/알라그 필드.webp" alt="알라그 필드">
+              </div>
+            </div>
+            <div class="row">
+              <div class="time">01:20</div>
+              <div class="event">마력 충전</div>
+              <div class="note">이후 나오는 선더가와 블리자가를 기억한다. 02:00 마력 방출에서 다시 나온다.</div>
+              <div class="tag">기억 시작</div>
+            </div>
+            <div class="row key">
+              <div class="time">01:21</div>
+              <div class="event">빠른 물/번개</div>
+              <div class="note">빠른 가속도 폭탄도 같이 처리한다. 진짜면 번개 산개, 가짜면 물 산개. 탱힐 산개 9시, 본대 12시, 딜러 산개 3시, 본대 6시.</div>
+              <div class="tag icons">
+                <img class="icon" src="img/물.webp" alt="물">
+                <img class="icon" src="img/번개.webp" alt="번개">
+                <img class="icon" src="img/가속도 폭탄.webp" alt="가속도 폭탄">
+              </div>
+            </div>
+            <div class="row">
+              <div class="time">01:28</div>
+              <div class="event">선더가 기억1</div>
+              <div class="note">직선 장판의 참/거짓을 기억한다. 선더가가 진짜인지 가짜인지가 02:00 마력 방출 판단에 쓰인다.</div>
+              <div class="tag">기억1</div>
+            </div>
+            <div class="row key">
+              <div class="time">01:30</div>
+              <div class="event">빠른 마안</div>
+              <div class="note">진짜면 뒤돌기, 가짜면 바라보기.</div>
+              <div class="tag icons">
+                <img class="icon" src="img/저주의 외침.webp" alt="저주의 외침">
+                <img class="icon" src="img/진실.png" alt="진실">
+                <img class="icon" src="img/거짓.png" alt="거짓">
+              </div>
+            </div>
+            <div class="row danger">
+              <div class="time">01:39</div>
+              <div class="event">두근두근 알테마</div>
+              <div class="note">혼돈의 불 설치와 거의 붙어 있다.</div>
+              <div class="tag">광역</div>
+            </div>
+            <div class="row key">
+              <div class="time">01:41</div>
+              <div class="event">혼돈의 불</div>
+              <div class="note">진짜는 원형, 가짜는 도넛. 중앙 설치 후 안전지대로 이동한다.</div>
+              <div class="tag icons">
+                <img class="icon" src="img/혼돈의 불.webp" alt="혼돈의 불">
+                <img class="icon" src="img/진실.png" alt="진실">
+                <img class="icon" src="img/거짓.png" alt="거짓">
+              </div>
+            </div>
+            <div class="row key">
+              <div class="time">01:46</div>
+              <div class="event">느린 물/번개</div>
+              <div class="note">느린 가속도 폭탄도 같이 처리한다.</div>
+              <div class="tag icons">
+                <img class="icon" src="img/물.webp" alt="물">
+                <img class="icon" src="img/번개.webp" alt="번개">
+                <img class="icon" src="img/가속도 폭탄.webp" alt="가속도 폭탄">
+              </div>
+            </div>
+            <div class="row">
+              <div class="time">01:47</div>
+              <div class="event">블리자가 기억2</div>
+              <div class="note">부채꼴 장판의 참/거짓을 기억한다.</div>
+              <div class="tag">기억2</div>
+            </div>
+            <div class="row">
+              <div class="time">01:52</div>
+              <div class="event">혼돈의 물</div>
+              <div class="note">혼돈의 물 설치/준비 구간. 최종 폭발은 02:04에 마력 방출 처리와 겹쳐 들어온다.</div>
+              <div class="tag">물 준비</div>
+            </div>
+            <div class="row key">
+              <div class="time">01:54</div>
+              <div class="event">늦은 마안</div>
+              <div class="note">히트박스 안쪽에서 진짜/가짜에 맞춰 시선 처리.</div>
+              <div class="tag icons">
+                <img class="icon" src="img/저주의 외침.webp" alt="저주의 외침">
+                <img class="icon" src="img/진실.png" alt="진실">
+                <img class="icon" src="img/거짓.png" alt="거짓">
+              </div>
+            </div>
+            <div class="row danger">
+              <div class="time">02:00</div>
+              <div class="event">마력 방출</div>
+              <div class="note">기억1 선더가와 기억2 블리자가가 전조 없이 다시 나온다. 가짜였던 패턴은 일부러 밟고, 진짜였던 패턴은 피한다.</div>
+              <div class="tag">기억 방출</div>
+            </div>
+            <div class="row danger">
+              <div class="time">02:04</div>
+              <div class="event">혼돈의 물</div>
+              <div class="note">진짜는 도넛, 가짜는 원형. 방출 패턴과 겹쳐 사고가 잦은 지점.</div>
+              <div class="tag icons">
+                <img class="icon" src="img/혼돈의 물.webp" alt="혼돈의 물">
+                <img class="icon" src="img/진실.png" alt="진실">
+                <img class="icon" src="img/거짓.png" alt="거짓">
+              </div>
+            </div>
+            <div class="row danger">
+              <div class="time">02:14</div>
+              <div class="event">심판의 빛</div>
+              <div class="note">25% 미만을 넘기지 못하면 전멸기.</div>
+              <div class="tag">전멸</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <h2>판정 메모</h2>
+          <div class="callouts">
+            <div class="callout">
+              <b>물/번개 산개</b>
+              <p>진짜라면 번개 대상자가 산개, 가짜라면 물 대상자가 산개한다. 빠른/느린 모두 가속도 폭탄을 함께 본다.</p>
+            </div>
+            <div class="callout warn">
+              <b>혼돈의 불/물</b>
+              <p>카오스 시전 순서와 별개로 실제 실행은 혼돈의 불 다음 혼돈의 물 흐름으로 잡는다.</p>
+            </div>
+            <div class="callout">
+              <b>무의 범람</b>
+              <p>같은 색/다른 색의 기준은 본인이 가진 산자의 상처 또는 죽은자의 상처 디버프 색상이다. 무의 범람 시전 때 알라그 필드는 상처와 다른 색, 죽음 초월은 상처와 같은 색을 맞는다.</p>
+            </div>
+            <div class="callout warn">
+              <b>마력 방출</b>
+              <p>01:28의 선더가와 01:47의 블리자가를 기억해서 02:00에 다시 처리한다.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="quiz" class="panel" aria-labelledby="quiz-tab">
+        <div class="sim-layout">
+          <article class="sim-card">
+            <div class="sim-head">
+              <h2 class="sim-title" id="simTitle">상황 생성</h2>
+              <span class="sim-time" id="simTime">--:--</span>
+            </div>
+            <p class="sim-prompt" id="simPrompt">시작을 누르면 랜덤 처리 상황이 나옵니다.</p>
+            <div class="sim-facts" id="simFacts"></div>
+            <div class="sim-choices" id="simChoices"></div>
+            <div class="sim-result" id="simResult">무의 범람, 물/번개, 가속도, 마안, 혼돈 장판, 마력 방출 중 하나가 출제됩니다.</div>
+          </article>
+
+          <aside class="scorebox" aria-live="polite">
+            <div>퀴즈</div>
+            <div class="score"><span id="simScore">0</span>/<span id="simCount">0</span></div>
+            <p id="simScoreText">랜덤 상황을 빠르게 판단해 보세요.</p>
+            <div class="actions">
+              <button class="primary" type="button" id="nextSimBtn">새 문제</button>
+              <button class="secondary" type="button" id="resetSimBtn">기록 초기화</button>
+            </div>
+            <ul class="sim-log" id="simLog"></ul>
+          </aside>
+        </div>
+      </section>
+
+      <section id="simulation" class="panel" aria-labelledby="simulation-tab">
+        <div class="sim-layout">
+          <div class="sim-main">
+            <div id="seqBuffs" class="sim-status-slot"></div>
+            <article class="sim-card">
+              <div class="sim-head">
+                <h2 class="sim-title" id="seqTitle">1단계부터 순차 진행</h2>
+                <span class="sim-time" id="seqTime">00:25</span>
+              </div>
+              <p class="sim-prompt" id="seqPrompt">시작을 누르면 1단계부터 디버프가 차례대로 부여됩니다.</p>
+              <div class="sim-choices" id="seqChoices"></div>
+              <div class="sim-result" id="seqResult">부여된 디버프를 보면서 해당 처리 타이밍에 올바른 행동을 선택합니다.</div>
+            </article>
+          </div>
+
+          <div class="sim-side">
+            <aside class="scorebox" aria-live="polite">
+              <div>시뮬레이션</div>
+              <div class="score"><span id="seqStep">0</span>/16</div>
+              <p id="seqScoreText">부여된 디버프와 현재 처리 타이밍을 같이 보세요.</p>
+              <div class="actions">
+                <button class="primary" type="button" id="seqNextBtn">시작</button>
+                <button class="secondary" type="button" id="seqResetBtn">처음부터</button>
+              </div>
+              <ul class="sim-log" id="seqLog"></ul>
+            </aside>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const quiz = [
+      {
+        q: "00:25 / 00:40 / 00:55 알쏭달쏭 마법에서 해야 하는 것은?",
+        choices: ["참/거짓을 확인해서 직선장판과 부채꼴 장판을 즉시 피한다", "나중에 쓸 패턴을 저장만 한다", "무조건 직선장판을 밟는다", "디버프 색깔만 확인한다"],
+        answer: 0,
+        explain: "알쏭달쏭 마법은 저장 구간이 아니라 즉시 처리 기믹이다. 참/거짓을 보고 선더가 직선장판과 블리자가 부채꼴 장판을 피한다."
+      },
+      {
+        q: "1/2회차 그랜드 크로스에서 물/번개 산개 대상 판단으로 맞는 것은?",
+        choices: ["진짜면 번개, 가짜면 물", "진짜면 물, 가짜면 번개", "항상 물", "항상 번개"],
+        answer: 0,
+        explain: "엑셀 기준 물/번개 산개 대상자는 진짜라면 번개 2명, 가짜라면 물 2명이다."
+      },
+      {
+        q: "빠른 물/번개 처리 타이밍에 같이 봐야 하는 것은?",
+        choices: ["빠른 가속도 폭탄", "심판의 빛", "늦은 마안", "두 번째 혼돈의 물"],
+        answer: 0,
+        explain: "01:21에는 빠른 물/번개와 빠른 가속도 폭탄을 같이 처리한다."
+      },
+      {
+        q: "무의 범람에서 알라그 필드 대상자의 기본 처리 기준은?",
+        choices: ["상처 디버프와 다른 색을 맞는다", "상처 디버프와 같은 색을 맞는다", "아무 색도 맞지 않는다", "마안을 바라본다"],
+        answer: 0,
+        explain: "색의 기준은 본인의 산자의 상처/죽은자의 상처 디버프다. 알라그 필드는 상처와 다른 색을 맞는다."
+      },
+      {
+        q: "무의 범람에서 죽음 초월 대상자의 기본 처리 기준은?",
+        choices: ["상처 디버프와 같은 색을 맞는다", "상처 디버프와 다른 색을 맞는다", "혼돈의 불 색을 따라간다", "선더가 직선을 밟는다"],
+        answer: 0,
+        explain: "죽음 초월은 본인의 산자의 상처/죽은자의 상처 디버프와 같은 색을 맞아야 한다."
+      },
+      {
+        q: "마력 방출 때 다시 나오는 기억 패턴 두 가지는?",
+        choices: ["선더가와 블리자가", "혼돈의 불과 혼돈의 물", "무의 범람과 데스 서지", "꼭두각시 영혼과 평타"],
+        answer: 0,
+        explain: "01:28 선더가가 기억1, 01:47 블리자가가 기억2로 기록되고 02:00에 방출된다."
+      },
+      {
+        q: "마력 방출에서 선더가가 가짜, 블리자가가 진짜라면 어떻게 처리하는가?",
+        choices: ["선더가 직선만 밟는다", "블리자가 부채꼴만 밟는다", "둘 다 피한다", "둘 다 맞는다"],
+        answer: 0,
+        explain: "엑셀 예시 기준 가짜 패턴은 반대로 처리하므로 선더가가 가짜라면 직선을 밟고, 블리자가가 진짜라면 피한다."
+      },
+      {
+        q: "빠른 마안의 기본 판정 설명으로 맞는 것은?",
+        choices: ["진짜면 뒤돌고, 가짜면 바라본다", "진짜면 바라보고, 가짜면 뒤돈다", "항상 바라본다", "항상 중앙 밖으로 나간다"],
+        answer: 0,
+        explain: "저주의 외침은 진짜면 대상자를 보면 안 되고, 가짜면 봐야 한다."
+      },
+      {
+        q: "혼돈의 불 처리 설명으로 맞는 것은?",
+        choices: ["진짜는 원형, 가짜는 도넛", "진짜는 도넛, 가짜는 원형", "둘 다 직선 장판", "색깔만 맞으면 된다"],
+        answer: 0,
+        explain: "혼돈의 불은 진짜일 때 원형, 가짜일 때 도넛 장판으로 본다."
+      },
+      {
+        q: "혼돈의 물 처리 설명으로 맞는 것은?",
+        choices: ["진짜는 도넛, 가짜는 원형", "진짜는 원형, 가짜는 도넛", "항상 원형", "항상 도넛"],
+        answer: 0,
+        explain: "혼돈의 물은 혼돈의 불과 반대로 진짜일 때 도넛, 가짜일 때 원형이다."
+      },
+      {
+        q: "카오스의 화염/해일 시전 순서와 관계없이 실제 혼돈 디버프 실행 순서는?",
+        choices: ["혼돈의 불 다음 혼돈의 물", "혼돈의 물 다음 혼돈의 불", "항상 랜덤", "마안 다음 알라그 필드"],
+        answer: 0,
+        explain: "엑셀 주의사항에는 해일/화염 시전 순서와 상관없이 카오스 디버프는 항상 혼돈의 불 → 혼돈의 물 순서로 실행된다고 적혀 있다."
+      },
+      {
+        q: "그랜드 크로스 1/2회차 디버프 처리 순서를 판단할 때 가장 우선해야 하는 것은?",
+        choices: ["디버프 남은 시간", "무조건 1회차부터", "직업 순서", "보스 위치"],
+        answer: 0,
+        explain: "1/2회차 디버프는 시간이 랜덤하게 부여되어 처리 순서가 섞일 수 있으므로 남은 시간을 봐야 한다."
+      },
+      {
+        q: "실제 처리 구간이 본격적으로 시작되는 타이밍은?",
+        choices: ["01:11 무의 범람", "00:07 평타", "00:16 꼭두각시 영혼", "02:14 심판의 빛"],
+        answer: 0,
+        explain: "00:25/00:40/00:55 알쏭달쏭은 즉시 피하고, 01:11 무의 범람부터 상처/알라그/죽음 초월 해제가 시작된다."
+      },
+      {
+        q: "느린 물/번개와 함께 처리되는 것은?",
+        choices: ["느린 가속도 폭탄", "첫 번째 알쏭달쏭 마법", "타겟불가", "데스 서지"],
+        answer: 0,
+        explain: "01:46에는 느린 물/번개와 느린 가속도 폭탄이 같이 온다."
+      },
+      {
+        q: "빠른/느린 물번개 산개에서 딜러 산개 대상자의 기준 위치는?",
+        choices: ["3시", "9시", "12시", "중앙"],
+        answer: 0,
+        explain: "엑셀 기준 탱힐 산개 대상자는 9시, 탱힐 본대는 12시, 딜러 산개 대상자는 3시, 딜러 본대는 6시다."
+      },
+      {
+        q: "가속도 폭탄 처리 설명으로 맞는 것은?",
+        choices: ["각자 1번 처리하며 빠른/느린 물번개와 같이 실행된다", "무의 범람에서만 처리한다", "힐러만 처리한다", "알라그 필드와 같은 효과다"],
+        answer: 0,
+        explain: "가속도 폭탄은 4개씩 2차례 부여되지만 각자 1번씩 처리하며, 빠른 또는 느린 물/번개와 함께 실행된다."
+      }
+    ];
+
+    const tabs = document.querySelectorAll(".tab");
+    const panels = document.querySelectorAll(".panel");
+    const questionRoot = document.getElementById("questions");
+    const scoreEl = document.getElementById("score");
+    const totalEl = document.getElementById("total");
+    const scoreText = document.getElementById("scoreText");
+    const simTitle = document.getElementById("simTitle");
+    const simTime = document.getElementById("simTime");
+    const simPrompt = document.getElementById("simPrompt");
+    const simFacts = document.getElementById("simFacts");
+    const simChoices = document.getElementById("simChoices");
+    const simResult = document.getElementById("simResult");
+    const simScore = document.getElementById("simScore");
+    const simCount = document.getElementById("simCount");
+    const simScoreText = document.getElementById("simScoreText");
+    const simLog = document.getElementById("simLog");
+    const seqTitle = document.getElementById("seqTitle");
+    const seqTime = document.getElementById("seqTime");
+    const seqPrompt = document.getElementById("seqPrompt");
+    const seqBuffs = document.getElementById("seqBuffs");
+    const seqChoices = document.getElementById("seqChoices");
+    const seqResult = document.getElementById("seqResult");
+    const seqStep = document.getElementById("seqStep");
+    const seqScoreText = document.getElementById("seqScoreText");
+    const seqLog = document.getElementById("seqLog");
+    const seqNextBtn = document.getElementById("seqNextBtn");
+    let currentSim = null;
+    let simStats = { correct: 0, total: 0 };
+    let seq = null;
+
+    tabs.forEach((tab) => {
+      tab.addEventListener("click", () => {
+        const id = tab.dataset.tab;
+        tabs.forEach((item) => item.setAttribute("aria-selected", String(item === tab)));
+        panels.forEach((panel) => panel.classList.toggle("active", panel.id === id));
+      });
+    });
+
+    function renderQuiz() {
+      totalEl.textContent = quiz.length;
+      questionRoot.innerHTML = quiz.map((item, index) => `
+        <article class="question" data-index="${index}">
+          <h3>${index + 1}. ${item.q}</h3>
+          <div class="choices">
+            ${item.choices.map((choice, choiceIndex) => `
+              <button class="choice" type="button" data-choice="${choiceIndex}">${choice}</button>
+            `).join("")}
+          </div>
+          <div class="explain">${item.explain}</div>
+        </article>
+      `).join("");
+
+      document.querySelectorAll(".choice").forEach((button) => {
+        button.addEventListener("click", () => {
+          const question = button.closest(".question");
+          question.querySelectorAll(".choice").forEach((choice) => {
+            choice.classList.remove("selected");
+          });
+          button.classList.add("selected");
+        });
+      });
+    }
+
+    function gradeQuiz() {
+      let score = 0;
+      document.querySelectorAll(".question").forEach((question) => {
+        const index = Number(question.dataset.index);
+        const selected = question.querySelector(".choice.selected");
+        const explain = question.querySelector(".explain");
+        question.querySelectorAll(".choice").forEach((choice) => {
+          const choiceIndex = Number(choice.dataset.choice);
+          choice.classList.remove("correct", "wrong");
+          if (choiceIndex === quiz[index].answer) {
+            choice.classList.add("correct");
+          }
+        });
+
+        if (selected) {
+          const selectedIndex = Number(selected.dataset.choice);
+          if (selectedIndex === quiz[index].answer) {
+            score += 1;
+          } else {
+            selected.classList.add("wrong");
+          }
+        }
+        explain.classList.add("show");
+      });
+
+      scoreEl.textContent = score;
+      const percent = Math.round((score / quiz.length) * 100);
+      scoreText.textContent = percent >= 80
+        ? "실전 콜을 맡겨도 될 만큼 안정적입니다."
+        : percent >= 50
+          ? "핵심 흐름은 잡혔고, 가속도와 혼돈 판정을 더 보면 좋습니다."
+          : "01:11 이후 처리 순서를 다시 한 번 훑어보면 금방 올라옵니다.";
+    }
+
+    function resetQuiz() {
+      document.querySelectorAll(".choice").forEach((choice) => {
+        choice.classList.remove("selected", "correct", "wrong");
+      });
+      document.querySelectorAll(".explain").forEach((explain) => {
+        explain.classList.remove("show");
+      });
+      scoreEl.textContent = "0";
+      scoreText.textContent = "문제를 풀면 결과가 표시됩니다.";
+    }
+
+    function icon(name, alt = name) {
+      return `<img class="icon small" src="img/${name}" alt="${alt}">`;
+    }
+
+    function pick(list) {
+      return list[Math.floor(Math.random() * list.length)];
+    }
+
+    function fact(label, value, options = {}) {
+      const cls = options.resolved ? "sim-fact resolved" : "sim-fact";
+      const remain = options.remain ? `<small>${options.remain}</small>` : "";
+      return `<div class="${cls}"><span>${label}</span><b>${value}${remain}</b></div>`;
+    }
+
+    function makeFloodSim() {
+      const wound = pick([
+        { name: "산자의 상처", img: "산자의 상처.webp" },
+        { name: "죽은자의 상처", img: "죽은자의 상처.webp" }
+      ]);
+      const debuff = pick([
+        { name: "알라그 필드", img: "알라그 필드.webp", base: "다른 색" },
+        { name: "죽음 초월", img: "죽음 초월.webp", base: "같은 색" }
+      ]);
+      const flood = pick([
+        { name: "진짜", img: "진실.png", flip: false },
+        { name: "가짜", img: "거짓.png", flip: true }
+      ]);
+      const answer = flood.flip
+        ? (debuff.base === "다른 색" ? "같은 색" : "다른 색")
+        : debuff.base;
+      return {
+        title: "9. 무의 범람",
+        time: "01:11",
+        prompt: "상처 색상을 기준으로 어떤 색을 맞아야 할까?",
+        facts: [
+          fact("상처", `${icon(wound.img, wound.name)} ${wound.name}`),
+          fact("디버프", `${icon(debuff.img, debuff.name)} ${debuff.name}`),
+          fact("무의 범람", `${icon(flood.img, flood.name)} ${flood.name}`)
+        ],
+        choices: ["같은 색", "다른 색"],
+        answer,
+        explain: `기본은 ${debuff.name} = ${debuff.base}. 무의 범람이 ${flood.name}이므로 최종은 ${answer}.`
+      };
+    }
+
+    function makeSpreadSim() {
+      const truth = pick([
+        { name: "진짜", img: "진실.png", answer: "번개 산개" },
+        { name: "가짜", img: "거짓.png", answer: "물 산개" }
+      ]);
+      const speed = pick([
+        { name: "빠른", time: "01:21" },
+        { name: "느린", time: "01:46" }
+      ]);
+      return {
+        title: `${speed.name} 물/번개/가속도`,
+        time: speed.time,
+        prompt: "산개 대상자는 누구인가?",
+        facts: [
+          fact("판정", `${icon(truth.img, truth.name)} ${truth.name}`),
+          fact("물", `${icon("물.webp", "물")} 쉐어/산개 후보`),
+          fact("번개", `${icon("번개.webp", "번개")} 쉐어/산개 후보`)
+        ],
+        choices: ["물 산개", "번개 산개"],
+        answer: truth.answer,
+        explain: `물/번개는 진짜면 번개 산개, 가짜면 물 산개.`
+      };
+    }
+
+    function makeAccelSim() {
+      const truth = pick([
+        { name: "진짜", img: "진실.png", answer: "멈춤" },
+        { name: "가짜", img: "거짓.png", answer: "움직임" }
+      ]);
+      return {
+        title: "가속도 폭탄",
+        time: pick(["01:21", "01:46"]),
+        prompt: "가속도 폭탄 대상자는 어떻게 처리해야 할까?",
+        facts: [
+          fact("디버프", `${icon("가속도 폭탄.webp", "가속도 폭탄")} 가속도 폭탄`),
+          fact("판정", `${icon(truth.img, truth.name)} ${truth.name}`)
+        ],
+        choices: ["멈춤", "움직임"],
+        answer: truth.answer,
+        explain: "가속도 폭탄은 진짜면 멈춤, 가짜면 움직임."
+      };
+    }
+
+    function makeGazeSim() {
+      const truth = pick([
+        { name: "진짜", img: "진실.png", answer: "뒤돌기" },
+        { name: "가짜", img: "거짓.png", answer: "바라보기" }
+      ]);
+      return {
+        title: "저주의 외침",
+        time: pick(["01:30", "01:54"]),
+        prompt: "마안 대상자는 시선을 어떻게 처리해야 할까?",
+        facts: [
+          fact("디버프", `${icon("저주의 외침.webp", "저주의 외침")} 저주의 외침`),
+          fact("판정", `${icon(truth.img, truth.name)} ${truth.name}`)
+        ],
+        choices: ["뒤돌기", "바라보기"],
+        answer: truth.answer,
+        explain: "저주의 외침은 진짜면 뒤돌기, 가짜면 바라보기."
+      };
+    }
+
+    function makeChaosSim() {
+      const chaos = pick([
+        { name: "혼돈의 불", img: "혼돈의 불.webp", trueAnswer: "밖", falseAnswer: "안" },
+        { name: "혼돈의 물", img: "혼돈의 물.webp", trueAnswer: "안", falseAnswer: "밖" }
+      ]);
+      const truth = pick([
+        { name: "진짜", img: "진실.png", key: "trueAnswer" },
+        { name: "가짜", img: "거짓.png", key: "falseAnswer" }
+      ]);
+      const answer = chaos[truth.key];
+      return {
+        title: chaos.name,
+        time: chaos.name === "혼돈의 불" ? "01:41" : "02:04",
+        prompt: "히트박스 기준 어디서 피해야 할까?",
+        facts: [
+          fact("디버프", `${icon(chaos.img, chaos.name)} ${chaos.name}`),
+          fact("판정", `${icon(truth.img, truth.name)} ${truth.name}`)
+        ],
+        choices: ["안", "밖"],
+        answer,
+        explain: "혼돈의 불은 진짜 밖/가짜 안. 혼돈의 물은 진짜 안/가짜 밖."
+      };
+    }
+
+    function makeReleaseSim() {
+      const thunder = pick(["진짜", "가짜"]);
+      const blizzard = pick(["진짜", "가짜"]);
+      const top = pick(["진짜", "가짜"]);
+      const bottom = pick(["진짜", "가짜"]);
+      const line = thunder === top ? "피하기" : "밟기";
+      const cone = blizzard === bottom ? "피하기" : "밟기";
+      return {
+        title: "15. 마력 방출",
+        time: "02:00",
+        prompt: "직선과 부채꼴을 어떻게 처리해야 할까?",
+        facts: [
+          fact("저장 선더가", `${icon(thunder === "진짜" ? "진실.png" : "거짓.png", thunder)} ${thunder}`),
+          fact("저장 블리자가", `${icon(blizzard === "진짜" ? "진실.png" : "거짓.png", blizzard)} ${blizzard}`),
+          fact("방출 위", `${icon(top === "진짜" ? "진실.png" : "거짓.png", top)} ${top}`),
+          fact("방출 밑", `${icon(bottom === "진짜" ? "진실.png" : "거짓.png", bottom)} ${bottom}`)
+        ],
+        choices: [
+          "직선 피하기 / 부채꼴 피하기",
+          "직선 피하기 / 부채꼴 밟기",
+          "직선 밟기 / 부채꼴 피하기",
+          "직선 밟기 / 부채꼴 밟기"
+        ],
+        answer: `직선 ${line} / 부채꼴 ${cone}`,
+        explain: `선더가는 저장과 위 고리가 같으면 피하기, 다르면 밟기. 블리자가는 저장과 밑 고리가 같으면 피하기, 다르면 밟기.`
+      };
+    }
+
+    function nextSimulation() {
+      const makers = [makeFloodSim, makeSpreadSim, makeAccelSim, makeGazeSim, makeChaosSim, makeReleaseSim];
+      currentSim = pick(makers)();
+      simTitle.textContent = currentSim.title;
+      simTime.textContent = currentSim.time;
+      simPrompt.textContent = currentSim.prompt;
+      simFacts.innerHTML = currentSim.facts.join("");
+      simResult.textContent = "선택지를 고르면 판정이 표시됩니다.";
+      simChoices.innerHTML = currentSim.choices.map((choice) => (
+        `<button class="sim-choice" type="button" data-answer="${choice}">${choice}</button>`
+      )).join("");
+
+      document.querySelectorAll("#simChoices .sim-choice").forEach((button) => {
+        button.addEventListener("click", () => answerSimulation(button));
+      });
+    }
+
+    function answerSimulation(button) {
+      if (!currentSim || button.disabled) return;
+      const selected = button.dataset.answer;
+      const correct = selected === currentSim.answer;
+      simStats.total += 1;
+      if (correct) simStats.correct += 1;
+
+      document.querySelectorAll("#simChoices .sim-choice").forEach((choice) => {
+        choice.disabled = true;
+        if (choice.dataset.answer === currentSim.answer) choice.classList.add("correct");
+      });
+      if (!correct) button.classList.add("wrong");
+
+      simScore.textContent = simStats.correct;
+      simCount.textContent = simStats.total;
+      simScoreText.textContent = correct ? "좋아요. 다음 상황으로 넘어가도 됩니다." : "틀린 판정을 바로 다시 보면 좋아요.";
+      simResult.textContent = `${correct ? "정답" : "오답"}: ${currentSim.answer}. ${currentSim.explain}`;
+
+      const item = document.createElement("li");
+      item.textContent = `${currentSim.time} ${currentSim.title}: ${selected} → ${correct ? "정답" : `오답, 정답은 ${currentSim.answer}`}`;
+      simLog.prepend(item);
+      while (simLog.children.length > 5) simLog.removeChild(simLog.lastChild);
+    }
+
+    function resetSimulation() {
+      simStats = { correct: 0, total: 0 };
+      simScore.textContent = "0";
+      simCount.textContent = "0";
+      simScoreText.textContent = "랜덤 상황을 빠르게 판단해 보세요.";
+      simLog.innerHTML = "";
+      nextSimulation();
+    }
+
+    function truthIcon(value) {
+      return icon(value === "진짜" ? "진실.png" : "거짓.png", value);
+    }
+
+    function parseSeconds(time) {
+      time = String(time).split("~")[0];
+      const [m, s] = time.split(":").map(Number);
+      return (m * 60) + s;
+    }
+
+    function remainText(resolveAt) {
+      if (!resolveAt || !seq?.timePoint) return "";
+      const diff = parseSeconds(resolveAt) - parseSeconds(seq.timePoint);
+      return diff > 0 ? `${diff}s` : "";
+    }
+
+    function addSeqBuff(truth, debuff, resolveStep = null, resolveAt = "", source = "") {
+      seq.buffs.push({ truth, debuff, resolveStep, resolveAt, source });
+    }
+
+    function mechanicIcon(name) {
+      const map = {
+        "물/번개": `${icon("물.webp", "물")} ${icon("번개.webp", "번개")}`,
+        "물": `${icon("물.webp", "물")}`,
+        "번개": `${icon("번개.webp", "번개")}`,
+        "가속도": `${icon("가속도 폭탄.webp", "가속도 폭탄")}`,
+        "마안": `${icon("저주의 외침.webp", "저주의 외침")}`,
+        "없음": "-"
+      };
+      return map[name] || name;
+    }
+
+    function shuffle(list) {
+      return [...list].sort(() => Math.random() - 0.5);
+    }
+
+    function makeGrandCrossAssignment() {
+      const th = ["탱커 1", "탱커 2", "힐러 1", "힐러 2"];
+      const dps = ["딜러 1", "딜러 2", "딜러 3", "딜러 4"];
+      const mechanics = ["물", "번개", "마안", "없음"];
+      const result = {};
+
+      shuffle(th).forEach((player, index) => {
+        result[player] = { main: mechanics[index], accel: false };
+      });
+      shuffle(dps).forEach((player, index) => {
+        result[player] = { main: mechanics[index], accel: false };
+      });
+
+      const players = [...th, ...dps];
+      const noMain = players.filter((player) => result[player].main === "없음");
+      noMain.forEach((player) => {
+        result[player].accel = true;
+      });
+
+      const remainingAccelTargets = shuffle(players.filter((player) => !result[player].accel)).slice(0, 4 - noMain.length);
+      remainingAccelTargets.forEach((player) => {
+        result[player].accel = true;
+      });
+
+      return result;
+    }
+
+    function addPersonalGrandCross(data, truth, spreadStep, spreadAt, gazeStep, gazeAt, source) {
+      const spreadIcons = [];
+      if (data.main === "물" || data.main === "번개") {
+        spreadIcons.push(mechanicIcon(data.main));
+      }
+      if (data.accel) {
+        spreadIcons.push(mechanicIcon("가속도"));
+      }
+      if (spreadIcons.length) {
+        addSeqBuff(truthIcon(truth), spreadIcons.join(" "), spreadStep, spreadAt, source);
+      }
+      if (data.main === "마안") {
+        addSeqBuff(truthIcon(truth), mechanicIcon("마안"), gazeStep, gazeAt, source);
+      }
+    }
+
+    function personalGrandCrossAction(data, truth) {
+      let spread = "본대";
+      if ((data.main === "번개" && truth === "진짜") || (data.main === "물" && truth === "가짜")) {
+        spread = "산개";
+      }
+      let accel = "가속도 없음";
+      if (data.accel) {
+        accel = truth === "진짜" ? "멈춤" : "움직임";
+      }
+      return { spread, accel, main: data.main, hasGaze: data.main === "마안" };
+    }
+
+    function makeGrandCrossSchedule() {
+      const patterns = [
+        ["gc2Spread", "gc1Gaze", "gc1Spread", "gc2Gaze"],
+        ["gc2Spread", "gc2Gaze", "gc1Spread", "gc1Gaze"],
+        ["gc1Spread", "gc2Gaze", "gc2Spread", "gc1Gaze"],
+        ["gc1Spread", "gc1Gaze", "gc2Spread", "gc2Gaze"]
+      ];
+      const order = pick(patterns);
+      const times = {
+        0: { step: 10, time: "01:21" },
+        1: { step: 11, time: "01:30" },
+        2: { step: 13, time: "01:46" },
+        3: { step: 14, time: "01:54" }
+      };
+      const schedule = {};
+      order.forEach((key, index) => {
+        schedule[key] = times[index];
+      });
+      return schedule;
+    }
+
+    function scheduledEvent(step) {
+      return Object.entries(seq.gcSchedule).find(([, event]) => event.step === step)?.[0] || "";
+    }
+
+    function eventLabel(key) {
+      const labels = {
+        gc1Spread: "물/번개/가속도",
+        gc1Gaze: "마안",
+        gc2Spread: "물/번개/가속도",
+        gc2Gaze: "마안"
+      };
+      return labels[key] || "";
+    }
+
+    function renderSeqBuffs(extra = []) {
+      const all = (seq?.buffs || []).concat(extra);
+      const sources = ["그랜드<br>크로스<br>1회차", "카오스<br>1회차", "그랜드<br>크로스<br>2회차", "카오스<br>2회차", "그랜드<br>크로스<br>3회차", "마력<br>방출<br>기억"];
+      const sourceKeys = ["그랜드 크로스 1회차", "카오스 1회차", "그랜드 크로스 2회차", "카오스 2회차", "그랜드 크로스 3회차", "마력 방출 기억"];
+      const bySource = {};
+      sourceKeys.forEach((source) => {
+        bySource[source] = all.filter((item) => item.source === source);
+      });
+
+      const columnData = (source) => {
+        const items = bySource[source];
+        if (source === "마력 방출 기억") {
+          const releaseEntries = items.map((item) => {
+            const resolved = seq && item.resolveStep ? (seq.step > item.resolveStep || seq.completedSteps.has(item.resolveStep)) : false;
+            const remain = seq && item.resolveAt && (!item.resolveStep || seq.step <= item.resolveStep) ? remainText(item.resolveAt) : "";
+            return `
+              <div class="buff-release-entry ${resolved ? "resolved" : ""}">
+                <span>${item.truth || ""}</span>
+                <span>${item.debuff || ""}</span>
+                <span class="buff-remain">${remain}</span>
+              </div>
+            `;
+          }).join("");
+          return {
+            truthEntry: "",
+            debuffEntries: releaseEntries ? `<div class="buff-release-list">${releaseEntries}</div>` : "",
+            release: true
+          };
+        }
+        const truthValues = [];
+        items.forEach((item) => {
+          if (item.truth && !truthValues.includes(item.truth)) truthValues.push(item.truth);
+        });
+        const groups = [];
+        items.forEach((item) => {
+          const resolved = seq && item.resolveStep ? (seq.step > item.resolveStep || seq.completedSteps.has(item.resolveStep)) : false;
+          const remain = seq && item.resolveAt && (!item.resolveStep || seq.step <= item.resolveStep) ? remainText(item.resolveAt) : "";
+          const key = `${remain}|${resolved}`;
+          let group = groups.find((entry) => entry.key === key);
+          if (!group) {
+            group = { key, remain, resolved, debuffs: [] };
+            groups.push(group);
+          }
+          if (item.debuff) group.debuffs.push(item.debuff);
+        });
+        const truthResolved = items.length > 0 && items.every((item) => (
+          item.resolveStep ? (seq && (seq.step > item.resolveStep || seq.completedSteps.has(item.resolveStep))) : false
+        ));
+        const truthEntry = truthValues.length ? `<div class="buff-entry ${truthResolved ? "resolved" : ""}">${truthValues.join("")}</div>` : "";
+        const debuffEntries = groups.map((group) => {
+          return `
+            <div class="buff-entry ${group.resolved ? "resolved" : ""}">
+              ${group.debuffs.join(" ")}${group.remain ? `<span class="buff-remain">${group.remain}</span>` : ""}
+            </div>
+          `;
+        }).join("");
+        return { truthEntry, debuffEntries };
+      };
+      const columns = sourceKeys.map((source) => columnData(source));
+
+      seqBuffs.innerHTML = `
+        <div class="buff-panel" aria-label="부여된 디버프">
+          <div class="buff-slot-grid">
+            <div class="buff-slot-title buff-corner"></div>
+            ${sources.map((source) => `<div class="buff-slot-title">${source}</div>`).join("")}
+            <div class="buff-row-label">진짜/가짜</div>
+            ${columns.map((column) => column.release ? `<div class="buff-value release-merged">${column.debuffEntries}</div>` : `<div class="buff-value">${column.truthEntry}</div>`).join("")}
+            <div class="buff-row-label">디버프</div>
+            ${columns.map((column) => column.release ? "" : `<div class="buff-value debuffs">${column.debuffEntries}</div>`).join("")}
+          </div>
+        </div>
+      `;
+    }
+
+    function setSeqChoices(choices, answer, explain) {
+      seqNextBtn.disabled = true;
+      seqNextBtn.textContent = "선택 필요";
+      seqChoices.innerHTML = choices.map((choice) => (
+        `<button class="sim-choice" type="button" data-answer="${choice}">${choice}</button>`
+      )).join("");
+      document.querySelectorAll("#seqChoices .sim-choice").forEach((button) => {
+        button.addEventListener("click", () => {
+          const selected = button.dataset.answer;
+          const correct = selected === answer;
+          document.querySelectorAll("#seqChoices .sim-choice").forEach((choice) => {
+            choice.disabled = true;
+            if (choice.dataset.answer === answer) choice.classList.add("correct");
+          });
+          if (!correct) button.classList.add("wrong");
+          seqResult.textContent = `${correct ? "정답" : "오답"}: ${answer}. ${explain}`;
+          seq.completedSteps.add(seq.step);
+          renderSeqBuffs();
+          seqNextBtn.disabled = false;
+          const item = document.createElement("li");
+          item.textContent = `${seq.time} ${seq.title}: ${selected} → ${correct ? "정답" : `오답, 정답은 ${answer}`}`;
+          seqLog.prepend(item);
+          seqNextBtn.textContent = seq.step >= 16 ? "완료" : "다음 단계";
+        });
+      });
+    }
+
+    function noSeqChoice(message) {
+      seqChoices.innerHTML = "";
+      seqResult.textContent = message;
+      seqNextBtn.disabled = false;
+      seqNextBtn.textContent = seq.step >= 16 ? "완료" : "다음 단계";
+    }
+
+    function initSequential() {
+      seq = {
+        step: 0,
+        completedSteps: new Set(),
+        buffs: [],
+        gcSchedule: makeGrandCrossSchedule(),
+        player: pick(["탱커 1", "탱커 2", "힐러 1", "힐러 2", "딜러 1", "딜러 2", "딜러 3", "딜러 4"]),
+        gc1Assign: makeGrandCrossAssignment(),
+        gc2Assign: makeGrandCrossAssignment(),
+        gc1: pick(["진짜", "가짜"]),
+        gc2: pick(["진짜", "가짜"]),
+        gc3: pick(["진짜", "가짜"]),
+        chaosFirst: pick(["혼돈의 불", "혼돈의 물"]),
+        chaos1Truth: pick(["진짜", "가짜"]),
+        chaos2Truth: pick(["진짜", "가짜"]),
+        wound: pick(["산자의 상처", "죽은자의 상처"]),
+        finalDebuff: pick(["알라그 필드", "죽음 초월"]),
+        flood: pick(["진짜", "가짜"]),
+        thunderMemory: pick(["진짜", "가짜"]),
+        blizzardMemory: pick(["진짜", "가짜"]),
+        releaseTop: pick(["진짜", "가짜"]),
+        releaseBottom: pick(["진짜", "가짜"])
+      };
+      seq.gc1Personal = seq.gc1Assign[seq.player];
+      seq.gc2Personal = seq.gc2Assign[seq.player];
+      seq.chaosSecond = seq.chaosFirst === "혼돈의 불" ? "혼돈의 물" : "혼돈의 불";
+      seq.fireTruth = seq.chaosFirst === "혼돈의 불" ? seq.chaos1Truth : seq.chaos2Truth;
+      seq.waterTruth = seq.chaosFirst === "혼돈의 물" ? seq.chaos1Truth : seq.chaos2Truth;
+      seqLog.innerHTML = "";
+      advanceSequential();
+    }
+
+    function advanceSequential() {
+      if (!seq) initSequential();
+      if (seq.step >= 16) return;
+      seq.step += 1;
+      seqStep.textContent = seq.step;
+      seqChoices.innerHTML = "";
+      seqResult.textContent = "";
+      seqScoreText.textContent = "부여된 디버프와 현재 처리 타이밍을 같이 보세요.";
+
+      const spreadAnswer = (truth) => truth === "진짜" ? "번개 산개" : "물 산개";
+      const accelAnswer = (truth) => truth === "진짜" ? "멈춤" : "움직임";
+      const gazeAnswer = (truth) => truth === "진짜" ? "뒤돌기" : "바라보기";
+      const gazePosition = (hasGaze) => hasGaze ? "안으로 들어가서" : "밖에서";
+      const gazeChoices = (hasGaze) => [`${gazePosition(hasGaze)} 마안 바라보기`, `${gazePosition(hasGaze)} 마안 뒤돌기`];
+      const gazeChoiceAnswer = (hasGaze, truth) => `${gazePosition(hasGaze)} 마안 ${gazeAnswer(truth)}`;
+      const floodBase = seq.finalDebuff === "알라그 필드" ? "다른 색" : "같은 색";
+      const floodAnswer = seq.flood === "가짜" ? (floodBase === "다른 색" ? "같은 색" : "다른 색") : floodBase;
+      const fireAnswer = seq.fireTruth === "진짜" ? "밖" : "안";
+      const waterAnswer = seq.waterTruth === "진짜" ? "안" : "밖";
+      const line = seq.thunderMemory === seq.releaseTop ? "피하기" : "밟기";
+      const cone = seq.blizzardMemory === seq.releaseBottom ? "피하기" : "밟기";
+
+      const stages = {
+        1: () => {
+          seq.title = "1. 알쏭달쏭 마법";
+          seq.time = "00:25";
+          seq.timePoint = "00:25";
+          seqPrompt.textContent = "참/거짓을 확인해서 직선장판과 부채꼴 장판을 피합니다.";
+          renderSeqBuffs();
+          noSeqChoice("처리 완료: 직선장판과 부채꼴 장판을 피했습니다.");
+        },
+        2: () => {
+          seq.title = "2. 그랜드 크로스 1회차";
+          seq.time = "00:29";
+          seq.timePoint = "00:29";
+          addPersonalGrandCross(seq.gc1Personal, seq.gc1, seq.gcSchedule.gc1Spread.step, seq.gcSchedule.gc1Spread.time, seq.gcSchedule.gc1Gaze.step, seq.gcSchedule.gc1Gaze.time, "그랜드 크로스 1회차");
+          seqPrompt.textContent = "1회차 물/번개/마안/가속도 폭탄이 부여됩니다.";
+          renderSeqBuffs();
+          noSeqChoice("디버프가 부여되었습니다. 남은 시간 기준으로 빠른/느린 처리를 봅니다.");
+        },
+        3: () => {
+          seq.title = "3. 카오스 화염 또는 해일";
+          seq.time = "00:35";
+          seq.timePoint = "00:35";
+          addSeqBuff(truthIcon(seq.chaos1Truth), icon(seq.chaosFirst === "혼돈의 불" ? "혼돈의 불.webp" : "혼돈의 물.webp", seq.chaosFirst), seq.chaosFirst === "혼돈의 불" ? 12 : 15, seq.chaosFirst === "혼돈의 불" ? "01:41" : "02:04", "카오스 1회차");
+          seqPrompt.textContent = "첫 번째 혼돈 디버프가 부여됩니다.";
+          renderSeqBuffs();
+          noSeqChoice("카오스 디버프를 기억합니다. 실제 실행은 혼돈의 불 → 혼돈의 물 순서입니다.");
+        },
+        4: () => {
+          seq.title = "4. 알쏭달쏭 마법 2회차";
+          seq.time = "00:40";
+          seq.timePoint = "00:40";
+          seqPrompt.textContent = "두 번째 직선/부채꼴 패턴을 피합니다.";
+          renderSeqBuffs();
+          noSeqChoice("처리 완료: 참/거짓을 보고 장판을 피했습니다.");
+        },
+        5: () => {
+          seq.title = "5. 그랜드 크로스 2회차";
+          seq.time = "00:44";
+          seq.timePoint = "00:44";
+          addPersonalGrandCross(seq.gc2Personal, seq.gc2, seq.gcSchedule.gc2Spread.step, seq.gcSchedule.gc2Spread.time, seq.gcSchedule.gc2Gaze.step, seq.gcSchedule.gc2Gaze.time, "그랜드 크로스 2회차");
+          seqPrompt.textContent = "2회차 물/번개/마안/가속도 폭탄이 부여됩니다.";
+          renderSeqBuffs();
+          noSeqChoice("디버프가 추가되었습니다. 처리 순서는 회차가 아니라 남은 시간 기준입니다.");
+        },
+        6: () => {
+          seq.title = "6. 카오스 반대 공격";
+          seq.time = "00:49";
+          seq.timePoint = "00:49";
+          addSeqBuff(truthIcon(seq.chaos2Truth), icon(seq.chaosSecond === "혼돈의 불" ? "혼돈의 불.webp" : "혼돈의 물.webp", seq.chaosSecond), seq.chaosSecond === "혼돈의 불" ? 12 : 15, seq.chaosSecond === "혼돈의 불" ? "01:41" : "02:04", "카오스 2회차");
+          seqPrompt.textContent = "앞쪽과 다른 혼돈 디버프가 부여됩니다.";
+          renderSeqBuffs();
+          noSeqChoice("혼돈의 불과 혼돈의 물이 모두 준비되었습니다.");
+        },
+        7: () => {
+          seq.title = "7. 알쏭달쏭 마법 3회차";
+          seq.time = "00:55";
+          seq.timePoint = "00:55";
+          seqPrompt.textContent = "세 번째 직선/부채꼴 패턴을 피합니다.";
+          renderSeqBuffs();
+          noSeqChoice("처리 완료: 참/거짓을 보고 장판을 피했습니다.");
+        },
+        8: () => {
+          seq.title = "8. 그랜드 크로스 3회차";
+          seq.time = "00:59";
+          seq.timePoint = "00:59";
+          addSeqBuff(truthIcon(seq.gc3), icon(seq.wound === "산자의 상처" ? "산자의 상처.webp" : "죽은자의 상처.webp", seq.wound), 9, "01:11", "그랜드 크로스 3회차");
+          addSeqBuff(truthIcon(seq.gc3), icon(seq.finalDebuff === "알라그 필드" ? "알라그 필드.webp" : "죽음 초월.webp", seq.finalDebuff), 9, "01:11", "그랜드 크로스 3회차");
+          seqPrompt.textContent = "상처 색상과 알라그 필드/죽음 초월이 부여됩니다.";
+          renderSeqBuffs();
+          noSeqChoice("상처 색상과 해제 디버프 종류를 기억합니다.");
+        },
+        9: () => {
+          seq.title = "9. 무의 범람";
+          seq.time = "01:11";
+          seq.timePoint = "01:11";
+          seqPrompt.textContent = "무의 범람에서 어떤 색을 맞아야 할까요?";
+          renderSeqBuffs();
+          setSeqChoices(["같은 색", "다른 색"], floodAnswer, `${seq.finalDebuff} 기본은 ${floodBase}. 무의 범람이 ${seq.flood}이므로 최종은 ${floodAnswer}.`);
+        },
+        10: () => {
+          const event = scheduledEvent(10);
+          const isGc1 = event.startsWith("gc1");
+          const isGaze = event.endsWith("Gaze");
+          const data = isGc1 ? seq.gc1Personal : seq.gc2Personal;
+          const truth = isGc1 ? seq.gc1 : seq.gc2;
+          seq.title = `10. ${eventLabel(event)}`;
+          seq.time = "01:21";
+          seq.timePoint = "01:21";
+          const action = personalGrandCrossAction(data, truth);
+          seqPrompt.textContent = `${eventLabel(event)}를 어떻게 처리할까요?`;
+          renderSeqBuffs();
+          if (isGaze) {
+            setSeqChoices(gazeChoices(action.hasGaze), gazeChoiceAnswer(action.hasGaze, truth), `${eventLabel(event)}은 ${truth}이므로 ${gazeChoiceAnswer(action.hasGaze, truth)}.`);
+          } else {
+            const answer = `${action.spread} / ${action.accel}`;
+            setSeqChoices(["산개 / 멈춤", "산개 / 움직임", "산개 / 가속도 없음", "본대 / 멈춤", "본대 / 움직임", "본대 / 가속도 없음"], answer, `${eventLabel(event)} 최종 처리는 ${answer}.`);
+          }
+        },
+        11: () => {
+          const event = scheduledEvent(11);
+          const isGc1 = event.startsWith("gc1");
+          const isGaze = event.endsWith("Gaze");
+          const data = isGc1 ? seq.gc1Personal : seq.gc2Personal;
+          const truth = isGc1 ? seq.gc1 : seq.gc2;
+          seq.title = `11. ${eventLabel(event)} + 선더가`;
+          seq.time = "01:28";
+          seq.timePoint = "01:28";
+          addSeqBuff(truthIcon(seq.thunderMemory), "선더가", 15, "02:00", "마력 방출 기억");
+          const action = personalGrandCrossAction(data, truth);
+          seqPrompt.textContent = `선더가를 기억하고, ${eventLabel(event)}를 처리합니다.`;
+          renderSeqBuffs();
+          if (isGaze) {
+            setSeqChoices(gazeChoices(action.hasGaze), gazeChoiceAnswer(action.hasGaze, truth), `${eventLabel(event)}은 ${truth}이므로 ${gazeChoiceAnswer(action.hasGaze, truth)}. 선더가도 기억합니다.`);
+          } else {
+            const answer = `${action.spread} / ${action.accel}`;
+            setSeqChoices(["산개 / 멈춤", "산개 / 움직임", "산개 / 가속도 없음", "본대 / 멈춤", "본대 / 움직임", "본대 / 가속도 없음"], answer, `${eventLabel(event)} 최종 처리는 ${answer}.`);
+          }
+        },
+        12: () => {
+          seq.title = "12. 혼돈의 불 + 알테마";
+          seq.time = "01:41";
+          seq.timePoint = "01:41";
+          seqPrompt.textContent = "혼돈의 불은 히트박스 기준 어디서 피할까요?";
+          renderSeqBuffs();
+          setSeqChoices(["안", "밖"], fireAnswer, `혼돈의 불은 진짜면 밖, 가짜면 안.`);
+        },
+        13: () => {
+          const event = scheduledEvent(13);
+          const isGc1 = event.startsWith("gc1");
+          const isGaze = event.endsWith("Gaze");
+          const data = isGc1 ? seq.gc1Personal : seq.gc2Personal;
+          const truth = isGc1 ? seq.gc1 : seq.gc2;
+          seq.title = `13. ${eventLabel(event)} + 블리자가`;
+          seq.time = "01:46";
+          seq.timePoint = "01:46";
+          addSeqBuff(truthIcon(seq.blizzardMemory), "블리자가", 15, "02:00", "마력 방출 기억");
+          const action = personalGrandCrossAction(data, truth);
+          seqPrompt.textContent = `${eventLabel(event)}를 어떻게 처리할까요?`;
+          renderSeqBuffs();
+          if (isGaze) {
+            setSeqChoices(gazeChoices(action.hasGaze), gazeChoiceAnswer(action.hasGaze, truth), `${eventLabel(event)}은 ${truth}이므로 ${gazeChoiceAnswer(action.hasGaze, truth)}. 블리자가도 기억합니다.`);
+          } else {
+            const answer = `${action.spread} / ${action.accel}`;
+            setSeqChoices(["산개 / 멈춤", "산개 / 움직임", "산개 / 가속도 없음", "본대 / 멈춤", "본대 / 움직임", "본대 / 가속도 없음"], answer, `${eventLabel(event)} 최종 처리는 ${answer}.`);
+          }
+        },
+        14: () => {
+          const event = scheduledEvent(14);
+          const isGc1 = event.startsWith("gc1");
+          const isGaze = event.endsWith("Gaze");
+          const data = isGc1 ? seq.gc1Personal : seq.gc2Personal;
+          const truth = isGc1 ? seq.gc1 : seq.gc2;
+          seq.title = `14. ${eventLabel(event)}`;
+          seq.time = "01:54";
+          seq.timePoint = "01:54";
+          seqPrompt.textContent = `${eventLabel(event)}를 어떻게 처리할까요?`;
+          const action = personalGrandCrossAction(data, truth);
+          renderSeqBuffs();
+          if (isGaze) {
+            setSeqChoices(gazeChoices(action.hasGaze), gazeChoiceAnswer(action.hasGaze, truth), `${eventLabel(event)}은 ${truth}이므로 ${gazeChoiceAnswer(action.hasGaze, truth)}.`);
+          } else {
+            const answer = `${action.spread} / ${action.accel}`;
+            setSeqChoices(["산개 / 멈춤", "산개 / 움직임", "산개 / 가속도 없음", "본대 / 멈춤", "본대 / 움직임", "본대 / 가속도 없음"], answer, `${eventLabel(event)} 최종 처리는 ${answer}.`);
+          }
+        },
+        15: () => {
+          seq.title = "15. 마력 방출 + 혼돈의 물";
+          seq.time = "02:00 / 02:04";
+          seq.timePoint = "02:00";
+          const answer = `직선 ${line} / 부채꼴 ${cone} / 물 ${waterAnswer}`;
+          seqPrompt.textContent = "마력 방출과 혼돈의 물을 같이 처리합니다.";
+          renderSeqBuffs();
+          setSeqChoices([
+            "직선 피하기 / 부채꼴 피하기 / 물 안",
+            "직선 피하기 / 부채꼴 피하기 / 물 밖",
+            "직선 피하기 / 부채꼴 밟기 / 물 안",
+            "직선 피하기 / 부채꼴 밟기 / 물 밖",
+            "직선 밟기 / 부채꼴 피하기 / 물 안",
+            "직선 밟기 / 부채꼴 피하기 / 물 밖",
+            "직선 밟기 / 부채꼴 밟기 / 물 안",
+            "직선 밟기 / 부채꼴 밟기 / 물 밖"
+          ], answer, `마력 방출은 저장과 방출이 같으면 피하고 다르면 밟기. 혼돈의 물은 진짜면 안, 가짜면 밖.`);
+        },
+        16: () => {
+          seq.title = "16. 전멸기 / 5페이즈 전환";
+          seq.time = "02:09~02:14";
+          seq.timePoint = "02:09";
+          seqPrompt.textContent = "25% 미만이면 5페이즈로 전환합니다.";
+          renderSeqBuffs();
+          noSeqChoice("시뮬레이션 완료. 처음부터 다시 하려면 초기화 후 시작하세요.");
+        }
+      };
+
+      stages[seq.step]();
+      seqTitle.textContent = seq.title;
+      seqTime.textContent = seq.time;
+    }
+
+    document.getElementById("gradeBtn")?.addEventListener("click", gradeQuiz);
+    document.getElementById("resetBtn")?.addEventListener("click", resetQuiz);
+    document.getElementById("nextSimBtn").addEventListener("click", nextSimulation);
+    document.getElementById("resetSimBtn").addEventListener("click", resetSimulation);
+    seqNextBtn.addEventListener("click", () => {
+      if (!seq || seq.step >= 16) initSequential();
+      else advanceSequential();
+    });
+    document.getElementById("seqResetBtn").addEventListener("click", initSequential);
+    if (questionRoot) renderQuiz();
+    nextSimulation();
+    renderSeqBuffs();
+  </script>
+</body>
+</html>
