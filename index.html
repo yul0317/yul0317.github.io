@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="ko">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -176,40 +177,70 @@
     }
 
     .icon.small {
-      width:18px;
-      height:18px;
+      width: 18px;
+      height: 18px;
     }
 
     .legend {
       display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 8px;
+      gap: 6px;
       margin: 10px 0 12px;
     }
 
-    .legend-item {
-      display: grid;
-      grid-template-columns: 34px 1fr;
-      gap: 8px;
+    .legend-row {
+      display: flex;
       align-items: center;
-      min-height: 48px;
+      gap: 6px;
+      flex-wrap: wrap;
       padding: 7px;
       background: var(--panel);
       border: 1px solid var(--line);
       border-radius: 8px;
     }
 
-    .legend-item b {
-      display: block;
-      font-size: 12px;
-      line-height: 1.25;
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      min-height: 42px;
+      padding: 5px 8px;
+      background: #f8fafc;
+      border: 1px solid var(--line);
+      border-radius: 6px;
     }
 
-    .legend-item span {
+    .legend-item > div {
+      display: grid;
+      gap: 3px;
+    }
+
+    .legend-item b {
+      display: inline;
+      font-size: 12px;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .legend-item > div > span {
       display: block;
       color: var(--muted);
       font-size: 11px;
-      margin-top: 2px;
+      margin-top: 0;
+      white-space: nowrap;
+    }
+
+    .legend-item > div > span span {
+      display: inline;
+    }
+
+    .legend-item .true {
+      color: #1f64c8;
+      font-weight: 800;
+    }
+
+    .legend-item .false {
+      color: #c43d3d;
+      font-weight: 800;
     }
 
     .section {
@@ -660,7 +691,7 @@
     }
 
     .red {
-      color:var(--bad) !important;
+      color: var(--bad) !important;
     }
 
     .mini {
@@ -844,7 +875,7 @@
       min-height: 76px;
     }
 
-    .buff-slot-grid > :nth-child(7n) {
+    .buff-slot-grid> :nth-child(7n) {
       border-right: 0;
     }
 
@@ -1205,6 +1236,7 @@
     }
   </style>
 </head>
+
 <body>
   <div class="shell">
     <header>
@@ -1229,54 +1261,76 @@
 
     <main>
       <section id="guide" class="panel active" aria-labelledby="guide-tab">
-        <div class="legend" aria-label="디버프 아이콘 범례">
-          <div class="legend-item">
-            <img class="icon large" src="img/진실.png" alt="진실">
-            <div><b>진실</b><span>기믹을 보이는 그대로 처리</span></div>
+        <div class="section">
+          <h2>기본처리 원리</h2>
+          <div class="rule-list" aria-label="엑셀 주의사항">
+            <div class="rule"><b>가속도 폭탄</b><span>각자 1번씩 처리한다. 빠른 또는 느린 물/번개와 함께 오며, 진짜면 멈춤, 가짜면 움직임으로 기억한다.</span></div>
+            <div class="rule"><b>디버프 시간 우선</b><span>1/2회차 그랜드 크로스는 처리 순서가 섞일 수 있다. 예: 2회차 물/번개/가속도 → 1회차 마안 → 1회차
+                물/번개/가속도 → 2회차 마안.</span></div>
+            <div class="rule"><b>기본 위치</b><span>탱힐은 북서쪽/12시 쪽, 딜러는 남동쪽/6시 쪽을 기준으로 처리한다.</span></div>
+            <div class="rule"><b>디버프형 경감</b><span>엑셀 원문 기준 디버프형 경감이 되지 않으므로 공생기와 회복 타이밍을 신경 쓴다.</span></div>
           </div>
-          <div class="legend-item">
-            <img class="icon large" src="img/거짓.png" alt="거짓">
-            <div><b>거짓</b><span>기믹 판정을 반대로 처리</span></div>
-          </div>
-          <div class="legend-item">
-            <img class="icon large" src="img/물.webp" alt="물">
-            <div><b>물</b><span>진짜: 쉐어 / 가짜: 개인 원형</span></div>
-          </div>
-          <div class="legend-item">
-            <img class="icon large" src="img/번개.webp" alt="번개">
-            <div><b>번개</b><span>진짜: 개인 원형 / 가짜: 쉐어</span></div>
-          </div>
-          <div class="legend-item">
-            <img class="icon large" src="img/가속도 폭탄.webp" alt="가속도 폭탄">
-            <div><b>가속도 폭탄</b><span>진짜: 멈춤 / 가짜: 움직임</span></div>
-          </div>
-          <div class="legend-item">
-            <img class="icon large" src="img/저주의 외침.webp" alt="저주의 외침">
-            <div><b>저주의 외침</b><span>진짜: 뒤돌기 / 가짜: 바라보기</span></div>
-          </div>
-          <div class="legend-item">
-            <img class="icon large" src="img/혼돈의 불.webp" alt="혼돈의 불">
-            <div><b>혼돈의 불</b><span>진짜 원형 / 가짜 도넛</span></div>
-          </div>
-          <div class="legend-item">
-            <img class="icon large" src="img/혼돈의 물.webp" alt="혼돈의 물">
-            <div><b>혼돈의 물</b><span>진짜 도넛 / 가짜 원형</span></div>
-          </div>
-          <div class="legend-item">
-            <img class="icon large" src="img/알라그 필드.webp" alt="알라그 필드">
-            <div><b>알라그 필드</b><span>상처 디버프와 다른 색 맞기</span></div>
-          </div>
-          <div class="legend-item">
-            <img class="icon large" src="img/죽음 초월.webp" alt="죽음 초월">
-            <div><b>죽음 초월</b><span>상처 디버프와 같은 색 맞기</span></div>
-          </div>
-          <div class="legend-item">
-            <img class="icon large" src="img/산자의 상처.webp" alt="산자의 상처">
-            <div><b>산자의 상처</b><span>진짜: 산자 / 가짜: 죽은자</span></div>
-          </div>
-          <div class="legend-item">
-            <img class="icon large" src="img/죽은자의 상처.webp" alt="죽은자의 상처">
-            <div><b>죽은자의 상처</b><span>진짜: 죽은자 / 가짜: 산자</span></div>
+        </div>
+
+        <div class="section">
+          <h2>디버프 종류</h2>
+          <div class="legend" aria-label="디버프 아이콘 범례">
+            <div class="legend-row">
+              <div class="legend-item">
+                <img class="icon large" src="img/진실.png" alt="진실">
+                <div><b>진실</b><span><span class="true">진짜:</span> 기믹을 보이는 그대로 처리</span></div>
+              </div>
+              <div class="legend-item">
+                <img class="icon large" src="img/거짓.png" alt="거짓">
+                <div><b>거짓</b><span><span class="false">가짜:</span> 기믹 판정을 반대로 처리</span></div>
+              </div>
+            </div>
+            <div class="legend-row">
+              <div class="legend-item">
+                <img class="icon large" src="img/물.webp" alt="물">
+                <div><b>물</b><span><span class="true">진짜:</span> 쉐어 / <span class="false">가짜:</span> 개인 원형</span></div>
+              </div>
+              <div class="legend-item">
+                <img class="icon large" src="img/번개.webp" alt="번개">
+                <div><b>번개</b><span><span class="true">진짜:</span> 개인 원형 / <span class="false">가짜:</span> 쉐어</span></div>
+              </div>
+              <div class="legend-item">
+                <img class="icon large" src="img/가속도 폭탄.webp" alt="가속도 폭탄">
+                <div><b>가속도 폭탄</b><span><span class="true">진짜:</span> 멈춤 / <span class="false">가짜:</span> 움직임</span></div>
+              </div>
+              <div class="legend-item">
+                <img class="icon large" src="img/저주의 외침.webp" alt="저주의 외침">
+                <div><b>저주의 외침</b><span><span class="true">진짜:</span> 뒤돌기 / <span class="false">가짜:</span> 바라보기</span></div>
+              </div>
+            </div>
+            <div class="legend-row">
+              <div class="legend-item">
+                <img class="icon large" src="img/혼돈의 불.webp" alt="혼돈의 불">
+                <div><b>혼돈의 불</b><span><span class="true">진짜:</span> 원형 / <span class="false">가짜:</span> 도넛</span></div>
+              </div>
+              <div class="legend-item">
+                <img class="icon large" src="img/혼돈의 물.webp" alt="혼돈의 물">
+                <div><b>혼돈의 물</b><span><span class="true">진짜:</span> 도넛 / <span class="false">가짜:</span> 원형</span></div>
+              </div>
+            </div>
+            <div class="legend-row">
+              <div class="legend-item">
+                <img class="icon large" src="img/알라그 필드.webp" alt="알라그 필드">
+                <div><b>알라그 필드</b><span>상처 디버프와 다른 색 맞기</span></div>
+              </div>
+              <div class="legend-item">
+                <img class="icon large" src="img/죽음 초월.webp" alt="죽음 초월">
+                <div><b>죽음 초월</b><span>상처 디버프와 같은 색 맞기</span></div>
+              </div>
+              <div class="legend-item">
+                <img class="icon large" src="img/산자의 상처.webp" alt="산자의 상처">
+                <div><b>산자의 상처</b><span><span class="true">진짜:</span> 산자 / <span class="false">가짜:</span> 죽은자</span></div>
+              </div>
+              <div class="legend-item">
+                <img class="icon large" src="img/죽은자의 상처.webp" alt="죽은자의 상처">
+                <div><b>죽은자의 상처</b><span><span class="true">진짜:</span> 죽은자 / <span class="false">가짜:</span> 산자</span></div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -1308,7 +1362,8 @@
               </div>
               <p>물 2명, 번개 2명, 마안 2명, 가속도 폭탄 4명이 부여된다. 탱힐/딜러조에 물, 번개, 마안이 각각 1개씩 들어간다.</p>
               <p><strong>진짜면 번개, 가짜면 물디버프에게 1,2 마커를 부여, 추후 산개 대상자가 됨.</strong></p>
-              <p><strong class="red">* 물/번 디버프 시간이 1m 이하면 첫번째 / 1m 이상이면 두번째 그러므로 1m 이하면 공 1,2 징 / 이상이면 속 1,2 징으로 처리 가능 </strong></p>
+              <p><strong class="red">* 물/번 디버프 시간이 1m 이하면 첫번째 / 1m 이상이면 두번째 그러므로 1m 이하면 공 1,2 징 / 이상이면 속 1,2 징으로 처리 가능
+                </strong></p>
             </article>
 
             <article class="stage">
@@ -1320,7 +1375,8 @@
                 <img class="icon" src="img/혼돈의 불.webp" alt="혼돈의 불">
                 <img class="icon" src="img/혼돈의 물.webp" alt="혼돈의 물">
               </div>
-              <p>전원에게 혼돈의 불 또는 혼돈의 물이 부여된다. 혼돈의 불은 <strong>진짜 원형 / 가짜 도넛</strong>, 혼돈의 물은 <strong>진짜 도넛 / 가짜 원형</strong>이다.</p>
+              <p>전원에게 혼돈의 불 또는 혼돈의 물이 부여된다. 혼돈의 불은 <strong>진짜 원형 / 가짜 도넛</strong>, 혼돈의 물은 <strong>진짜 도넛 / 가짜
+                  원형</strong>이다.</p>
             </article>
 
             <article class="stage">
@@ -1384,7 +1440,8 @@
                 <img class="icon" src="img/알라그 필드.webp" alt="알라그 필드">
                 <img class="icon" src="img/죽음 초월.webp" alt="죽음 초월">
               </div>
-              <p>산자의 상처 또는 죽은자의 상처와, 알라그 필드 또는 죽음 초월이 동시에 부여된다. 여기서는 디버프의 진짜/가짜보다 <strong>부여된 상처 색상과 종류</strong>를 확인한다.</p>
+              <p>산자의 상처 또는 죽은자의 상처와, 알라그 필드 또는 죽음 초월이 동시에 부여된다. 여기서는 디버프의 진짜/가짜보다 <strong>부여된 상처 색상과 종류</strong>를 확인한다.
+              </p>
             </article>
 
             <article class="stage">
@@ -1399,8 +1456,12 @@
                 <img class="icon" src="img/죽음 초월.webp" alt="죽음 초월">
               </div>
               <p>네오 엑스데스가 랜덤 위치로 이동해 좌/우 산자/죽은자의 상처공격을 시전한다. </p>
-              <p><strong>알라그 필드(<img class="icon small" src="img/알라그 필드.webp" alt="알라그 필드">)는 죽은자(<img class="icon small" src="img/죽은자의 상처.webp" alt="죽은자의 상처">)/산자(<img class="icon small" src="img/산자의 상처.webp" alt="산자의 상처">) 상처색과 <span class="red">다른 색</span></strong></p>
-              <p><strong>죽음 초월(<img class="icon small" src="img/죽음 초월.webp" alt="죽음 초월">)은 죽은자(<img class="icon small" src="img/죽은자의 상처.webp" alt="죽은자의 상처">)/산자(<img class="icon small" src="img/산자의 상처.webp" alt="산자의 상처">) 상처색과 <span class="red">같은 색</span></strong></p>
+              <p><strong>알라그 필드(<img class="icon small" src="img/알라그 필드.webp" alt="알라그 필드">)는 죽은자(<img
+                    class="icon small" src="img/죽은자의 상처.webp" alt="죽은자의 상처">)/산자(<img class="icon small"
+                    src="img/산자의 상처.webp" alt="산자의 상처">) 상처색과 <span class="red">다른 색</span></strong></p>
+              <p><strong>죽음 초월(<img class="icon small" src="img/죽음 초월.webp" alt="죽음 초월">)은 죽은자(<img class="icon small"
+                    src="img/죽은자의 상처.webp" alt="죽은자의 상처">)/산자(<img class="icon small" src="img/산자의 상처.webp"
+                    alt="산자의 상처">) 상처색과 <span class="red">같은 색</span></strong></p>
               <p><strong>*주의: 무의 범람이 가짜면 반대로 처리. 다른색 -> 같은색 / 같은색 -> 다른색</strong></p>
               <div class="stage-images">
                 <img class="stage-image" src="img/무의범람_진짜.png" alt="무의범람 진짜">
@@ -1435,7 +1496,8 @@
                 <img class="icon" src="img/진실.png" alt="진실">
                 <img class="icon" src="img/거짓.png" alt="거짓">
               </div>
-              <p>마력 충전을 시전, 앞으로 나오는 선더가/블리자가 기억해야함. 북쪽 탱힐/남쪽 딜러 기준으로 산개한다. 선더가 직선이 나오면서, 빠른 마안 대상자는 히트박스 안으로 들어가 유도하며, 마안은 <strong>진짜면 뒤돌기 / 가짜면 바라보기</strong>다.</p>
+              <p>마력 충전을 시전, 앞으로 나오는 선더가/블리자가 기억해야함. 북쪽 탱힐/남쪽 딜러 기준으로 산개한다. 선더가 직선이 나오면서, 빠른 마안 대상자는 히트박스 안으로 들어가 유도하며,
+                마안은 <strong>진짜면 뒤돌기 / 가짜면 바라보기</strong>다.</p>
               <div class="stage-images">
                 <img class="stage-image" src="img/마안_선더가_처리_1.png" alt="마안 선더가 처리 1">
                 <img class="stage-image" src="img/마안_선더가_처리_2.png" alt="마안 선더가 처리 2">
@@ -1454,7 +1516,8 @@
                 <img class="icon" src="img/진실.png" alt="진실">
                 <img class="icon" src="img/거짓.png" alt="거짓">
               </div>
-              <p>빠른 마안 처리 후 모두 중앙에 모여 혼돈의 불을 설치한다. <strong>진짜 혼돈의 불은 히트박스 밖, 가짜는 히트박스 안에서 피한다. 이후 느린 물/번개 산개 준비를 바로 한다.</strong></p>
+              <p>빠른 마안 처리 후 모두 중앙에 모여 혼돈의 불을 설치한다. <strong>진짜 혼돈의 불은 히트박스 밖, 가짜는 히트박스 안에서 피한다. 이후 느린 물/번개 산개 준비를 바로
+                  한다.</strong></p>
               <div class="stage-images">
                 <img class="stage-image" src="img/혼돈의불설치_중앙모임.png" alt="혼돈의 불 설치 중앙모임">
                 <img class="stage-image" src="img/혼돈의불_발동_진짜.png" alt="혼돈의 불 발동 진짜">
@@ -1518,12 +1581,12 @@
                     <th colspan="2">결과</th>
                   </tr>
                   <tr>
-                    <th>선더가<br/><span class="mini">직선</span></th>
-                    <th>블리자가<br/><span class="mini">부채꼴</span></th>
-                    <th>위 고리<br/><span class="mini">직선</span></th>
-                    <th>밑 고리<br/><span class="mini">부채꼴</span></th>
-                    <th>선더가<br/><span class="mini">직선</span></th>
-                    <th>블리자가<br/><span class="mini">부채꼴</span></th>
+                    <th>선더가<br /><span class="mini">직선</span></th>
+                    <th>블리자가<br /><span class="mini">부채꼴</span></th>
+                    <th>위 고리<br /><span class="mini">직선</span></th>
+                    <th>밑 고리<br /><span class="mini">부채꼴</span></th>
+                    <th>선더가<br /><span class="mini">직선</span></th>
+                    <th>블리자가<br /><span class="mini">부채꼴</span></th>
                   </tr>
                   <tr>
                     <td><img class="icon small" src="img/진실.png" alt="진짜"></td>
@@ -1590,13 +1653,6 @@
               </div>
               <p>보스 체력을 25% 미만으로 깎으면 두근두근 알테마 후 5페이즈로 전환한다. 실패하면 타겟 불가능 상태가 되고 심판의 빛 전멸기를 시전한다.</p>
             </article>
-          </div>
-
-          <div class="rule-list" aria-label="엑셀 주의사항">
-            <div class="rule"><b>디버프 시간 우선</b><span>1/2회차 그랜드 크로스는 처리 순서가 섞일 수 있다. 예: 2회차 물/번개/가속도 → 1회차 마안 → 1회차 물/번개/가속도 → 2회차 마안.</span></div>
-            <div class="rule"><b>가속도 폭탄</b><span>각자 1번씩 처리한다. 빠른 또는 느린 물/번개와 함께 오며, 진짜면 멈춤, 가짜면 움직임으로 기억한다.</span></div>
-            <div class="rule"><b>기본 위치</b><span>탱힐은 북서쪽/12시 쪽, 딜러는 남동쪽/6시 쪽을 기준으로 처리한다.</span></div>
-            <div class="rule"><b>디버프형 경감</b><span>엑셀 원문 기준 디버프형 경감이 되지 않으므로 공생기와 회복 타이밍을 신경 쓴다.</span></div>
           </div>
         </div>
 
@@ -1827,7 +1883,8 @@
             </div>
             <div class="callout">
               <b>무의 범람</b>
-              <p>같은 색/다른 색의 기준은 본인이 가진 산자의 상처 또는 죽은자의 상처 디버프 색상이다. 무의 범람 시전 때 알라그 필드는 상처와 다른 색, 죽음 초월은 상처와 같은 색을 맞는다.</p>
+              <p>같은 색/다른 색의 기준은 본인이 가진 산자의 상처 또는 죽은자의 상처 디버프 색상이다. 무의 범람 시전 때 알라그 필드는 상처와 다른 색, 죽음 초월은 상처와 같은 색을 맞는다.
+              </p>
             </div>
             <div class="callout warn">
               <b>마력 방출</b>
@@ -1859,7 +1916,8 @@
               <button class="secondary" type="button" id="resetSimBtn">기록 초기화</button>
             </div>
             <div class="result-stats">
-              <button class="result-correct" type="button" id="simCorrectFilter">맞춤 <b id="simCorrectCount">0</b></button>
+              <button class="result-correct" type="button" id="simCorrectFilter">맞춤 <b
+                  id="simCorrectCount">0</b></button>
               <button class="result-wrong" type="button" id="simWrongFilter">틀림 <b id="simWrongCount">0</b></button>
             </div>
             <button class="secondary log-toggle" type="button" id="simLogToggle">기록 보기</button>
@@ -1896,7 +1954,8 @@
                 <button class="secondary" type="button" id="seqResetBtn">처음부터</button>
               </div>
               <div class="result-stats">
-                <button class="result-correct" type="button" id="seqCorrectFilter">맞춤 <b id="seqCorrectCount">0</b></button>
+                <button class="result-correct" type="button" id="seqCorrectFilter">맞춤 <b
+                    id="seqCorrectCount">0</b></button>
                 <button class="result-wrong" type="button" id="seqWrongFilter">틀림 <b id="seqWrongCount">0</b></button>
               </div>
               <button class="secondary log-toggle" type="button" id="seqLogToggle">기록 보기</button>
@@ -2099,15 +2158,26 @@
       return gazeActionAnswer(truth) === "바라보기" ? "마안 본다" : "마안 안본다";
     }
 
-    function thunderMarkerAnswersFor(player, shouldSoakThunder, hasGaze) {
+    function thunderGazeMarkerGroups(player, thunderPattern, shouldSoakThunder, hasGaze) {
       const support = isSupportPlayer(player);
-      const thunderMarkers = support
+      const firstSide = support
+        ? (thunderPattern === 1 ? "far" : "near")
+        : (thunderPattern === 1 ? "near" : "far");
+      const thunderMarkers = firstSide === "near"
         ? (shouldSoakThunder ? ["1", "3"] : ["2", "4"])
         : (shouldSoakThunder ? ["5", "7"] : ["6", "8"]);
-      const gazeMarkers = support
+      const gazeMarkers = firstSide === "near"
         ? (hasGaze ? ["3", "4"] : ["1", "2"])
         : (hasGaze ? ["5", "6"] : ["7", "8"]);
-      return thunderMarkers.filter((marker) => gazeMarkers.includes(marker));
+      return {
+        thunderMarkers,
+        gazeMarkers,
+        markerAnswers: thunderMarkers.filter((marker) => gazeMarkers.includes(marker))
+      };
+    }
+
+    function thunderMarkerAnswersFor(player, thunderPattern, shouldSoakThunder, hasGaze) {
+      return thunderGazeMarkerGroups(player, thunderPattern, shouldSoakThunder, hasGaze).markerAnswers;
     }
 
     function chaosAnswerFor(chaos, truth) {
@@ -2257,6 +2327,9 @@
         ],
         choices: ["1", "2"],
         answer,
+        type: "image-marker",
+        image: state.flood === "진짜" ? "무의범람_진짜_처리.png" : "무의범람_가짜_처리.png",
+        imageAlt: `무의 범람 ${state.flood} 처리`,
         explain: `기본은 ${state.finalDebuff} = ${base}. 무의 범람이 ${state.flood}이므로 최종은 ${answerColor}, 정답 위치는 ${answer}번.`
       };
     }
@@ -2284,14 +2357,16 @@
           fact("판정", `${quizTruthIcon(truth)} ${truth}`),
           fact("디버프", `${quizMainIcon(data.main)} ${data.accel ? icon("가속도 폭탄.webp", "가속도 폭탄") : ""}`)
         ],
-        choices: [
-          "1 / 움직임", "1 / 안 움직임", "1 / 움직임 상관없음",
-          "2 / 움직임", "2 / 안 움직임", "2 / 움직임 상관없음",
-          "3 / 움직임", "3 / 안 움직임", "3 / 움직임 상관없음",
-          "4 / 움직임", "4 / 안 움직임", "4 / 움직임 상관없음"
-        ],
         answer,
         answers,
+        type: "position-move",
+        image: "빠른_물_번개_가속_디버프처리.png",
+        imageAlt: "물 번개 가속도 처리",
+        markerChoices: ["1", "2", "3", "4"],
+        movementChoices: ["움직임", "안 움직임"],
+        answerMarker: marker,
+        answerMovement: movement === "움직임 상관없음" ? "움직임" : movement,
+        anyMovement: movement === "움직임 상관없음",
         explain: `물/번개는 진짜면 번개 산개, 가짜면 물 산개. ${state.player} 기준 최종 위치는 ${marker}번. 가속도 처리는 ${movement}.`
       };
     }
@@ -2326,7 +2401,9 @@
       const truth = isGc1 ? state.gc1 : state.gc2;
       const action = personalGrandCrossAction(data, truth);
       const shouldSoakThunder = state.thunderMemory === "가짜";
-      const markerAnswers = thunderMarkerAnswersFor(state.player, shouldSoakThunder, action.hasGaze);
+      const thunderPattern = pick([1, 2]);
+      const markerGroups = thunderGazeMarkerGroups(state.player, thunderPattern, shouldSoakThunder, action.hasGaze);
+      const markerAnswers = markerGroups.markerAnswers;
       const gazeAnswer = gazeTextAnswer(truth);
       const answers = markerAnswers.map((marker) => `${marker} / ${gazeAnswer}`);
       const answer = answers.join(" 또는 ");
@@ -2340,10 +2417,14 @@
           fact("그랜드 크로스", `${quizTruthIcon(truth)} ${truth}`),
           fact("선더가 기억", `${quizTruthIcon(state.thunderMemory)} ${state.thunderMemory}`)
         ],
-        choices: ["1", "2", "3", "4", "5", "6", "7", "8"].flatMap((marker) => [`${marker} / 마안 본다`, `${marker} / 마안 안본다`]),
         answer,
         answers,
-        explain: `선더가는 ${state.thunderMemory}이므로 ${shouldSoakThunder ? "밟기" : "피하기"}. 마안은 ${truth}이므로 ${gazeAnswer}. 선택 직업과 마안 대상 여부 기준 정답 위치는 ${markerAnswers.join(", ")}번.`
+        type: "thunder-gaze",
+        image: `선더가_${state.thunderMemory}_${thunderPattern}.webp`,
+        imageAlt: `선더가 ${state.thunderMemory} ${thunderPattern} 처리`,
+        markerAnswers,
+        gazeAnswer,
+        explain: `선더가는 ${state.thunderMemory}이므로 ${shouldSoakThunder ? "밟기" : "피하기"}: ${markerGroups.thunderMarkers.join(", ")}번. 마안 ${action.hasGaze ? "대상자" : "비대상자"} 위치: ${markerGroups.gazeMarkers.join(", ")}번. 마안은 ${truth}이므로 ${gazeAnswer}. 정답 위치는 ${markerAnswers.join(", ")}번.`
       };
     }
 
@@ -2392,17 +2473,143 @@
     }
 
     function nextSimulation() {
-      const makers = [makeFloodSim, makeSpreadSim, makeAccelSim, makeGazeSim, makeChaosSim, makeReleaseSim];
+      const makers = [makeFloodSim, makeSpreadSim, makeGazeSim, makeChaosSim, makeReleaseSim];
       currentSim = pick(makers)();
       simTitle.textContent = currentSim.title;
       simTime.textContent = currentSim.time;
       simPrompt.textContent = currentSim.prompt;
       simFacts.innerHTML = currentSim.facts.join("");
       clearResultState(simResult, "선택지를 고르면 판정이 표시됩니다.");
+      renderSimulationChoices();
+    }
+
+    function finishSimulationAnswer(selected, correct) {
+      simStats.total += 1;
+      if (correct) simStats.correct += 1;
+      updateSimStats();
+      simScoreText.textContent = correct ? "좋아요. 다음 상황으로 넘어가도 됩니다." : "틀린 판정을 바로 다시 보면 좋아요.";
+      setResultState(
+        simResult,
+        correct,
+        `정답: ${currentSim.answer}.<br>${currentSim.explain}`
+      );
+      addResultLog(simLog, `${currentSim.time} ${currentSim.title}`, selected, currentSim.answer, correct);
+    }
+
+    function renderSimulationChoices() {
+      if (currentSim.type === "image-marker") {
+        simChoices.innerHTML = `
+          <div class="sim-choice-guide">
+            <img src="img/simul/${currentSim.image}" alt="${currentSim.imageAlt || ""}">
+          </div>
+          <div class="sim-choice-group">
+            ${currentSim.choices.map((choice) => `<button class="sim-choice" type="button" data-answer="${choice}">${choice}번</button>`).join("")}
+          </div>
+        `;
+        document.querySelectorAll("#simChoices .sim-choice").forEach((button) => {
+          button.addEventListener("click", () => answerSimulation(button));
+        });
+        return;
+      }
+
+      if (currentSim.type === "position-move") {
+        const state = { marker: "", movement: "" };
+        simChoices.innerHTML = `
+          <div class="sim-choice-guide">
+            <img src="img/simul/${currentSim.image}" alt="${currentSim.imageAlt || ""}">
+          </div>
+          <div class="sim-choice-board">
+            <div class="sim-choice-group" data-group="marker">
+              <div class="sim-choice-label">어디로 갈까요?</div>
+              ${currentSim.markerChoices.map((choice) => `<button class="sim-choice" type="button" data-part="marker" data-answer="${choice}">${choice}</button>`).join("")}
+            </div>
+            <div class="sim-choice-group" data-group="movement">
+              <div class="sim-choice-label">해당 위치에서?</div>
+              ${currentSim.movementChoices.map((choice) => `<button class="sim-choice" type="button" data-part="movement" data-answer="${choice}">${choice}</button>`).join("")}
+            </div>
+          </div>
+        `;
+        document.querySelectorAll("#simChoices .sim-choice").forEach((button) => {
+          button.addEventListener("click", () => {
+            const part = button.dataset.part;
+            state[part] = button.dataset.answer;
+            document.querySelectorAll(`#simChoices .sim-choice[data-part="${part}"]`).forEach((choice) => choice.classList.remove("selected"));
+            button.classList.add("selected");
+            if (!state.marker || !state.movement) return;
+
+            const movementCorrect = currentSim.anyMovement || state.movement === currentSim.answerMovement;
+            const correct = state.marker === currentSim.answerMarker && movementCorrect;
+            document.querySelectorAll("#simChoices .sim-choice").forEach((choice) => {
+              choice.disabled = true;
+              if (
+                (choice.dataset.part === "marker" && choice.dataset.answer === currentSim.answerMarker) ||
+                (choice.dataset.part === "movement" && (currentSim.anyMovement || choice.dataset.answer === currentSim.answerMovement))
+              ) {
+                choice.classList.add("correct");
+              }
+            });
+            document.querySelectorAll("#simChoices .sim-choice.selected").forEach((choice) => {
+              const isCorrect =
+                (choice.dataset.part === "marker" && choice.dataset.answer === currentSim.answerMarker) ||
+                (choice.dataset.part === "movement" && (currentSim.anyMovement || choice.dataset.answer === currentSim.answerMovement));
+              if (!isCorrect) choice.classList.add("wrong");
+            });
+            finishSimulationAnswer(`${state.marker} / ${state.movement}`, correct);
+          });
+        });
+        return;
+      }
+
+      if (currentSim.type === "thunder-gaze") {
+        const state = { marker: "", gaze: "" };
+        simChoices.innerHTML = `
+          <div class="sim-choice-guide">
+            <img src="img/simul/${currentSim.image}" alt="${currentSim.imageAlt || ""}">
+          </div>
+          <div class="sim-choice-board">
+            <div class="sim-choice-group">
+              <div class="sim-choice-label">어디로 갈까요?</div>
+              ${["1", "2", "3", "4", "5", "6", "7", "8"].map((choice) => `<button class="sim-choice" type="button" data-part="marker" data-answer="${choice}">${choice}</button>`).join("")}
+            </div>
+            <div class="sim-choice-group">
+              <div class="sim-choice-label">마안을 어떻게 할까요?</div>
+              ${["마안 본다", "마안 안본다"].map((choice) => `<button class="sim-choice" type="button" data-part="gaze" data-answer="${choice}">${choice}</button>`).join("")}
+            </div>
+          </div>
+        `;
+        document.querySelectorAll("#simChoices .sim-choice").forEach((button) => {
+          button.addEventListener("click", () => {
+            const part = button.dataset.part;
+            state[part] = button.dataset.answer;
+            document.querySelectorAll(`#simChoices .sim-choice[data-part="${part}"]`).forEach((choice) => choice.classList.remove("selected"));
+            button.classList.add("selected");
+            if (!state.marker || !state.gaze) return;
+
+            const correct = currentSim.markerAnswers.includes(state.marker) && state.gaze === currentSim.gazeAnswer;
+            document.querySelectorAll("#simChoices .sim-choice").forEach((choice) => {
+              choice.disabled = true;
+              if (
+                (choice.dataset.part === "marker" && currentSim.markerAnswers.includes(choice.dataset.answer)) ||
+                (choice.dataset.part === "gaze" && choice.dataset.answer === currentSim.gazeAnswer)
+              ) {
+                choice.classList.add("correct");
+              }
+            });
+            document.querySelectorAll("#simChoices .sim-choice.selected").forEach((choice) => {
+              const isCorrect =
+                (choice.dataset.part === "marker" && currentSim.markerAnswers.includes(choice.dataset.answer)) ||
+                (choice.dataset.part === "gaze" && choice.dataset.answer === currentSim.gazeAnswer);
+              if (!isCorrect) choice.classList.add("wrong");
+            });
+            finishSimulationAnswer(`${state.marker} / ${state.gaze}`, correct);
+          });
+        });
+        return;
+      }
+
       simChoices.innerHTML = currentSim.choices.map((choice) => (
         `<button class="sim-choice" type="button" data-answer="${choice}">${choice}</button>`
       )).join("");
-
       document.querySelectorAll("#simChoices .sim-choice").forEach((button) => {
         button.addEventListener("click", () => answerSimulation(button));
       });
@@ -2413,23 +2620,13 @@
       const selected = button.dataset.answer;
       const answers = currentSim.answers || [currentSim.answer];
       const correct = answers.includes(selected);
-      simStats.total += 1;
-      if (correct) simStats.correct += 1;
 
       document.querySelectorAll("#simChoices .sim-choice").forEach((choice) => {
         choice.disabled = true;
         if (answers.includes(choice.dataset.answer)) choice.classList.add("correct");
       });
       if (!correct) button.classList.add("wrong");
-
-      updateSimStats();
-      simScoreText.textContent = correct ? "좋아요. 다음 상황으로 넘어가도 됩니다." : "틀린 판정을 바로 다시 보면 좋아요.";
-      setResultState(
-        simResult,
-        correct,
-        `정답: ${currentSim.answer}.<br>${currentSim.explain}`
-      );
-      addResultLog(simLog, `${currentSim.time} ${currentSim.title}`, selected, currentSim.answer, correct);
+      finishSimulationAnswer(selected, correct);
     }
 
     function resetSimulation() {
@@ -3157,8 +3354,8 @@
           if (isGaze) {
             const thunderPattern = pick([1, 2]);
             const shouldSoakThunder = seq.thunderMemory === "가짜";
-            const isSupport = isSupportPlayer(seq.player);
-            const markerAnswers = thunderMarkerAnswersFor(seq.player, shouldSoakThunder, action.hasGaze);
+            const markerGroups = thunderGazeMarkerGroups(seq.player, thunderPattern, shouldSoakThunder, action.hasGaze);
+            const markerAnswers = markerGroups.markerAnswers;
             const gazeAnswerText = gazeTextAnswer(truth);
             setSeqThunderGazeChoices({
               image: `선더가_${seq.thunderMemory}_${thunderPattern}.webp`,
@@ -3168,9 +3365,10 @@
               explain: [
                 `선더가는 ${seq.thunderMemory}입니다.`,
                 shouldSoakThunder
-                  ? `선더가를 밟아야 하므로 ${isSupport ? "탱/힐 기준 1, 3" : "딜러 기준 5, 7"}을 봅니다.`
-                  : `선더가를 피해야 하므로 ${isSupport ? "탱/힐 기준 2, 4" : "딜러 기준 6, 8"}을 봅니다.`,
+                  ? `선더가를 밟아야 하므로 ${markerGroups.thunderMarkers.join(", ")}번을 봅니다.`
+                  : `선더가를 피해야 하므로 ${markerGroups.thunderMarkers.join(", ")}번을 봅니다.`,
                 action.hasGaze ? `마안 대상자이므로 보스 히트박스 안으로 들어갑니다.` : `마안 대상자가 아니므로 보스 히트박스 밖에서 처리합니다.`,
+                `마안 ${action.hasGaze ? "대상자" : "비대상자"} 위치는 ${markerGroups.gazeMarkers.join(", ")}번입니다.`,
                 `마안은 ${truth}이므로 ${gazeAnswerText}가 정답입니다.`
               ].join("<br>")
             });
@@ -3276,4 +3474,5 @@
     renderSeqPlayerPicker();
   </script>
 </body>
+
 </html>
