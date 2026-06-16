@@ -543,12 +543,18 @@
 
     .scorebox {
       position: sticky;
-      top: 8px;
+      top: 132px;
+      max-height: calc(100vh - 150px);
       background: #222a32;
       color: #fff;
       border-radius: 8px;
       padding: 12px;
       box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      justify-content: flex-start;
+      min-height: calc(100vh - 150px);
     }
 
     .score {
@@ -557,6 +563,60 @@
       line-height: 1;
       margin: 6px 0;
       font-variant-numeric: tabular-nums;
+    }
+
+    .score-line {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .role-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 42px;
+      border: 1px solid rgba(255, 255, 255, .25);
+      border-radius: 999px;
+      padding: 4px 8px;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .result-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      margin: 8px 0 0;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .result-stats button {
+      display: block;
+      border: 1px solid rgba(255, 255, 255, .16);
+      border-radius: 8px;
+      padding: 5px 7px;
+      background: rgba(255, 255, 255, .06);
+      color: inherit;
+      cursor: pointer;
+      font: inherit;
+      text-align: left;
+    }
+
+    .result-stats button.active {
+      border-color: currentColor;
+      background: rgba(255, 255, 255, .14);
+    }
+
+    .result-correct {
+      color: #69a7ff !important;
+    }
+
+    .result-wrong {
+      color: #ff6b6b !important;
     }
 
     .scorebox p {
@@ -891,6 +951,64 @@
       gap: 7px;
     }
 
+    .sim-choice-guide {
+      grid-column: 1 / -1;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      padding: 6px;
+    }
+
+    .sim-choice-guide.layered {
+      position: relative;
+    }
+
+    .sim-choice-guide img {
+      display: block;
+      width: 100%;
+      max-height: 260px;
+      object-fit: contain;
+    }
+
+    .sim-overlay-icon {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 5px 7px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, .88);
+      color: var(--ink);
+      font-size: 12px;
+      font-weight: 800;
+      box-shadow: var(--shadow);
+    }
+
+    .sim-choice-board {
+      grid-column: 1 / -1;
+      display: grid;
+      gap: 8px;
+    }
+
+    .sim-choice-group {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 7px;
+    }
+
+    .sim-choice-group.image-choices {
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    }
+
+    .sim-choice-label {
+      grid-column: 1 / -1;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
     .sim-choice {
       border: 1px solid var(--line);
       border-radius: 8px;
@@ -902,9 +1020,29 @@
       font-weight: 700;
     }
 
+    .sim-choice.image-choice {
+      padding: 6px;
+      display: grid;
+      gap: 5px;
+      text-align: center;
+    }
+
+    .sim-choice.image-choice img {
+      width: 100%;
+      max-height: 150px;
+      object-fit: contain;
+      border-radius: 6px;
+      background: #f7f9fb;
+    }
+
     .sim-choice:hover {
       border-color: #9ab9b7;
       background: #f7fbfb;
+    }
+
+    .sim-choice.selected {
+      border-color: var(--accent);
+      background: #eef8f7;
     }
 
     .sim-choice.correct {
@@ -931,9 +1069,16 @@
       padding: 0;
       list-style: none;
       display: grid;
+      align-content: start;
       gap: 5px;
       color: #dce5ec;
       font-size: 11px;
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
+      padding-right: 4px;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255, 255, 255, .28) transparent;
     }
 
     .sim-log li {
@@ -941,7 +1086,49 @@
       padding-top: 5px;
     }
 
+    .sim-log::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    .sim-log::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .sim-log::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, .24);
+      border: 3px solid transparent;
+      border-radius: 999px;
+      background-clip: content-box;
+    }
+
+    .sim-log::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, .38);
+      border: 3px solid transparent;
+      background-clip: content-box;
+    }
+
+    .log-correct {
+      color: #69a7ff;
+    }
+
+    .log-wrong {
+      color: #ff6b6b;
+    }
+
+    .sim-log li.hidden {
+      display: none;
+    }
+
+    .log-toggle {
+      display: none;
+      margin-top: 8px;
+    }
+
     @media (max-width: 860px) {
+      body {
+        font-size: 12px;
+      }
+
       .topbar,
       .quiz-layout,
       .sim-layout,
@@ -952,6 +1139,31 @@
       .rule-list,
       .callouts {
         grid-template-columns: 1fr;
+      }
+
+      .sim-layout {
+        gap: 8px;
+      }
+
+      .sim-card {
+        padding: 9px;
+      }
+
+      .sim-title {
+        font-size: 15px;
+      }
+
+      .sim-prompt {
+        font-size: 13px;
+      }
+
+      .score {
+        font-size: 28px;
+      }
+
+      #quiz .scorebox,
+      .sim-side {
+        order: -1;
       }
 
       .meta {
@@ -973,6 +1185,22 @@
 
       .scorebox {
         position: static;
+        max-height: none;
+        min-height: auto;
+      }
+
+      .log-toggle {
+        display: block;
+      }
+
+      .sim-log {
+        display: none;
+        max-height: 160px;
+        flex: none;
+      }
+
+      .sim-log.open {
+        display: grid;
       }
     }
   </style>
@@ -1171,8 +1399,8 @@
                 <img class="icon" src="img/죽음 초월.webp" alt="죽음 초월">
               </div>
               <p>네오 엑스데스가 랜덤 위치로 이동해 좌/우 산자/죽은자의 상처공격을 시전한다. </p>
-              <p><strong>알라그 필드(<img class="icon small" src="img/알라그 필드.webp" alt="알라그 필드">)는 상처(<img class="icon small" src="img/죽은자의 상처.webp" alt="죽은자의 상처">, <img class="icon small" src="img/산자의 상처.webp" alt="산자의 상처">) 색과 <span class="red">다른 색</span></strong></p>
-              <p><strong>죽음 초월(<img class="icon small" src="img/죽음 초월.webp" alt="죽음 초월">)은 상처(<img class="icon small" src="img/죽은자의 상처.webp" alt="죽은자의 상처">, <img class="icon small" src="img/산자의 상처.webp" alt="산자의 상처">) 색과 <span class="red">같은 색</span></strong></p>
+              <p><strong>알라그 필드(<img class="icon small" src="img/알라그 필드.webp" alt="알라그 필드">)는 죽은자(<img class="icon small" src="img/죽은자의 상처.webp" alt="죽은자의 상처">)/산자(<img class="icon small" src="img/산자의 상처.webp" alt="산자의 상처">) 상처색과 <span class="red">다른 색</span></strong></p>
+              <p><strong>죽음 초월(<img class="icon small" src="img/죽음 초월.webp" alt="죽음 초월">)은 죽은자(<img class="icon small" src="img/죽은자의 상처.webp" alt="죽은자의 상처">)/산자(<img class="icon small" src="img/산자의 상처.webp" alt="산자의 상처">) 상처색과 <span class="red">같은 색</span></strong></p>
               <p><strong>*주의: 무의 범람이 가짜면 반대로 처리. 다른색 -> 같은색 / 같은색 -> 다른색</strong></p>
               <div class="stage-images">
                 <img class="stage-image" src="img/무의범람_진짜.png" alt="무의범람 진짜">
@@ -1630,6 +1858,11 @@
               <button class="primary" type="button" id="nextSimBtn">새 문제</button>
               <button class="secondary" type="button" id="resetSimBtn">기록 초기화</button>
             </div>
+            <div class="result-stats">
+              <button class="result-correct" type="button" id="simCorrectFilter">맞춤 <b id="simCorrectCount">0</b></button>
+              <button class="result-wrong" type="button" id="simWrongFilter">틀림 <b id="simWrongCount">0</b></button>
+            </div>
+            <button class="secondary log-toggle" type="button" id="simLogToggle">기록 보기</button>
             <ul class="sim-log" id="simLog"></ul>
           </aside>
         </div>
@@ -1653,12 +1886,20 @@
           <div class="sim-side">
             <aside class="scorebox" aria-live="polite">
               <div>시뮬레이션</div>
-              <div class="score"><span id="seqStep">0</span>/16</div>
+              <div class="score-line">
+                <div class="score"><span id="seqStep">0</span>/16</div>
+                <span class="role-badge" id="seqPlayerBadge">--</span>
+              </div>
               <p id="seqScoreText">부여된 디버프와 현재 처리 타이밍을 같이 보세요.</p>
               <div class="actions">
                 <button class="primary" type="button" id="seqNextBtn">시작</button>
                 <button class="secondary" type="button" id="seqResetBtn">처음부터</button>
               </div>
+              <div class="result-stats">
+                <button class="result-correct" type="button" id="seqCorrectFilter">맞춤 <b id="seqCorrectCount">0</b></button>
+                <button class="result-wrong" type="button" id="seqWrongFilter">틀림 <b id="seqWrongCount">0</b></button>
+              </div>
+              <button class="secondary log-toggle" type="button" id="seqLogToggle">기록 보기</button>
               <ul class="sim-log" id="seqLog"></ul>
             </aside>
           </div>
@@ -1668,104 +1909,7 @@
   </div>
 
   <script>
-    const quiz = [
-      {
-        q: "00:25 / 00:40 / 00:55 알쏭달쏭 마법에서 해야 하는 것은?",
-        choices: ["참/거짓을 확인해서 직선장판과 부채꼴 장판을 즉시 피한다", "나중에 쓸 패턴을 저장만 한다", "무조건 직선장판을 밟는다", "디버프 색깔만 확인한다"],
-        answer: 0,
-        explain: "알쏭달쏭 마법은 저장 구간이 아니라 즉시 처리 기믹이다. 참/거짓을 보고 선더가 직선장판과 블리자가 부채꼴 장판을 피한다."
-      },
-      {
-        q: "1/2회차 그랜드 크로스에서 물/번개 산개 대상 판단으로 맞는 것은?",
-        choices: ["진짜면 번개, 가짜면 물", "진짜면 물, 가짜면 번개", "항상 물", "항상 번개"],
-        answer: 0,
-        explain: "엑셀 기준 물/번개 산개 대상자는 진짜라면 번개 2명, 가짜라면 물 2명이다."
-      },
-      {
-        q: "빠른 물/번개 처리 타이밍에 같이 봐야 하는 것은?",
-        choices: ["빠른 가속도 폭탄", "심판의 빛", "늦은 마안", "두 번째 혼돈의 물"],
-        answer: 0,
-        explain: "01:21에는 빠른 물/번개와 빠른 가속도 폭탄을 같이 처리한다."
-      },
-      {
-        q: "무의 범람에서 알라그 필드 대상자의 기본 처리 기준은?",
-        choices: ["상처 디버프와 다른 색을 맞는다", "상처 디버프와 같은 색을 맞는다", "아무 색도 맞지 않는다", "마안을 바라본다"],
-        answer: 0,
-        explain: "색의 기준은 본인의 산자의 상처/죽은자의 상처 디버프다. 알라그 필드는 상처와 다른 색을 맞는다."
-      },
-      {
-        q: "무의 범람에서 죽음 초월 대상자의 기본 처리 기준은?",
-        choices: ["상처 디버프와 같은 색을 맞는다", "상처 디버프와 다른 색을 맞는다", "혼돈의 불 색을 따라간다", "선더가 직선을 밟는다"],
-        answer: 0,
-        explain: "죽음 초월은 본인의 산자의 상처/죽은자의 상처 디버프와 같은 색을 맞아야 한다."
-      },
-      {
-        q: "마력 방출 때 다시 나오는 기억 패턴 두 가지는?",
-        choices: ["선더가와 블리자가", "혼돈의 불과 혼돈의 물", "무의 범람과 데스 서지", "꼭두각시 영혼과 평타"],
-        answer: 0,
-        explain: "01:28 선더가가 기억1, 01:47 블리자가가 기억2로 기록되고 02:00에 방출된다."
-      },
-      {
-        q: "마력 방출에서 선더가가 가짜, 블리자가가 진짜라면 어떻게 처리하는가?",
-        choices: ["선더가 직선만 밟는다", "블리자가 부채꼴만 밟는다", "둘 다 피한다", "둘 다 맞는다"],
-        answer: 0,
-        explain: "엑셀 예시 기준 가짜 패턴은 반대로 처리하므로 선더가가 가짜라면 직선을 밟고, 블리자가가 진짜라면 피한다."
-      },
-      {
-        q: "빠른 마안의 기본 판정 설명으로 맞는 것은?",
-        choices: ["진짜면 뒤돌고, 가짜면 바라본다", "진짜면 바라보고, 가짜면 뒤돈다", "항상 바라본다", "항상 중앙 밖으로 나간다"],
-        answer: 0,
-        explain: "저주의 외침은 진짜면 대상자를 보면 안 되고, 가짜면 봐야 한다."
-      },
-      {
-        q: "혼돈의 불 처리 설명으로 맞는 것은?",
-        choices: ["진짜는 원형, 가짜는 도넛", "진짜는 도넛, 가짜는 원형", "둘 다 직선 장판", "색깔만 맞으면 된다"],
-        answer: 0,
-        explain: "혼돈의 불은 진짜일 때 원형, 가짜일 때 도넛 장판으로 본다."
-      },
-      {
-        q: "혼돈의 물 처리 설명으로 맞는 것은?",
-        choices: ["진짜는 도넛, 가짜는 원형", "진짜는 원형, 가짜는 도넛", "항상 원형", "항상 도넛"],
-        answer: 0,
-        explain: "혼돈의 물은 혼돈의 불과 반대로 진짜일 때 도넛, 가짜일 때 원형이다."
-      },
-      {
-        q: "카오스의 화염/해일 시전 순서와 관계없이 실제 혼돈 디버프 실행 순서는?",
-        choices: ["혼돈의 불 다음 혼돈의 물", "혼돈의 물 다음 혼돈의 불", "항상 랜덤", "마안 다음 알라그 필드"],
-        answer: 0,
-        explain: "엑셀 주의사항에는 해일/화염 시전 순서와 상관없이 카오스 디버프는 항상 혼돈의 불 → 혼돈의 물 순서로 실행된다고 적혀 있다."
-      },
-      {
-        q: "그랜드 크로스 1/2회차 디버프 처리 순서를 판단할 때 가장 우선해야 하는 것은?",
-        choices: ["디버프 남은 시간", "무조건 1회차부터", "직업 순서", "보스 위치"],
-        answer: 0,
-        explain: "1/2회차 디버프는 시간이 랜덤하게 부여되어 처리 순서가 섞일 수 있으므로 남은 시간을 봐야 한다."
-      },
-      {
-        q: "실제 처리 구간이 본격적으로 시작되는 타이밍은?",
-        choices: ["01:11 무의 범람", "00:07 평타", "00:16 꼭두각시 영혼", "02:14 심판의 빛"],
-        answer: 0,
-        explain: "00:25/00:40/00:55 알쏭달쏭은 즉시 피하고, 01:11 무의 범람부터 상처/알라그/죽음 초월 해제가 시작된다."
-      },
-      {
-        q: "느린 물/번개와 함께 처리되는 것은?",
-        choices: ["느린 가속도 폭탄", "첫 번째 알쏭달쏭 마법", "타겟불가", "데스 서지"],
-        answer: 0,
-        explain: "01:46에는 느린 물/번개와 느린 가속도 폭탄이 같이 온다."
-      },
-      {
-        q: "빠른/느린 물번개 산개에서 딜러 산개 대상자의 기준 위치는?",
-        choices: ["3시", "9시", "12시", "중앙"],
-        answer: 0,
-        explain: "엑셀 기준 탱힐 산개 대상자는 9시, 탱힐 본대는 12시, 딜러 산개 대상자는 3시, 딜러 본대는 6시다."
-      },
-      {
-        q: "가속도 폭탄 처리 설명으로 맞는 것은?",
-        choices: ["각자 1번 처리하며 빠른/느린 물번개와 같이 실행된다", "무의 범람에서만 처리한다", "힐러만 처리한다", "알라그 필드와 같은 효과다"],
-        answer: 0,
-        explain: "가속도 폭탄은 4개씩 2차례 부여되지만 각자 1번씩 처리하며, 빠른 또는 느린 물/번개와 함께 실행된다."
-      }
-    ];
+    const quiz = [];
 
     const tabs = document.querySelectorAll(".tab");
     const panels = document.querySelectorAll(".panel");
@@ -1781,6 +1925,11 @@
     const simResult = document.getElementById("simResult");
     const simScore = document.getElementById("simScore");
     const simCount = document.getElementById("simCount");
+    const simCorrectCount = document.getElementById("simCorrectCount");
+    const simWrongCount = document.getElementById("simWrongCount");
+    const simCorrectFilter = document.getElementById("simCorrectFilter");
+    const simWrongFilter = document.getElementById("simWrongFilter");
+    const simLogToggle = document.getElementById("simLogToggle");
     const simScoreText = document.getElementById("simScoreText");
     const simLog = document.getElementById("simLog");
     const seqTitle = document.getElementById("seqTitle");
@@ -1790,12 +1939,32 @@
     const seqChoices = document.getElementById("seqChoices");
     const seqResult = document.getElementById("seqResult");
     const seqStep = document.getElementById("seqStep");
+    const seqPlayerBadge = document.getElementById("seqPlayerBadge");
+    const seqCorrectCount = document.getElementById("seqCorrectCount");
+    const seqWrongCount = document.getElementById("seqWrongCount");
+    const seqCorrectFilter = document.getElementById("seqCorrectFilter");
+    const seqWrongFilter = document.getElementById("seqWrongFilter");
+    const seqLogToggle = document.getElementById("seqLogToggle");
     const seqScoreText = document.getElementById("seqScoreText");
     const seqLog = document.getElementById("seqLog");
     const seqNextBtn = document.getElementById("seqNextBtn");
     let currentSim = null;
     let simStats = { correct: 0, total: 0 };
+    let seqStats = { correct: 0, wrong: 0 };
+    let simLogFilter = "";
+    let seqLogFilter = "";
     let seq = null;
+    let selectedSeqPlayer = "";
+    const seqPlayers = [
+      { key: "T1", name: "탱커 1" },
+      { key: "T2", name: "탱커 2" },
+      { key: "H1", name: "힐러 1" },
+      { key: "H2", name: "힐러 2" },
+      { key: "D1", name: "딜러 1" },
+      { key: "D2", name: "딜러 2" },
+      { key: "D3", name: "딜러 3" },
+      { key: "D4", name: "딜러 4" }
+    ];
 
     tabs.forEach((tab) => {
       tab.addEventListener("click", () => {
@@ -1889,116 +2058,226 @@
       return `<div class="${cls}"><span>${label}</span><b>${value}${remain}</b></div>`;
     }
 
+    function setResultState(target, correct, html) {
+      target.classList.remove("result-correct", "result-wrong");
+      const labelClass = correct ? "result-correct" : "result-wrong";
+      const label = correct ? "정답입니다." : "오답입니다.";
+      target.innerHTML = `<span class="${labelClass}">${label}</span><br>${html}`;
+    }
+
+    function clearResultState(target, text = "") {
+      target.classList.remove("result-correct", "result-wrong");
+      target.textContent = text;
+    }
+
+    function addResultLog(target, prefix, selected, answer, correct) {
+      const item = document.createElement("li");
+      item.className = correct ? "correct" : "wrong";
+      const resultText = correct ? "정답" : "오답";
+      const resultClass = correct ? "log-correct" : "log-wrong";
+      item.innerHTML = `${prefix}: ${selected} → <span class="${resultClass}">${resultText}</span>${correct ? "" : `, 정답은 ${answer}`}`;
+      target.prepend(item);
+      applyLogFilter(target, target === simLog ? simLogFilter : seqLogFilter);
+    }
+
+    function applyLogFilter(target, filter) {
+      [...target.children].forEach((item) => {
+        item.classList.toggle("hidden", Boolean(filter) && !item.classList.contains(filter));
+      });
+    }
+
+    function setLogFilter(kind, filter) {
+      if (kind === "sim") {
+        simLogFilter = simLogFilter === filter ? "" : filter;
+        simCorrectFilter.classList.toggle("active", simLogFilter === "correct");
+        simWrongFilter.classList.toggle("active", simLogFilter === "wrong");
+        applyLogFilter(simLog, simLogFilter);
+      } else {
+        seqLogFilter = seqLogFilter === filter ? "" : filter;
+        seqCorrectFilter.classList.toggle("active", seqLogFilter === "correct");
+        seqWrongFilter.classList.toggle("active", seqLogFilter === "wrong");
+        applyLogFilter(seqLog, seqLogFilter);
+      }
+    }
+
+    function toggleLog(target, button) {
+      const opened = target.classList.toggle("open");
+      button.textContent = opened ? "기록 숨기기" : "기록 보기";
+    }
+
+    function updateSimStats() {
+      const wrong = simStats.total - simStats.correct;
+      simScore.textContent = simStats.correct;
+      simCount.textContent = simStats.total;
+      simCorrectCount.textContent = simStats.correct;
+      simWrongCount.textContent = wrong;
+    }
+
+    function updateSeqStats(correct) {
+      if (typeof correct === "boolean") {
+        if (correct) seqStats.correct += 1;
+        else seqStats.wrong += 1;
+      }
+      seqCorrectCount.textContent = seqStats.correct;
+      seqWrongCount.textContent = seqStats.wrong;
+    }
+
+    function seqPlayerKey() {
+      return seqPlayers.find((player) => player.name === selectedSeqPlayer)?.key || "--";
+    }
+
+    function makeQuizScenarioState() {
+      const assignments = makeGrandCrossAssignments();
+      const player = pick(["탱커 1", "탱커 2", "힐러 1", "힐러 2", "딜러 1", "딜러 2", "딜러 3", "딜러 4"]);
+      const schedule = makeGrandCrossSchedule();
+      const gc1 = pick(["진짜", "가짜"]);
+      const gc2 = pick(["진짜", "가짜"]);
+      const chaosFirst = pick(["혼돈의 불", "혼돈의 물"]);
+      const chaos1Truth = pick(["진짜", "가짜"]);
+      const chaos2Truth = pick(["진짜", "가짜"]);
+      const chaosSecond = chaosFirst === "혼돈의 불" ? "혼돈의 물" : "혼돈의 불";
+
+      return {
+        player,
+        schedule,
+        gc1,
+        gc2,
+        gc1Personal: assignments.first[player],
+        gc2Personal: assignments.second[player],
+        gc3: pick(["진짜", "가짜"]),
+        wound: pick(["산자의 상처", "죽은자의 상처"]),
+        finalDebuff: pick(["알라그 필드", "죽음 초월"]),
+        flood: pick(["진짜", "가짜"]),
+        chaosFirst,
+        chaosSecond,
+        chaos1Truth,
+        chaos2Truth,
+        fireTruth: chaosFirst === "혼돈의 불" ? chaos1Truth : chaos2Truth,
+        waterTruth: chaosFirst === "혼돈의 물" ? chaos1Truth : chaos2Truth,
+        thunderMemory: pick(["진짜", "가짜"]),
+        blizzardMemory: pick(["진짜", "가짜"]),
+        releaseTop: pick(["진짜", "가짜"]),
+        releaseBottom: pick(["진짜", "가짜"])
+      };
+    }
+
+    function quizTruthIcon(value) {
+      return icon(value === "진짜" ? "진실.png" : "거짓.png", value);
+    }
+
+    function quizMainIcon(value) {
+      if (value === "물") return icon("물.webp", "물");
+      if (value === "번개") return icon("번개.webp", "번개");
+      if (value === "마안") return icon("저주의 외침.webp", "저주의 외침");
+      return "-";
+    }
+
     function makeFloodSim() {
-      const wound = pick([
-        { name: "산자의 상처", img: "산자의 상처.webp" },
-        { name: "죽은자의 상처", img: "죽은자의 상처.webp" }
-      ]);
-      const debuff = pick([
-        { name: "알라그 필드", img: "알라그 필드.webp", base: "다른 색" },
-        { name: "죽음 초월", img: "죽음 초월.webp", base: "같은 색" }
-      ]);
-      const flood = pick([
-        { name: "진짜", img: "진실.png", flip: false },
-        { name: "가짜", img: "거짓.png", flip: true }
-      ]);
-      const answer = flood.flip
-        ? (debuff.base === "다른 색" ? "같은 색" : "다른 색")
-        : debuff.base;
+      const state = makeQuizScenarioState();
+      const woundImg = state.wound === "산자의 상처" ? "산자의 상처.webp" : "죽은자의 상처.webp";
+      const finalImg = state.finalDebuff === "알라그 필드" ? "알라그 필드.webp" : "죽음 초월.webp";
+      const base = state.finalDebuff === "알라그 필드" ? "다른 색" : "같은 색";
+      const answer = state.flood === "가짜" ? (base === "다른 색" ? "같은 색" : "다른 색") : base;
       return {
         title: "9. 무의 범람",
         time: "01:11",
         prompt: "상처 색상을 기준으로 어떤 색을 맞아야 할까?",
         facts: [
-          fact("상처", `${icon(wound.img, wound.name)} ${wound.name}`),
-          fact("디버프", `${icon(debuff.img, debuff.name)} ${debuff.name}`),
-          fact("무의 범람", `${icon(flood.img, flood.name)} ${flood.name}`)
+          fact("상처", `${icon(woundImg, state.wound)} ${state.wound}`),
+          fact("디버프", `${icon(finalImg, state.finalDebuff)} ${state.finalDebuff}`),
+          fact("무의 범람", `${quizTruthIcon(state.flood)} ${state.flood}`)
         ],
         choices: ["같은 색", "다른 색"],
         answer,
-        explain: `기본은 ${debuff.name} = ${debuff.base}. 무의 범람이 ${flood.name}이므로 최종은 ${answer}.`
+        explain: `기본은 ${state.finalDebuff} = ${base}. 무의 범람이 ${state.flood}이므로 최종은 ${answer}.`
       };
     }
 
     function makeSpreadSim() {
-      const truth = pick([
-        { name: "진짜", img: "진실.png", answer: "번개 산개" },
-        { name: "가짜", img: "거짓.png", answer: "물 산개" }
-      ]);
-      const speed = pick([
-        { name: "빠른", time: "01:21" },
-        { name: "느린", time: "01:46" }
-      ]);
+      const state = makeQuizScenarioState();
+      const event = pick(["gc1Spread", "gc2Spread"]);
+      const isGc1 = event.startsWith("gc1");
+      const data = isGc1 ? state.gc1Personal : state.gc2Personal;
+      const truth = isGc1 ? state.gc1 : state.gc2;
+      const action = personalGrandCrossAction(data, truth);
+      const eventTime = state.schedule[event].time;
+      const answer = `${action.spread} / ${action.accel}`;
       return {
-        title: `${speed.name} 물/번개/가속도`,
-        time: speed.time,
-        prompt: "산개 대상자는 누구인가?",
+        title: `${isGc1 ? "1회차" : "2회차"} 물/번개/가속도`,
+        time: eventTime,
+        prompt: "부여된 디버프 기준으로 어떻게 처리할까?",
         facts: [
-          fact("판정", `${icon(truth.img, truth.name)} ${truth.name}`),
-          fact("물", `${icon("물.webp", "물")} 쉐어/산개 후보`),
-          fact("번개", `${icon("번개.webp", "번개")} 쉐어/산개 후보`)
+          fact("플레이어", state.player),
+          fact("판정", `${quizTruthIcon(truth)} ${truth}`),
+          fact("디버프", `${quizMainIcon(data.main)} ${data.accel ? icon("가속도 폭탄.webp", "가속도 폭탄") : ""}`)
         ],
-        choices: ["물 산개", "번개 산개"],
-        answer: truth.answer,
-        explain: `물/번개는 진짜면 번개 산개, 가짜면 물 산개.`
+        choices: ["산개 / 멈춤", "산개 / 움직임", "산개 / 가속도 없음", "본대 / 멈춤", "본대 / 움직임", "본대 / 가속도 없음"],
+        answer,
+        explain: `물/번개는 진짜면 번개 산개, 가짜면 물 산개. 가속도는 진짜면 멈춤, 가짜면 움직임. 최종 처리는 ${answer}.`
       };
     }
 
     function makeAccelSim() {
-      const truth = pick([
-        { name: "진짜", img: "진실.png", answer: "멈춤" },
-        { name: "가짜", img: "거짓.png", answer: "움직임" }
-      ]);
+      const state = makeQuizScenarioState();
+      const event = state.gc1Personal.accel ? "gc1Spread" : "gc2Spread";
+      const isGc1 = event.startsWith("gc1");
+      const data = isGc1 ? state.gc1Personal : state.gc2Personal;
+      const truth = isGc1 ? state.gc1 : state.gc2;
+      const action = personalGrandCrossAction(data, truth);
       return {
         title: "가속도 폭탄",
-        time: pick(["01:21", "01:46"]),
+        time: state.schedule[event].time,
         prompt: "가속도 폭탄 대상자는 어떻게 처리해야 할까?",
         facts: [
+          fact("플레이어", state.player),
           fact("디버프", `${icon("가속도 폭탄.webp", "가속도 폭탄")} 가속도 폭탄`),
-          fact("판정", `${icon(truth.img, truth.name)} ${truth.name}`)
+          fact("판정", `${quizTruthIcon(truth)} ${truth}`)
         ],
         choices: ["멈춤", "움직임"],
-        answer: truth.answer,
+        answer: action.accel,
         explain: "가속도 폭탄은 진짜면 멈춤, 가짜면 움직임."
       };
     }
 
     function makeGazeSim() {
-      const truth = pick([
-        { name: "진짜", img: "진실.png", answer: "뒤돌기" },
-        { name: "가짜", img: "거짓.png", answer: "바라보기" }
-      ]);
+      const state = makeQuizScenarioState();
+      const event = pick(["gc1Gaze", "gc2Gaze"]);
+      const isGc1 = event.startsWith("gc1");
+      const data = isGc1 ? state.gc1Personal : state.gc2Personal;
+      const truth = isGc1 ? state.gc1 : state.gc2;
+      const hasGaze = data.main === "마안";
+      const position = hasGaze ? "안으로 들어가서" : "밖에서";
+      const look = truth === "진짜" ? "뒤돌기" : "바라보기";
+      const answer = `${position} 마안 ${look}`;
       return {
         title: "저주의 외침",
-        time: pick(["01:30", "01:54"]),
-        prompt: "마안 대상자는 시선을 어떻게 처리해야 할까?",
+        time: state.schedule[event].time,
+        prompt: "마안 타이밍에 어디서 시선을 어떻게 처리해야 할까?",
         facts: [
-          fact("디버프", `${icon("저주의 외침.webp", "저주의 외침")} 저주의 외침`),
-          fact("판정", `${icon(truth.img, truth.name)} ${truth.name}`)
+          fact("플레이어", state.player),
+          fact("디버프", hasGaze ? `${icon("저주의 외침.webp", "저주의 외침")} 저주의 외침` : "마안 대상 아님"),
+          fact("판정", `${quizTruthIcon(truth)} ${truth}`)
         ],
-        choices: ["뒤돌기", "바라보기"],
-        answer: truth.answer,
-        explain: "저주의 외침은 진짜면 뒤돌기, 가짜면 바라보기."
+        choices: [`${position} 마안 바라보기`, `${position} 마안 뒤돌기`],
+        answer,
+        explain: `마안은 진짜면 뒤돌기, 가짜면 바라보기. ${hasGaze ? "대상자는 안쪽" : "비대상자는 바깥"}에서 처리.`
       };
     }
 
     function makeChaosSim() {
-      const chaos = pick([
-        { name: "혼돈의 불", img: "혼돈의 불.webp", trueAnswer: "밖", falseAnswer: "안" },
-        { name: "혼돈의 물", img: "혼돈의 물.webp", trueAnswer: "안", falseAnswer: "밖" }
-      ]);
-      const truth = pick([
-        { name: "진짜", img: "진실.png", key: "trueAnswer" },
-        { name: "가짜", img: "거짓.png", key: "falseAnswer" }
-      ]);
-      const answer = chaos[truth.key];
+      const state = makeQuizScenarioState();
+      const chaos = pick(["혼돈의 불", "혼돈의 물"]);
+      const truth = chaos === "혼돈의 불" ? state.fireTruth : state.waterTruth;
+      const answer = chaos === "혼돈의 불"
+        ? (truth === "진짜" ? "밖" : "안")
+        : (truth === "진짜" ? "안" : "밖");
       return {
-        title: chaos.name,
-        time: chaos.name === "혼돈의 불" ? "01:41" : "02:04",
+        title: chaos,
+        time: chaos === "혼돈의 불" ? "01:41" : "02:04",
         prompt: "히트박스 기준 어디서 피해야 할까?",
         facts: [
-          fact("디버프", `${icon(chaos.img, chaos.name)} ${chaos.name}`),
-          fact("판정", `${icon(truth.img, truth.name)} ${truth.name}`)
+          fact("디버프", `${icon(chaos === "혼돈의 불" ? "혼돈의 불.webp" : "혼돈의 물.webp", chaos)} ${chaos}`),
+          fact("판정", `${quizTruthIcon(truth)} ${truth}`)
         ],
         choices: ["안", "밖"],
         answer,
@@ -2007,21 +2286,18 @@
     }
 
     function makeReleaseSim() {
-      const thunder = pick(["진짜", "가짜"]);
-      const blizzard = pick(["진짜", "가짜"]);
-      const top = pick(["진짜", "가짜"]);
-      const bottom = pick(["진짜", "가짜"]);
-      const line = thunder === top ? "피하기" : "밟기";
-      const cone = blizzard === bottom ? "피하기" : "밟기";
+      const state = makeQuizScenarioState();
+      const line = state.thunderMemory === state.releaseTop ? "피하기" : "밟기";
+      const cone = state.blizzardMemory === state.releaseBottom ? "피하기" : "밟기";
       return {
         title: "15. 마력 방출",
         time: "02:00",
         prompt: "직선과 부채꼴을 어떻게 처리해야 할까?",
         facts: [
-          fact("저장 선더가", `${icon(thunder === "진짜" ? "진실.png" : "거짓.png", thunder)} ${thunder}`),
-          fact("저장 블리자가", `${icon(blizzard === "진짜" ? "진실.png" : "거짓.png", blizzard)} ${blizzard}`),
-          fact("방출 위", `${icon(top === "진짜" ? "진실.png" : "거짓.png", top)} ${top}`),
-          fact("방출 밑", `${icon(bottom === "진짜" ? "진실.png" : "거짓.png", bottom)} ${bottom}`)
+          fact("저장 선더가", `${quizTruthIcon(state.thunderMemory)} ${state.thunderMemory}`),
+          fact("저장 블리자가", `${quizTruthIcon(state.blizzardMemory)} ${state.blizzardMemory}`),
+          fact("방출 위", `${quizTruthIcon(state.releaseTop)} ${state.releaseTop}`),
+          fact("방출 밑", `${quizTruthIcon(state.releaseBottom)} ${state.releaseBottom}`)
         ],
         choices: [
           "직선 피하기 / 부채꼴 피하기",
@@ -2041,7 +2317,7 @@
       simTime.textContent = currentSim.time;
       simPrompt.textContent = currentSim.prompt;
       simFacts.innerHTML = currentSim.facts.join("");
-      simResult.textContent = "선택지를 고르면 판정이 표시됩니다.";
+      clearResultState(simResult, "선택지를 고르면 판정이 표시됩니다.");
       simChoices.innerHTML = currentSim.choices.map((choice) => (
         `<button class="sim-choice" type="button" data-answer="${choice}">${choice}</button>`
       )).join("");
@@ -2064,23 +2340,26 @@
       });
       if (!correct) button.classList.add("wrong");
 
-      simScore.textContent = simStats.correct;
-      simCount.textContent = simStats.total;
+      updateSimStats();
       simScoreText.textContent = correct ? "좋아요. 다음 상황으로 넘어가도 됩니다." : "틀린 판정을 바로 다시 보면 좋아요.";
-      simResult.textContent = `${correct ? "정답" : "오답"}: ${currentSim.answer}. ${currentSim.explain}`;
-
-      const item = document.createElement("li");
-      item.textContent = `${currentSim.time} ${currentSim.title}: ${selected} → ${correct ? "정답" : `오답, 정답은 ${currentSim.answer}`}`;
-      simLog.prepend(item);
-      while (simLog.children.length > 5) simLog.removeChild(simLog.lastChild);
+      setResultState(
+        simResult,
+        correct,
+        `정답: ${currentSim.answer}.<br>${currentSim.explain}`
+      );
+      addResultLog(simLog, `${currentSim.time} ${currentSim.title}`, selected, currentSim.answer, correct);
     }
 
     function resetSimulation() {
       simStats = { correct: 0, total: 0 };
-      simScore.textContent = "0";
-      simCount.textContent = "0";
+      simLogFilter = "";
+      simCorrectFilter.classList.remove("active");
+      simWrongFilter.classList.remove("active");
+      updateSimStats();
       simScoreText.textContent = "랜덤 상황을 빠르게 판단해 보세요.";
       simLog.innerHTML = "";
+      simLog.classList.remove("open");
+      simLogToggle.textContent = "기록 보기";
       nextSimulation();
     }
 
@@ -2120,7 +2399,7 @@
       return [...list].sort(() => Math.random() - 0.5);
     }
 
-    function makeGrandCrossAssignment() {
+    function makeGrandCrossMainAssignment() {
       const th = ["탱커 1", "탱커 2", "힐러 1", "힐러 2"];
       const dps = ["딜러 1", "딜러 2", "딜러 3", "딜러 4"];
       const mechanics = ["물", "번개", "마안", "없음"];
@@ -2133,18 +2412,51 @@
         result[player] = { main: mechanics[index], accel: false };
       });
 
-      const players = [...th, ...dps];
-      const noMain = players.filter((player) => result[player].main === "없음");
-      noMain.forEach((player) => {
-        result[player].accel = true;
-      });
+      return result;
+    }
 
-      const remainingAccelTargets = shuffle(players.filter((player) => !result[player].accel)).slice(0, 4 - noMain.length);
-      remainingAccelTargets.forEach((player) => {
-        result[player].accel = true;
+    function makeNextGrandCrossMainAssignment(previous) {
+      const groups = [
+        ["탱커 1", "탱커 2", "힐러 1", "힐러 2"],
+        ["딜러 1", "딜러 2", "딜러 3", "딜러 4"]
+      ];
+      const mechanics = ["물", "번개", "마안", "없음"];
+      const result = {};
+      const conflicts = (before, after) => {
+        if (before === after) return true;
+        return (before === "물" || before === "번개") && (after === "물" || after === "번개");
+      };
+
+      groups.forEach((group) => {
+        let next = shuffle(mechanics);
+        while (next.some((mechanic, index) => conflicts(previous[group[index]].main, mechanic))) {
+          next = shuffle(mechanics);
+        }
+        group.forEach((player, index) => {
+          result[player] = { main: next[index], accel: false };
+        });
       });
 
       return result;
+    }
+
+    function makeGrandCrossAssignments() {
+      const players = ["탱커 1", "탱커 2", "힐러 1", "힐러 2", "딜러 1", "딜러 2", "딜러 3", "딜러 4"];
+      const first = makeGrandCrossMainAssignment();
+      const second = makeNextGrandCrossMainAssignment(first);
+      const firstNoMain = players.filter((player) => first[player].main === "없음");
+      const secondNoMain = players.filter((player) => second[player].main === "없음");
+      const fixedFirstAccel = new Set(firstNoMain);
+      const blockedFirstAccel = new Set(secondNoMain);
+      const extraFirstAccel = shuffle(players.filter((player) => !fixedFirstAccel.has(player) && !blockedFirstAccel.has(player))).slice(0, 4 - fixedFirstAccel.size);
+
+      extraFirstAccel.forEach((player) => fixedFirstAccel.add(player));
+      players.forEach((player) => {
+        first[player].accel = fixedFirstAccel.has(player);
+        second[player].accel = !first[player].accel;
+      });
+
+      return { first, second };
     }
 
     function addPersonalGrandCross(data, truth, spreadStep, spreadAt, gazeStep, gazeAt, source) {
@@ -2284,10 +2596,13 @@
       `;
     }
 
-    function setSeqChoices(choices, answer, explain) {
+    function setSeqChoices(choices, answer, explain, options = {}) {
       seqNextBtn.disabled = true;
       seqNextBtn.textContent = "선택 필요";
-      seqChoices.innerHTML = choices.map((choice) => (
+      const guide = options.image
+        ? `<div class="sim-choice-guide"><img src="img/${options.image}" alt="${options.imageAlt || ""}"></div>`
+        : "";
+      seqChoices.innerHTML = guide + choices.map((choice) => (
         `<button class="sim-choice" type="button" data-answer="${choice}">${choice}</button>`
       )).join("");
       document.querySelectorAll("#seqChoices .sim-choice").forEach((button) => {
@@ -2299,34 +2614,292 @@
             if (choice.dataset.answer === answer) choice.classList.add("correct");
           });
           if (!correct) button.classList.add("wrong");
-          seqResult.textContent = `${correct ? "정답" : "오답"}: ${answer}. ${explain}`;
+          setResultState(
+            seqResult,
+            correct,
+            `정답: ${answer}.<br>${explain}`
+          );
           seq.completedSteps.add(seq.step);
           renderSeqBuffs();
+          updateSeqStats(correct);
           seqNextBtn.disabled = false;
-          const item = document.createElement("li");
-          item.textContent = `${seq.time} ${seq.title}: ${selected} → ${correct ? "정답" : `오답, 정답은 ${answer}`}`;
-          seqLog.prepend(item);
+          addResultLog(seqLog, `${seq.time} ${seq.title}`, selected, answer, correct);
           seqNextBtn.textContent = seq.step >= 16 ? "완료" : "다음 단계";
+        });
+      });
+    }
+
+    function setSeqPositionMoveChoices(config) {
+      seqNextBtn.disabled = true;
+      seqNextBtn.textContent = "선택 필요";
+      const state = { marker: "", movement: "" };
+      seqChoices.innerHTML = `
+        <div class="sim-choice-guide">
+          <img src="img/simul/${config.image}" alt="${config.imageAlt || ""}">
+        </div>
+        <div class="sim-choice-board">
+          <div class="sim-choice-group" data-group="marker">
+            <div class="sim-choice-label">어디로 갈까요?</div>
+            ${config.markerChoices.map((choice) => `<button class="sim-choice" type="button" data-part="marker" data-answer="${choice}">${choice}</button>`).join("")}
+          </div>
+          <div class="sim-choice-group" data-group="movement">
+            <div class="sim-choice-label">해당 위치에서?</div>
+            ${config.movementChoices.map((choice) => `<button class="sim-choice" type="button" data-part="movement" data-answer="${choice}">${choice}</button>`).join("")}
+          </div>
+        </div>
+      `;
+
+      document.querySelectorAll("#seqChoices .sim-choice").forEach((button) => {
+        button.addEventListener("click", () => {
+          const part = button.dataset.part;
+          state[part] = button.dataset.answer;
+          document.querySelectorAll(`#seqChoices .sim-choice[data-part="${part}"]`).forEach((choice) => {
+            choice.classList.remove("selected");
+          });
+          button.classList.add("selected");
+
+          if (!state.marker || !state.movement) return;
+
+          const movementCorrect = config.anyMovement || state.movement === config.answerMovement;
+          const correct = state.marker === config.answerMarker && movementCorrect;
+          document.querySelectorAll("#seqChoices .sim-choice").forEach((choice) => {
+            choice.disabled = true;
+            if (
+              (choice.dataset.part === "marker" && choice.dataset.answer === config.answerMarker) ||
+              (choice.dataset.part === "movement" && (config.anyMovement || choice.dataset.answer === config.answerMovement))
+            ) {
+              choice.classList.add("correct");
+            }
+          });
+          document.querySelectorAll("#seqChoices .sim-choice.selected").forEach((choice) => {
+            const isCorrect =
+              (choice.dataset.part === "marker" && choice.dataset.answer === config.answerMarker) ||
+              (choice.dataset.part === "movement" && (config.anyMovement || choice.dataset.answer === config.answerMovement));
+            if (!isCorrect) choice.classList.add("wrong");
+          });
+          const answer = `${config.answerMarker} / ${config.anyMovement ? "움직임 상관없음" : config.answerMovement}`;
+          const selected = `${state.marker} / ${state.movement}`;
+          setResultState(
+            seqResult,
+            correct,
+            `정답: ${answer}.<br>${config.explain}`
+          );
+          seq.completedSteps.add(seq.step);
+          renderSeqBuffs();
+          updateSeqStats(correct);
+          seqNextBtn.disabled = false;
+          seqNextBtn.textContent = seq.step >= 16 ? "완료" : "다음 단계";
+          addResultLog(seqLog, `${seq.time} ${seq.title}`, selected, answer, correct);
+        });
+      });
+    }
+
+    function setSeqImageMarkerChoices(config) {
+      seqNextBtn.disabled = true;
+      seqNextBtn.textContent = "선택 필요";
+      const overlay = config.overlay
+        ? `<span class="sim-overlay-icon">${config.overlay}</span>`
+        : "";
+      seqChoices.innerHTML = `
+        <div class="sim-choice-guide ${config.overlay ? "layered" : ""}">
+          <img src="img/simul/${config.image}" alt="${config.imageAlt || ""}">
+          ${overlay}
+        </div>
+        <div class="sim-choice-group">
+          ${config.choices.map((choice) => `<button class="sim-choice" type="button" data-answer="${choice}">${choice}번</button>`).join("")}
+        </div>
+      `;
+
+      document.querySelectorAll("#seqChoices .sim-choice").forEach((button) => {
+        button.addEventListener("click", () => {
+          const selected = button.dataset.answer;
+          const correct = selected === config.answer;
+          document.querySelectorAll("#seqChoices .sim-choice").forEach((choice) => {
+            choice.disabled = true;
+            if (choice.dataset.answer === config.answer) choice.classList.add("correct");
+          });
+          if (!correct) button.classList.add("wrong");
+          setResultState(
+            seqResult,
+            correct,
+            `정답: ${config.answer}.<br>${config.explain}`
+          );
+          seq.completedSteps.add(seq.step);
+          renderSeqBuffs();
+          updateSeqStats(correct);
+          seqNextBtn.disabled = false;
+          seqNextBtn.textContent = seq.step >= 16 ? "완료" : "다음 단계";
+          addResultLog(seqLog, `${seq.time} ${seq.title}`, selected, config.answer, correct);
+        });
+      });
+    }
+
+    function setSeqSpreadChoices(event, action, options = {}) {
+      const answer = `${action.spread} / ${action.accel}`;
+      if (event.endsWith("Spread") && options.fastImage) {
+        const isSupport = seq.player.startsWith("탱커") || seq.player.startsWith("힐러");
+        const data = event.startsWith("gc1") ? seq.gc1Personal : seq.gc2Personal;
+        const truth = event.startsWith("gc1") ? seq.gc1 : seq.gc2;
+        const spreadTarget = truth === "진짜" ? "번개" : "물";
+        const roleText = isSupport ? "탱/힐" : "딜러";
+        const rolePositionText = isSupport
+          ? "탱/힐은 산개면 1번, 본대면 2번"
+          : "딜러는 산개면 3번, 본대면 4번";
+        const spreadReason = data.main === "물" || data.main === "번개"
+          ? `${truth} 판정에서는 ${spreadTarget} 대상자가 산개합니다. 현재 ${data.main} 디버프이므로 ${action.spread} 처리입니다.`
+          : `현재 물/번개 디버프가 없으므로 쉐어 본대 처리입니다.`;
+        const accelReason = data.accel
+          ? `가속도 폭탄은 ${truth} 판정이라 ${action.accel === "멈춤" ? "안 움직임" : "움직임"} 처리입니다.`
+          : "가속도 폭탄이 없으므로 움직임 여부는 정답에 영향을 주지 않습니다.";
+        const answerMarker = action.spread === "산개"
+          ? (isSupport ? "1" : "3")
+          : (isSupport ? "2" : "4");
+        const answerMovement = action.accel === "멈춤" ? "안 움직임" : "움직임";
+        setSeqPositionMoveChoices({
+          image: "빠른_물_번개_가속_디버프처리.png",
+          imageAlt: "1회차 물 번개 가속도 처리",
+          markerChoices: ["1", "2", "3", "4"],
+          movementChoices: ["움직임", "안 움직임"],
+          answerMarker,
+          answerMovement,
+          anyMovement: action.accel === "가속도 없음",
+          explain: [
+            `선택 직업: ${seq.player} (${roleText}).`,
+            spreadReason,
+            rolePositionText + `이므로 최종 위치는 ${answerMarker}번입니다.`,
+            accelReason
+          ].join("<br>")
+        });
+      } else {
+        setSeqChoices(["산개 / 멈춤", "산개 / 움직임", "산개 / 가속도 없음", "본대 / 멈춤", "본대 / 움직임", "본대 / 가속도 없음"], answer, `${eventLabel(event)} 최종 처리는 ${answer}.`);
+      }
+    }
+
+    function setSeqThunderGazeChoices(config) {
+      seqNextBtn.disabled = true;
+      seqNextBtn.textContent = "선택 필요";
+      const state = { marker: "", gaze: "" };
+      seqChoices.innerHTML = `
+        <div class="sim-choice-guide">
+          <img src="img/simul/${config.image}" alt="${config.imageAlt || ""}">
+        </div>
+        <div class="sim-choice-board">
+          <div class="sim-choice-group">
+            <div class="sim-choice-label">어디로 갈까요?</div>
+            ${["1", "2", "3", "4", "5", "6", "7", "8"].map((choice) => `<button class="sim-choice" type="button" data-part="marker" data-answer="${choice}">${choice}</button>`).join("")}
+          </div>
+          <div class="sim-choice-group">
+            <div class="sim-choice-label">마안을 어떻게 할까요?</div>
+            ${["마안 본다", "마안 안본다"].map((choice) => `<button class="sim-choice" type="button" data-part="gaze" data-answer="${choice}">${choice}</button>`).join("")}
+          </div>
+        </div>
+      `;
+
+      document.querySelectorAll("#seqChoices .sim-choice").forEach((button) => {
+        button.addEventListener("click", () => {
+          const part = button.dataset.part;
+          state[part] = button.dataset.answer;
+          document.querySelectorAll(`#seqChoices .sim-choice[data-part="${part}"]`).forEach((choice) => {
+            choice.classList.remove("selected");
+          });
+          button.classList.add("selected");
+
+          if (!state.marker || !state.gaze) return;
+
+          const markerCorrect = config.markerAnswers.includes(state.marker);
+          const gazeCorrect = state.gaze === config.gazeAnswer;
+          const correct = markerCorrect && gazeCorrect;
+          document.querySelectorAll("#seqChoices .sim-choice").forEach((choice) => {
+            choice.disabled = true;
+            if (
+              (choice.dataset.part === "marker" && config.markerAnswers.includes(choice.dataset.answer)) ||
+              (choice.dataset.part === "gaze" && choice.dataset.answer === config.gazeAnswer)
+            ) {
+              choice.classList.add("correct");
+            }
+          });
+          document.querySelectorAll("#seqChoices .sim-choice.selected").forEach((choice) => {
+            const isCorrect =
+              (choice.dataset.part === "marker" && config.markerAnswers.includes(choice.dataset.answer)) ||
+              (choice.dataset.part === "gaze" && choice.dataset.answer === config.gazeAnswer);
+            if (!isCorrect) choice.classList.add("wrong");
+          });
+          setResultState(
+            seqResult,
+            correct,
+            `정답 위치: ${config.markerAnswers.join(", ")}번 / ${config.gazeAnswer}.<br>${config.explain}`
+          );
+          seq.completedSteps.add(seq.step);
+          renderSeqBuffs();
+          updateSeqStats(correct);
+          seqNextBtn.disabled = false;
+          seqNextBtn.textContent = seq.step >= 16 ? "완료" : "다음 단계";
+          addResultLog(seqLog, `${seq.time} ${seq.title}`, `${state.marker}번 / ${state.gaze}`, `${config.markerAnswers.join(", ")}번 / ${config.gazeAnswer}`, correct);
+        });
+      });
+    }
+
+    function renderSeqPlayerPicker() {
+      seq = null;
+      selectedSeqPlayer = "";
+      seqTitle.textContent = "시뮬레이션 직업 선택";
+      seqTime.textContent = "--:--";
+      seqStep.textContent = "0";
+      seqPlayerBadge.textContent = "--";
+      seqPrompt.textContent = "시작하기 전에 본인 자리를 선택하세요.";
+      clearResultState(seqResult, "T/H/D 선택에 따라 본대 위치가 달라집니다. 탱/힐 본대는 2번, 딜러 본대는 4번입니다.");
+      seqScoreText.textContent = "직업을 선택하면 시작할 수 있습니다.";
+      seqLog.innerHTML = "";
+      seqLog.classList.remove("open");
+      seqLogToggle.textContent = "기록 보기";
+      seqStats = { correct: 0, wrong: 0 };
+      seqLogFilter = "";
+      seqCorrectFilter.classList.remove("active");
+      seqWrongFilter.classList.remove("active");
+      updateSeqStats();
+      seqChoices.innerHTML = seqPlayers.map((player) => (
+        `<button class="sim-choice" type="button" data-player="${player.name}">${player.key}</button>`
+      )).join("");
+      seqNextBtn.disabled = true;
+      seqNextBtn.textContent = "직업 선택 필요";
+      renderSeqBuffs();
+
+      document.querySelectorAll("#seqChoices .sim-choice").forEach((button) => {
+        button.addEventListener("click", () => {
+          selectedSeqPlayer = button.dataset.player;
+          document.querySelectorAll("#seqChoices .sim-choice").forEach((choice) => {
+            choice.classList.remove("selected");
+          });
+          button.classList.add("selected");
+          seqNextBtn.disabled = false;
+          seqNextBtn.textContent = "시작";
+          seqPlayerBadge.textContent = button.textContent;
+          clearResultState(seqResult, `${button.textContent} 선택됨. 시작을 누르면 1단계부터 진행합니다.`);
         });
       });
     }
 
     function noSeqChoice(message) {
       seqChoices.innerHTML = "";
-      seqResult.textContent = message;
+      clearResultState(seqResult, message);
       seqNextBtn.disabled = false;
       seqNextBtn.textContent = seq.step >= 16 ? "완료" : "다음 단계";
     }
 
     function initSequential() {
+      if (!selectedSeqPlayer) {
+        renderSeqPlayerPicker();
+        return;
+      }
+      const grandCrossAssignments = makeGrandCrossAssignments();
       seq = {
         step: 0,
         completedSteps: new Set(),
         buffs: [],
         gcSchedule: makeGrandCrossSchedule(),
-        player: pick(["탱커 1", "탱커 2", "힐러 1", "힐러 2", "딜러 1", "딜러 2", "딜러 3", "딜러 4"]),
-        gc1Assign: makeGrandCrossAssignment(),
-        gc2Assign: makeGrandCrossAssignment(),
+        player: selectedSeqPlayer,
+        gc1Assign: grandCrossAssignments.first,
+        gc2Assign: grandCrossAssignments.second,
         gc1: pick(["진짜", "가짜"]),
         gc2: pick(["진짜", "가짜"]),
         gc3: pick(["진짜", "가짜"]),
@@ -2347,6 +2920,14 @@
       seq.fireTruth = seq.chaosFirst === "혼돈의 불" ? seq.chaos1Truth : seq.chaos2Truth;
       seq.waterTruth = seq.chaosFirst === "혼돈의 물" ? seq.chaos1Truth : seq.chaos2Truth;
       seqLog.innerHTML = "";
+      seqLog.classList.remove("open");
+      seqLogToggle.textContent = "기록 보기";
+      seqStats = { correct: 0, wrong: 0 };
+      seqLogFilter = "";
+      seqCorrectFilter.classList.remove("active");
+      seqWrongFilter.classList.remove("active");
+      updateSeqStats();
+      seqPlayerBadge.textContent = seqPlayerKey();
       advanceSequential();
     }
 
@@ -2356,7 +2937,7 @@
       seq.step += 1;
       seqStep.textContent = seq.step;
       seqChoices.innerHTML = "";
-      seqResult.textContent = "";
+      clearResultState(seqResult);
       seqScoreText.textContent = "부여된 디버프와 현재 처리 타이밍을 같이 보세요.";
 
       const spreadAnswer = (truth) => truth === "진짜" ? "번개 산개" : "물 산개";
@@ -2449,7 +3030,24 @@
           seq.timePoint = "01:11";
           seqPrompt.textContent = "무의 범람에서 어떤 색을 맞아야 할까요?";
           renderSeqBuffs();
-          setSeqChoices(["같은 색", "다른 색"], floodAnswer, `${seq.finalDebuff} 기본은 ${floodBase}. 무의 범람이 ${seq.flood}이므로 최종은 ${floodAnswer}.`);
+          const sameColorMarker = seq.wound === "산자의 상처" ? "1" : "2";
+          const differentColorMarker = seq.wound === "산자의 상처" ? "2" : "1";
+          const floodMarkerAnswer = floodAnswer === "같은 색" ? sameColorMarker : differentColorMarker;
+          const woundIcon = icon(seq.wound === "산자의 상처" ? "산자의 상처.webp" : "죽은자의 상처.webp", seq.wound);
+          const finalDebuffIcon = icon(seq.finalDebuff === "알라그 필드" ? "알라그 필드.webp" : "죽음 초월.webp", seq.finalDebuff);
+          setSeqImageMarkerChoices({
+            image: seq.flood === "진짜" ? "무의범람_진짜_처리.png" : "무의범람_가짜_처리.png",
+            imageAlt: `무의 범람 ${seq.flood} 처리`,
+            choices: ["1", "2"],
+            answer: floodMarkerAnswer,
+            explain: [
+              `내 디버프: ${woundIcon} ${seq.wound} / ${finalDebuffIcon} ${seq.finalDebuff}`,
+              '',
+              `알라그 필드(${icon("알라그 필드.webp", "알라그 필드")})는 죽은자(${icon("죽은자의 상처.webp", "죽은자의 상처")})/산자(${icon("산자의 상처.webp", "산자의 상처")}) 상처색과 <span class="red">다른 색</span>`,
+              `죽음 초월(${icon("죽음 초월.webp", "죽음 초월")})은 죽은자(${icon("죽은자의 상처.webp", "죽은자의 상처")})/산자(${icon("산자의 상처.webp", "산자의 상처")}) 상처색과 <span class="red">같은 색</span>`,
+              `*주의: 무의 범람이 가짜면 반대로 처리. 다른색 -> 같은색 / 같은색 -> 다른색`
+            ].join("<br>")
+          });
         },
         10: () => {
           const event = scheduledEvent(10);
@@ -2466,8 +3064,7 @@
           if (isGaze) {
             setSeqChoices(gazeChoices(action.hasGaze), gazeChoiceAnswer(action.hasGaze, truth), `${eventLabel(event)}은 ${truth}이므로 ${gazeChoiceAnswer(action.hasGaze, truth)}.`);
           } else {
-            const answer = `${action.spread} / ${action.accel}`;
-            setSeqChoices(["산개 / 멈춤", "산개 / 움직임", "산개 / 가속도 없음", "본대 / 멈춤", "본대 / 움직임", "본대 / 가속도 없음"], answer, `${eventLabel(event)} 최종 처리는 ${answer}.`);
+            setSeqSpreadChoices(event, action, { fastImage: true });
           }
         },
         11: () => {
@@ -2484,10 +3081,37 @@
           seqPrompt.textContent = `선더가를 기억하고, ${eventLabel(event)}를 처리합니다.`;
           renderSeqBuffs();
           if (isGaze) {
-            setSeqChoices(gazeChoices(action.hasGaze), gazeChoiceAnswer(action.hasGaze, truth), `${eventLabel(event)}은 ${truth}이므로 ${gazeChoiceAnswer(action.hasGaze, truth)}. 선더가도 기억합니다.`);
+            const thunderPattern = pick([1, 2]);
+            const shouldSoakThunder = seq.thunderMemory === "가짜";
+            const isSupport = seq.player.startsWith("탱커") || seq.player.startsWith("힐러");
+            const thunderMarkers = isSupport
+              ? (shouldSoakThunder ? ["1", "3"] : ["2", "4"])
+              : (shouldSoakThunder ? ["5", "7"] : ["6", "8"]);
+            const gazeMarkers = isSupport
+              ? (action.hasGaze ? ["3", "4"] : ["1", "2"])
+              : (action.hasGaze ? ["5", "6"] : ["7", "8"]);
+            const markerAnswers = thunderMarkers.filter((marker) => gazeMarkers.includes(marker));
+            const gazeAnswerText = gazeAnswer(truth) === "바라보기" ? "마안 본다" : "마안 안본다";
+            setSeqThunderGazeChoices({
+              image: `선더가_${seq.thunderMemory}_${thunderPattern}.webp`,
+              imageAlt: `선더가 ${seq.thunderMemory} ${thunderPattern} 처리`,
+              markerAnswers,
+              gazeAnswer: gazeAnswerText,
+              explain: [
+                `선더가 기억은 ${seq.thunderMemory}입니다.`,
+                `선택 직업은 ${seq.player}입니다.`,
+                shouldSoakThunder
+                  ? `선더가를 밟아야 하므로 ${isSupport ? "탱/힐 기준 1, 3" : "딜러 기준 5, 7"}을 봅니다.`
+                  : `선더가를 피해야 하므로 ${isSupport ? "탱/힐 기준 2, 4" : "딜러 기준 6, 8"}을 봅니다.`,
+                action.hasGaze ? `마안 대상자이므로 보스 히트박스 안으로 들어갑니다.` : `마안 대상자가 아니므로 보스 히트박스 밖에서 처리합니다.`,
+                action.hasGaze
+                  ? `마안 대상자 위치는 ${isSupport ? "3, 4" : "5, 6"}입니다.`
+                  : `마안 비대상자 위치는 ${isSupport ? "1, 2" : "7, 8"}입니다.`,
+                `마안은 ${truth}이므로 ${gazeAnswerText}가 정답입니다.`
+              ].join("<br>")
+            });
           } else {
-            const answer = `${action.spread} / ${action.accel}`;
-            setSeqChoices(["산개 / 멈춤", "산개 / 움직임", "산개 / 가속도 없음", "본대 / 멈춤", "본대 / 움직임", "본대 / 가속도 없음"], answer, `${eventLabel(event)} 최종 처리는 ${answer}.`);
+            setSeqSpreadChoices(event, action);
           }
         },
         12: () => {
@@ -2514,8 +3138,7 @@
           if (isGaze) {
             setSeqChoices(gazeChoices(action.hasGaze), gazeChoiceAnswer(action.hasGaze, truth), `${eventLabel(event)}은 ${truth}이므로 ${gazeChoiceAnswer(action.hasGaze, truth)}. 블리자가도 기억합니다.`);
           } else {
-            const answer = `${action.spread} / ${action.accel}`;
-            setSeqChoices(["산개 / 멈춤", "산개 / 움직임", "산개 / 가속도 없음", "본대 / 멈춤", "본대 / 움직임", "본대 / 가속도 없음"], answer, `${eventLabel(event)} 최종 처리는 ${answer}.`);
+            setSeqSpreadChoices(event, action);
           }
         },
         14: () => {
@@ -2533,8 +3156,7 @@
           if (isGaze) {
             setSeqChoices(gazeChoices(action.hasGaze), gazeChoiceAnswer(action.hasGaze, truth), `${eventLabel(event)}은 ${truth}이므로 ${gazeChoiceAnswer(action.hasGaze, truth)}.`);
           } else {
-            const answer = `${action.spread} / ${action.accel}`;
-            setSeqChoices(["산개 / 멈춤", "산개 / 움직임", "산개 / 가속도 없음", "본대 / 멈춤", "본대 / 움직임", "본대 / 가속도 없음"], answer, `${eventLabel(event)} 최종 처리는 ${answer}.`);
+            setSeqSpreadChoices(event, action);
           }
         },
         15: () => {
@@ -2574,14 +3196,20 @@
     document.getElementById("resetBtn")?.addEventListener("click", resetQuiz);
     document.getElementById("nextSimBtn").addEventListener("click", nextSimulation);
     document.getElementById("resetSimBtn").addEventListener("click", resetSimulation);
+    simCorrectFilter.addEventListener("click", () => setLogFilter("sim", "correct"));
+    simWrongFilter.addEventListener("click", () => setLogFilter("sim", "wrong"));
+    seqCorrectFilter.addEventListener("click", () => setLogFilter("seq", "correct"));
+    seqWrongFilter.addEventListener("click", () => setLogFilter("seq", "wrong"));
+    simLogToggle.addEventListener("click", () => toggleLog(simLog, simLogToggle));
+    seqLogToggle.addEventListener("click", () => toggleLog(seqLog, seqLogToggle));
     seqNextBtn.addEventListener("click", () => {
       if (!seq || seq.step >= 16) initSequential();
       else advanceSequential();
     });
-    document.getElementById("seqResetBtn").addEventListener("click", initSequential);
+    document.getElementById("seqResetBtn").addEventListener("click", renderSeqPlayerPicker);
     if (questionRoot) renderQuiz();
     nextSimulation();
-    renderSeqBuffs();
+    renderSeqPlayerPicker();
   </script>
 </body>
 </html>
