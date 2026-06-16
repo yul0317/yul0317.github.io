@@ -2052,6 +2052,73 @@
       return list[Math.floor(Math.random() * list.length)];
     }
 
+    // Shared mechanic helpers used by both random quiz and sequential simulation.
+    function isSupportPlayer(player) {
+      return player.startsWith("탱커") || player.startsWith("힐러");
+    }
+
+    function isSpreadTarget(main, truth) {
+      return (main === "번개" && truth === "진짜") || (main === "물" && truth === "가짜");
+    }
+
+    function flipColor(color) {
+      return color === "같은 색" ? "다른 색" : "같은 색";
+    }
+
+    function floodBaseFor(finalDebuff) {
+      return finalDebuff === "알라그 필드" ? "다른 색" : "같은 색";
+    }
+
+    function floodFinalColor(finalDebuff, floodTruth) {
+      const base = floodBaseFor(finalDebuff);
+      return floodTruth === "가짜" ? flipColor(base) : base;
+    }
+
+    function floodMarkerFor(wound, finalColor) {
+      const sameColorMarker = wound === "산자의 상처" ? "1" : "2";
+      const differentColorMarker = wound === "산자의 상처" ? "2" : "1";
+      return finalColor === "같은 색" ? sameColorMarker : differentColorMarker;
+    }
+
+    function spreadMarkerFor(player, spread) {
+      if (spread === "산개") return isSupportPlayer(player) ? "1" : "3";
+      return isSupportPlayer(player) ? "2" : "4";
+    }
+
+    function movementAnswerFor(accel) {
+      if (accel === "멈춤") return "안 움직임";
+      if (accel === "움직임") return "움직임";
+      return "움직임 상관없음";
+    }
+
+    function gazeActionAnswer(truth) {
+      return truth === "진짜" ? "뒤돌기" : "바라보기";
+    }
+
+    function gazeTextAnswer(truth) {
+      return gazeActionAnswer(truth) === "바라보기" ? "마안 본다" : "마안 안본다";
+    }
+
+    function thunderMarkerAnswersFor(player, shouldSoakThunder, hasGaze) {
+      const support = isSupportPlayer(player);
+      const thunderMarkers = support
+        ? (shouldSoakThunder ? ["1", "3"] : ["2", "4"])
+        : (shouldSoakThunder ? ["5", "7"] : ["6", "8"]);
+      const gazeMarkers = support
+        ? (hasGaze ? ["3", "4"] : ["1", "2"])
+        : (hasGaze ? ["5", "6"] : ["7", "8"]);
+      return thunderMarkers.filter((marker) => gazeMarkers.includes(marker));
+    }
+
+    function chaosAnswerFor(chaos, truth) {
+      if (chaos === "혼돈의 불") return truth === "진짜" ? "밖" : "안";
+      return truth === "진짜" ? "안" : "밖";
+    }
+
+    function releasePatternAnswer(memory, release) {
+      return memory === release ? "피하기" : "밟기";
+    }
+
     function fact(label, value, options = {}) {
       const cls = options.resolved ? "sim-fact resolved" : "sim-fact";
       const remain = options.remain ? `<small>${options.remain}</small>` : "";
@@ -2176,20 +2243,21 @@
       const state = makeQuizScenarioState();
       const woundImg = state.wound === "산자의 상처" ? "산자의 상처.webp" : "죽은자의 상처.webp";
       const finalImg = state.finalDebuff === "알라그 필드" ? "알라그 필드.webp" : "죽음 초월.webp";
-      const base = state.finalDebuff === "알라그 필드" ? "다른 색" : "같은 색";
-      const answer = state.flood === "가짜" ? (base === "다른 색" ? "같은 색" : "다른 색") : base;
+      const base = floodBaseFor(state.finalDebuff);
+      const answerColor = floodFinalColor(state.finalDebuff, state.flood);
+      const answer = floodMarkerFor(state.wound, answerColor);
       return {
         title: "9. 무의 범람",
         time: "01:11",
-        prompt: "상처 색상을 기준으로 어떤 색을 맞아야 할까?",
+        prompt: "상처 색상을 기준으로 몇 번을 맞아야 할까?",
         facts: [
           fact("상처", `${icon(woundImg, state.wound)} ${state.wound}`),
           fact("디버프", `${icon(finalImg, state.finalDebuff)} ${state.finalDebuff}`),
           fact("무의 범람", `${quizTruthIcon(state.flood)} ${state.flood}`)
         ],
-        choices: ["같은 색", "다른 색"],
+        choices: ["1", "2"],
         answer,
-        explain: `기본은 ${state.finalDebuff} = ${base}. 무의 범람이 ${state.flood}이므로 최종은 ${answer}.`
+        explain: `기본은 ${state.finalDebuff} = ${base}. 무의 범람이 ${state.flood}이므로 최종은 ${answerColor}, 정답 위치는 ${answer}번.`
       };
     }
 
@@ -2201,19 +2269,30 @@
       const truth = isGc1 ? state.gc1 : state.gc2;
       const action = personalGrandCrossAction(data, truth);
       const eventTime = state.schedule[event].time;
-      const answer = `${action.spread} / ${action.accel}`;
+      const marker = spreadMarkerFor(state.player, action.spread);
+      const movement = movementAnswerFor(action.accel);
+      const answer = `${marker} / ${movement}`;
+      const answers = movement === "움직임 상관없음"
+        ? [`${marker} / 움직임`, `${marker} / 안 움직임`, answer]
+        : [answer];
       return {
-        title: `${isGc1 ? "1회차" : "2회차"} 물/번개/가속도`,
+        title: `${isGc1 ? "빠른" : "느린"} 물/번개/가속도`,
         time: eventTime,
-        prompt: "부여된 디버프 기준으로 어떻게 처리할까?",
+        prompt: "부여된 디버프 기준으로 몇 번 위치에서 어떻게 처리할까?",
         facts: [
           fact("플레이어", state.player),
           fact("판정", `${quizTruthIcon(truth)} ${truth}`),
           fact("디버프", `${quizMainIcon(data.main)} ${data.accel ? icon("가속도 폭탄.webp", "가속도 폭탄") : ""}`)
         ],
-        choices: ["산개 / 멈춤", "산개 / 움직임", "산개 / 가속도 없음", "본대 / 멈춤", "본대 / 움직임", "본대 / 가속도 없음"],
+        choices: [
+          "1 / 움직임", "1 / 안 움직임", "1 / 움직임 상관없음",
+          "2 / 움직임", "2 / 안 움직임", "2 / 움직임 상관없음",
+          "3 / 움직임", "3 / 안 움직임", "3 / 움직임 상관없음",
+          "4 / 움직임", "4 / 안 움직임", "4 / 움직임 상관없음"
+        ],
         answer,
-        explain: `물/번개는 진짜면 번개 산개, 가짜면 물 산개. 가속도는 진짜면 멈춤, 가짜면 움직임. 최종 처리는 ${answer}.`
+        answers,
+        explain: `물/번개는 진짜면 번개 산개, 가짜면 물 산개. ${state.player} 기준 최종 위치는 ${marker}번. 가속도 처리는 ${movement}.`
       };
     }
 
@@ -2245,22 +2324,26 @@
       const isGc1 = event.startsWith("gc1");
       const data = isGc1 ? state.gc1Personal : state.gc2Personal;
       const truth = isGc1 ? state.gc1 : state.gc2;
-      const hasGaze = data.main === "마안";
-      const position = hasGaze ? "안으로 들어가서" : "밖에서";
-      const look = truth === "진짜" ? "뒤돌기" : "바라보기";
-      const answer = `${position} 마안 ${look}`;
+      const action = personalGrandCrossAction(data, truth);
+      const shouldSoakThunder = state.thunderMemory === "가짜";
+      const markerAnswers = thunderMarkerAnswersFor(state.player, shouldSoakThunder, action.hasGaze);
+      const gazeAnswer = gazeTextAnswer(truth);
+      const answers = markerAnswers.map((marker) => `${marker} / ${gazeAnswer}`);
+      const answer = answers.join(" 또는 ");
       return {
-        title: "저주의 외침",
+        title: "저주의 외침 + 선더가",
         time: state.schedule[event].time,
-        prompt: "마안 타이밍에 어디서 시선을 어떻게 처리해야 할까?",
+        prompt: "선더가와 마안 기준으로 몇 번 위치에서 어떻게 처리해야 할까?",
         facts: [
           fact("플레이어", state.player),
-          fact("디버프", hasGaze ? `${icon("저주의 외침.webp", "저주의 외침")} 저주의 외침` : "마안 대상 아님"),
-          fact("판정", `${quizTruthIcon(truth)} ${truth}`)
+          fact("마안", action.hasGaze ? `${icon("저주의 외침.webp", "저주의 외침")} 대상자` : "대상 아님"),
+          fact("그랜드 크로스", `${quizTruthIcon(truth)} ${truth}`),
+          fact("선더가 기억", `${quizTruthIcon(state.thunderMemory)} ${state.thunderMemory}`)
         ],
-        choices: [`${position} 마안 바라보기`, `${position} 마안 뒤돌기`],
+        choices: ["1", "2", "3", "4", "5", "6", "7", "8"].flatMap((marker) => [`${marker} / 마안 본다`, `${marker} / 마안 안본다`]),
         answer,
-        explain: `마안은 진짜면 뒤돌기, 가짜면 바라보기. ${hasGaze ? "대상자는 안쪽" : "비대상자는 바깥"}에서 처리.`
+        answers,
+        explain: `선더가는 ${state.thunderMemory}이므로 ${shouldSoakThunder ? "밟기" : "피하기"}. 마안은 ${truth}이므로 ${gazeAnswer}. 선택 직업과 마안 대상 여부 기준 정답 위치는 ${markerAnswers.join(", ")}번.`
       };
     }
 
@@ -2268,9 +2351,7 @@
       const state = makeQuizScenarioState();
       const chaos = pick(["혼돈의 불", "혼돈의 물"]);
       const truth = chaos === "혼돈의 불" ? state.fireTruth : state.waterTruth;
-      const answer = chaos === "혼돈의 불"
-        ? (truth === "진짜" ? "밖" : "안")
-        : (truth === "진짜" ? "안" : "밖");
+      const answer = chaosAnswerFor(chaos, truth);
       return {
         title: chaos,
         time: chaos === "혼돈의 불" ? "01:41" : "02:04",
@@ -2287,8 +2368,8 @@
 
     function makeReleaseSim() {
       const state = makeQuizScenarioState();
-      const line = state.thunderMemory === state.releaseTop ? "피하기" : "밟기";
-      const cone = state.blizzardMemory === state.releaseBottom ? "피하기" : "밟기";
+      const line = releasePatternAnswer(state.thunderMemory, state.releaseTop);
+      const cone = releasePatternAnswer(state.blizzardMemory, state.releaseBottom);
       return {
         title: "15. 마력 방출",
         time: "02:00",
@@ -2330,13 +2411,14 @@
     function answerSimulation(button) {
       if (!currentSim || button.disabled) return;
       const selected = button.dataset.answer;
-      const correct = selected === currentSim.answer;
+      const answers = currentSim.answers || [currentSim.answer];
+      const correct = answers.includes(selected);
       simStats.total += 1;
       if (correct) simStats.correct += 1;
 
       document.querySelectorAll("#simChoices .sim-choice").forEach((choice) => {
         choice.disabled = true;
-        if (choice.dataset.answer === currentSim.answer) choice.classList.add("correct");
+        if (answers.includes(choice.dataset.answer)) choice.classList.add("correct");
       });
       if (!correct) button.classList.add("wrong");
 
@@ -2476,10 +2558,7 @@
     }
 
     function personalGrandCrossAction(data, truth) {
-      let spread = "본대";
-      if ((data.main === "번개" && truth === "진짜") || (data.main === "물" && truth === "가짜")) {
-        spread = "산개";
-      }
+      const spread = isSpreadTarget(data.main, truth) ? "산개" : "본대";
       let accel = "가속도 없음";
       if (data.accel) {
         accel = truth === "진짜" ? "멈춤" : "움직임";
@@ -2514,9 +2593,9 @@
 
     function eventLabel(key) {
       const labels = {
-        gc1Spread: "물/번개/가속도",
+        gc1Spread: "빠른 물/번개/가속도",
         gc1Gaze: "마안",
-        gc2Spread: "물/번개/가속도",
+        gc2Spread: "느린 물/번개/가속도",
         gc2Gaze: "마안"
       };
       return labels[key] || "";
@@ -2737,7 +2816,7 @@
     function setSeqSpreadChoices(event, action, options = {}) {
       const answer = `${action.spread} / ${action.accel}`;
       if (event.endsWith("Spread") && options.fastImage) {
-        const isSupport = seq.player.startsWith("탱커") || seq.player.startsWith("힐러");
+        const isSupport = isSupportPlayer(seq.player);
         const data = event.startsWith("gc1") ? seq.gc1Personal : seq.gc2Personal;
         const truth = event.startsWith("gc1") ? seq.gc1 : seq.gc2;
         const spreadTarget = truth === "진짜" ? "번개" : "물";
@@ -2751,10 +2830,8 @@
         const accelReason = data.accel
           ? `가속도 폭탄은 ${truth} 판정이라 ${action.accel === "멈춤" ? "안 움직임" : "움직임"} 처리입니다.`
           : "가속도 폭탄이 없으므로 움직임 여부는 정답에 영향을 주지 않습니다.";
-        const answerMarker = action.spread === "산개"
-          ? (isSupport ? "1" : "3")
-          : (isSupport ? "2" : "4");
-        const answerMovement = action.accel === "멈춤" ? "안 움직임" : "움직임";
+        const answerMarker = spreadMarkerFor(seq.player, action.spread);
+        const answerMovement = movementAnswerFor(action.accel) === "움직임 상관없음" ? "움직임" : movementAnswerFor(action.accel);
         setSeqPositionMoveChoices({
           image: "빠른_물_번개_가속_디버프처리.png",
           imageAlt: "1회차 물 번개 가속도 처리",
@@ -2938,20 +3015,19 @@
       seqStep.textContent = seq.step;
       seqChoices.innerHTML = "";
       clearResultState(seqResult);
-      seqScoreText.textContent = "부여된 디버프와 현재 처리 타이밍을 같이 보세요.";
+      seqScoreText.textContent = "부여된 디버프와 현재 처리 타이밍을 확인";
 
       const spreadAnswer = (truth) => truth === "진짜" ? "번개 산개" : "물 산개";
       const accelAnswer = (truth) => truth === "진짜" ? "멈춤" : "움직임";
-      const gazeAnswer = (truth) => truth === "진짜" ? "뒤돌기" : "바라보기";
+      const gazeAnswer = gazeActionAnswer;
       const gazePosition = (hasGaze) => hasGaze ? "안으로 들어가서" : "밖에서";
       const gazeChoices = (hasGaze) => [`${gazePosition(hasGaze)} 마안 바라보기`, `${gazePosition(hasGaze)} 마안 뒤돌기`];
       const gazeChoiceAnswer = (hasGaze, truth) => `${gazePosition(hasGaze)} 마안 ${gazeAnswer(truth)}`;
-      const floodBase = seq.finalDebuff === "알라그 필드" ? "다른 색" : "같은 색";
-      const floodAnswer = seq.flood === "가짜" ? (floodBase === "다른 색" ? "같은 색" : "다른 색") : floodBase;
-      const fireAnswer = seq.fireTruth === "진짜" ? "밖" : "안";
-      const waterAnswer = seq.waterTruth === "진짜" ? "안" : "밖";
-      const line = seq.thunderMemory === seq.releaseTop ? "피하기" : "밟기";
-      const cone = seq.blizzardMemory === seq.releaseBottom ? "피하기" : "밟기";
+      const floodAnswer = floodFinalColor(seq.finalDebuff, seq.flood);
+      const fireAnswer = chaosAnswerFor("혼돈의 불", seq.fireTruth);
+      const waterAnswer = chaosAnswerFor("혼돈의 물", seq.waterTruth);
+      const line = releasePatternAnswer(seq.thunderMemory, seq.releaseTop);
+      const cone = releasePatternAnswer(seq.blizzardMemory, seq.releaseBottom);
 
       const stages = {
         1: () => {
@@ -3030,9 +3106,7 @@
           seq.timePoint = "01:11";
           seqPrompt.textContent = "무의 범람에서 어떤 색을 맞아야 할까요?";
           renderSeqBuffs();
-          const sameColorMarker = seq.wound === "산자의 상처" ? "1" : "2";
-          const differentColorMarker = seq.wound === "산자의 상처" ? "2" : "1";
-          const floodMarkerAnswer = floodAnswer === "같은 색" ? sameColorMarker : differentColorMarker;
+          const floodMarkerAnswer = floodMarkerFor(seq.wound, floodAnswer);
           const woundIcon = icon(seq.wound === "산자의 상처" ? "산자의 상처.webp" : "죽은자의 상처.webp", seq.wound);
           const finalDebuffIcon = icon(seq.finalDebuff === "알라그 필드" ? "알라그 필드.webp" : "죽음 초월.webp", seq.finalDebuff);
           setSeqImageMarkerChoices({
@@ -3083,30 +3157,20 @@
           if (isGaze) {
             const thunderPattern = pick([1, 2]);
             const shouldSoakThunder = seq.thunderMemory === "가짜";
-            const isSupport = seq.player.startsWith("탱커") || seq.player.startsWith("힐러");
-            const thunderMarkers = isSupport
-              ? (shouldSoakThunder ? ["1", "3"] : ["2", "4"])
-              : (shouldSoakThunder ? ["5", "7"] : ["6", "8"]);
-            const gazeMarkers = isSupport
-              ? (action.hasGaze ? ["3", "4"] : ["1", "2"])
-              : (action.hasGaze ? ["5", "6"] : ["7", "8"]);
-            const markerAnswers = thunderMarkers.filter((marker) => gazeMarkers.includes(marker));
-            const gazeAnswerText = gazeAnswer(truth) === "바라보기" ? "마안 본다" : "마안 안본다";
+            const isSupport = isSupportPlayer(seq.player);
+            const markerAnswers = thunderMarkerAnswersFor(seq.player, shouldSoakThunder, action.hasGaze);
+            const gazeAnswerText = gazeTextAnswer(truth);
             setSeqThunderGazeChoices({
               image: `선더가_${seq.thunderMemory}_${thunderPattern}.webp`,
               imageAlt: `선더가 ${seq.thunderMemory} ${thunderPattern} 처리`,
               markerAnswers,
               gazeAnswer: gazeAnswerText,
               explain: [
-                `선더가 기억은 ${seq.thunderMemory}입니다.`,
-                `선택 직업은 ${seq.player}입니다.`,
+                `선더가는 ${seq.thunderMemory}입니다.`,
                 shouldSoakThunder
                   ? `선더가를 밟아야 하므로 ${isSupport ? "탱/힐 기준 1, 3" : "딜러 기준 5, 7"}을 봅니다.`
                   : `선더가를 피해야 하므로 ${isSupport ? "탱/힐 기준 2, 4" : "딜러 기준 6, 8"}을 봅니다.`,
                 action.hasGaze ? `마안 대상자이므로 보스 히트박스 안으로 들어갑니다.` : `마안 대상자가 아니므로 보스 히트박스 밖에서 처리합니다.`,
-                action.hasGaze
-                  ? `마안 대상자 위치는 ${isSupport ? "3, 4" : "5, 6"}입니다.`
-                  : `마안 비대상자 위치는 ${isSupport ? "1, 2" : "7, 8"}입니다.`,
                 `마안은 ${truth}이므로 ${gazeAnswerText}가 정답입니다.`
               ].join("<br>")
             });
