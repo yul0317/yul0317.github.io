@@ -1134,6 +1134,19 @@
       object-fit: contain;
     }
 
+    .release-water-image {
+      position: relative;
+    }
+
+    .release-water-image .release-water-center {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 60px;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+
     .sim-overlay-icon {
       position: absolute;
       top: 10px;
@@ -1628,7 +1641,7 @@
                 <img class="icon" src="img/가속도 폭탄.webp" alt="가속도 폭탄">
               </div>
               <p>탱힐 산개 대상자는 9시, 탱힐 본대는 12시, 딜러 산개 대상자는 3시, 딜러 본대는 6시. 가속도 폭탄도 동시에 멈춤/움직임으로 처리한다.</p>
-              <p class="red">* 공격 or 속박 징 대상자는 산개 / 진짜면 번개, 가짜면 물 디버프 대상자</p>
+              <p class="red">* 진짜면 번개, 가짜면 물 디버프 대상자 / 공격 or 속박 징 대상자는 산개</p>
               <div class="stage-images">
                 <img class="stage-image" src="img/빠른_물_번개_가속_디버프처리.png" alt="빠른 물 번개 가속 디버프 처리">
               </div>
@@ -2112,6 +2125,7 @@
           </div>
         </div>
       </section>
+
     </main>
   </div>
 
@@ -2366,6 +2380,10 @@
 
     function releasePatternAnswer(memory, release) {
       return memory === release ? "피하기" : "밟기";
+    }
+
+    function releaseTruthFileName(value) {
+      return value === "진짜" ? "진실" : "거짓";
     }
 
     function fact(label, value, options = {}) {
@@ -3417,6 +3435,72 @@
       });
     }
 
+    function setSeqReleaseWaterChoices(config) {
+      seqNextBtn.disabled = true;
+      seqNextBtn.textContent = "선택 필요";
+      const overlay = `마력방출_${releaseTruthFileName(config.releaseTop)}_${releaseTruthFileName(config.releaseBottom)}.png`;
+      const correctWater = config.waterLabel === "안" ? "히트박스 안" : "히트박스 밖";
+      const correctRelease = releaseComboLabel(config.thunderLabel, config.blizzardLabel);
+      const answer = `${correctWater} / ${correctRelease}`;
+      const state = { water: "", release: "" };
+      seqChoices.innerHTML = `
+        <div class="sim-choice-guide release-water-image">
+          <img src="img/simul/${config.image}" alt="마력 방출 혼돈의 물 처리 이미지">
+          <img class="release-water-center" src="img/simul/${overlay}" alt="마력 방출 ${config.releaseTop} ${config.releaseBottom}">
+        </div>
+        <button type="button" class="sim-choice" data-part="water" data-answer="히트박스 안">히트박스 안</button>
+        <button type="button" class="sim-choice" data-part="water" data-answer="히트박스 밖">히트박스 밖</button>
+        <button type="button" class="sim-choice" data-part="release" data-answer="선더가/블리자가 피함">선더가/블리자가 피함</button>
+        <button type="button" class="sim-choice" data-part="release" data-answer="선더가만 밟음">선더가만 밟음</button>
+        <button type="button" class="sim-choice" data-part="release" data-answer="블리자가만 밟음">블리자가만 밟음</button>
+        <button type="button" class="sim-choice" data-part="release" data-answer="선더가/블리자가 밟음">선더가/블리자가 밟음</button>
+      `;
+
+      seqChoices.querySelectorAll(".sim-choice").forEach((choice) => {
+        choice.addEventListener("click", () => {
+          if (choice.disabled) return;
+          const part = choice.dataset.part;
+          state[part] = choice.dataset.answer;
+          seqChoices.querySelectorAll(`.sim-choice[data-part="${part}"]`).forEach((item) => {
+            item.classList.toggle("selected", item === choice);
+          });
+          if (!state.water || !state.release) return;
+          const correct = state.water === correctWater && state.release === correctRelease;
+          seqChoices.querySelectorAll(".sim-choice").forEach((item) => {
+            item.disabled = true;
+            const isCorrect =
+              (item.dataset.part === "water" && item.dataset.answer === correctWater) ||
+              (item.dataset.part === "release" && item.dataset.answer === correctRelease);
+            if (isCorrect) item.classList.add("correct");
+          });
+          seqChoices.querySelectorAll(".sim-choice.selected").forEach((item) => {
+            const isCorrect =
+              (item.dataset.part === "water" && item.dataset.answer === correctWater) ||
+              (item.dataset.part === "release" && item.dataset.answer === correctRelease);
+            if (!isCorrect) item.classList.add("wrong");
+          });
+          setResultState(
+            seqResult,
+            correct,
+            seqResultDetail(`정답: ${answer}.`, { handlingDebuff: config.handlingDebuff })
+          );
+          seq.completedSteps.add(seq.step);
+          renderSeqBuffs();
+          updateSeqStats(correct);
+          seqNextBtn.disabled = false;
+          seqNextBtn.textContent = seq.step >= 16 ? "완료" : "다음 단계";
+          addResultLog(seqLog, `${seq.time} ${seq.title}`, `${state.water} / ${state.release}`, answer, correct);
+        });
+      });
+    }
+
+    function releaseComboLabel(thunderLabel, blizzardLabel) {
+      if (thunderLabel === "피하기" && blizzardLabel === "피하기") return "선더가/블리자가 피함";
+      if (thunderLabel === "밟기" && blizzardLabel === "피하기") return "선더가만 밟음";
+      if (thunderLabel === "피하기" && blizzardLabel === "밟기") return "블리자가만 밟음";
+      return "선더가/블리자가 밟음";
+    }
+
     function renderSeqPlayerPicker() {
       seq = null;
       selectedSeqPlayer = "";
@@ -3746,19 +3830,16 @@
           seq.title = "15. 마력 방출 + 혼돈의 물";
           seq.time = "02:00 / 02:04";
           seq.timePoint = "02:00";
-          const answer = `직선 ${line} / 부채꼴 ${cone} / 물 ${waterAnswer}`;
           seqPrompt.textContent = "마력 방출과 혼돈의 물을 같이 처리합니다.";
           renderSeqBuffs();
-          setSeqChoices([
-            "직선 피하기 / 부채꼴 피하기 / 물 안",
-            "직선 피하기 / 부채꼴 피하기 / 물 밖",
-            "직선 피하기 / 부채꼴 밟기 / 물 안",
-            "직선 피하기 / 부채꼴 밟기 / 물 밖",
-            "직선 밟기 / 부채꼴 피하기 / 물 안",
-            "직선 밟기 / 부채꼴 피하기 / 물 밖",
-            "직선 밟기 / 부채꼴 밟기 / 물 안",
-            "직선 밟기 / 부채꼴 밟기 / 물 밖"
-          ], answer, `마력 방출은 저장과 방출이 같으면 피하고 다르면 밟기. 혼돈의 물은 진짜면 안, 가짜면 밖.`, {
+          const releaseWaterPattern = pick([1, 2, 3, 4, 5, 6, 7, 8]);
+          setSeqReleaseWaterChoices({
+            image: `마력방출_혼돈의_물_${releaseWaterPattern}.webp`,
+            releaseTop: seq.releaseTop,
+            releaseBottom: seq.releaseBottom,
+            thunderLabel: line,
+            blizzardLabel: cone,
+            waterLabel: waterAnswer,
             handlingDebuff: handlingDebuffLine(icon("혼돈의 물.webp", "혼돈의 물"), seq.waterTruth)
           });
         },
