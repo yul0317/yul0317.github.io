@@ -607,13 +607,37 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-width: 42px;
+      width: 54px;
+      height: 54px;
       border: 1px solid rgba(255, 255, 255, .25);
-      border-radius: 999px;
-      padding: 4px 8px;
+      border-radius: 8px;
+      padding: 6px;
       color: #fff;
       font-size: 13px;
       font-weight: 800;
+    }
+
+    .role-badge img {
+      width: 42px;
+      height: 42px;
+      object-fit: contain;
+    }
+
+    .job-choice {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 54px;
+      padding: 7px 10px;
+      gap: 7px;
+      white-space: nowrap;
+    }
+
+    .job-choice img {
+      width: 36px;
+      height: 36px;
+      object-fit: contain;
+      display: block;
     }
 
     .result-stats {
@@ -766,6 +790,115 @@
       border-radius: 8px;
       overflow-x: auto;
       background: #fff;
+    }
+
+    .buff-split {
+      display: grid;
+      grid-template-columns: 200px minmax(160px, 220px);
+      gap: 6px;
+      min-width: 520px;
+      padding: 3px;
+    }
+
+    .buff-party,
+    .buff-memory {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .buff-party-row,
+    .buff-memory-row {
+      display: grid;
+      align-items: center;
+      border-bottom: 1px solid var(--line);
+      min-height: 27px;
+    }
+
+    .buff-party-row {
+      grid-template-columns: 26px 1fr;
+    }
+
+    .buff-memory-row {
+      grid-template-columns: 1fr 30px;
+    }
+
+    .buff-party-row:last-child,
+    .buff-memory-row:last-child {
+      border-bottom: 0;
+    }
+
+    .buff-job,
+    .buff-memory-label {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1px;
+      background: #f3f7f9;
+      border-right: 1px solid var(--line);
+      font-size: 11px;
+      font-weight: 800;
+      text-align: center;
+      line-height: 1.2;
+    }
+
+    .buff-job img {
+      width: 21px;
+      height: 21px;
+      object-fit: contain;
+    }
+
+    .buff-memory-label {
+      justify-content: flex-start;
+      padding-left: 8px;
+    }
+
+    .buff-memory-truth {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 27px;
+    }
+
+    .buff-memory-truth .icon.small {
+      width: 20px;
+      height: 20px;
+    }
+
+    .buff-personal-list {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      padding: 0;
+      min-height: 27px;
+      flex-wrap: nowrap;
+    }
+
+    .buff-personal-empty {
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .buff-personal-item {
+      display: grid;
+      justify-items: center;
+      gap: 0;
+      width: 23px;
+      color: var(--warn);
+      font-size: 9px;
+      line-height: 1;
+    }
+
+    .buff-personal-item.resolved {
+      opacity: .35;
+      filter: grayscale(.4);
+    }
+
+    .buff-personal-item .icon.small {
+      width: 20px;
+      height: 20px;
     }
 
     .sim-status-slot {
@@ -2040,6 +2173,17 @@
       { key: "D4", name: "딜러 4" }
     ];
 
+    function jobIcon(key, alt = key) {
+      return `<img src="img/job/${key}.png" alt="${alt}">`;
+    }
+
+    function roleIconForKey(key) {
+      if (key.startsWith("T")) return jobIcon("TankRole", "Tank");
+      if (key.startsWith("H")) return jobIcon("HealerRole", "Healer");
+      if (key.startsWith("D")) return jobIcon("DPSRole", "DPS");
+      return "--";
+    }
+
     tabs.forEach((tab) => {
       tab.addEventListener("click", () => {
         const id = tab.dataset.tab;
@@ -2301,6 +2445,7 @@
     function makeQuizScenarioState() {
       const assignments = makeGrandCrossAssignments();
       const player = pick(["탱커 1", "탱커 2", "힐러 1", "힐러 2", "딜러 1", "딜러 2", "딜러 3", "딜러 4"]);
+      const thirdAssignments = makeGrandCrossThirdAssignment();
       const schedule = makeGrandCrossSchedule();
       const gc1 = pick(["진짜", "가짜"]);
       const gc2 = pick(["진짜", "가짜"]);
@@ -2317,8 +2462,8 @@
         gc1Personal: assignments.first[player],
         gc2Personal: assignments.second[player],
         gc3: pick(["진짜", "가짜"]),
-        wound: pick(["산자의 상처", "죽은자의 상처"]),
-        finalDebuff: pick(["알라그 필드", "죽음 초월"]),
+        wound: thirdAssignments[player].wound,
+        finalDebuff: thirdAssignments[player].finalDebuff,
         flood: pick(["진짜", "가짜"]),
         chaosFirst,
         chaosSecond,
@@ -2720,6 +2865,8 @@
         "번개": `${icon("번개.webp", "번개")}`,
         "가속도": `${icon("가속도 폭탄.webp", "가속도 폭탄")}`,
         "마안": `${icon("저주의 외침.webp", "저주의 외침")}`,
+        "혼돈의 불": `${icon("혼돈의 불.webp", "혼돈의 불")}`,
+        "혼돈의 물": `${icon("혼돈의 물.webp", "혼돈의 물")}`,
         "없음": "-"
       };
       return map[name] || name;
@@ -2801,6 +2948,17 @@
       return { first, second };
     }
 
+    function makeGrandCrossThirdAssignment() {
+      const players = ["탱커 1", "탱커 2", "힐러 1", "힐러 2", "딜러 1", "딜러 2", "딜러 3", "딜러 4"];
+      const wounds = shuffle(["산자의 상처", "산자의 상처", "산자의 상처", "산자의 상처", "죽은자의 상처", "죽은자의 상처", "죽은자의 상처", "죽은자의 상처"]);
+      const finalDebuffs = shuffle(["알라그 필드", "알라그 필드", "알라그 필드", "알라그 필드", "죽음 초월", "죽음 초월", "죽음 초월", "죽음 초월"]);
+      const result = {};
+      players.forEach((player, index) => {
+        result[player] = { wound: wounds[index], finalDebuff: finalDebuffs[index] };
+      });
+      return result;
+    }
+
     function addPersonalGrandCross(data, truth, spreadStep, spreadAt, gazeStep, gazeAt, source) {
       const spreadIcons = [];
       if (data.main === "물" || data.main === "번개") {
@@ -2862,74 +3020,106 @@
     }
 
     function renderSeqBuffs(extra = []) {
-      const all = (seq?.buffs || []).concat(extra);
-      const sources = ["그랜드<br>크로스<br>1회차", "카오스<br>1회차", "그랜드<br>크로스<br>2회차", "카오스<br>2회차", "그랜드<br>크로스<br>3회차", "마력<br>방출<br>기억"];
-      const sourceKeys = ["그랜드 크로스 1회차", "카오스 1회차", "그랜드 크로스 2회차", "카오스 2회차", "그랜드 크로스 3회차", "마력 방출 기억"];
-      const bySource = {};
-      sourceKeys.forEach((source) => {
-        bySource[source] = all.filter((item) => item.source === source);
-      });
-
-      const columnData = (source) => {
-        const items = bySource[source];
-        if (source === "마력 방출 기억") {
-          const releaseEntries = items.map((item) => {
-            const resolved = seq && item.resolveStep ? (seq.step > item.resolveStep || seq.completedSteps.has(item.resolveStep)) : false;
-            const remain = seq && item.resolveAt && (!item.resolveStep || seq.step <= item.resolveStep) ? remainText(item.resolveAt) : "";
-            return `
-              <div class="buff-release-entry ${resolved ? "resolved" : ""}">
-                <span>${item.truth || ""}</span>
-                <span>${item.debuff || ""}</span>
-                <span class="buff-remain">${remain}</span>
+      const empty = `<span class="buff-personal-empty">-</span>`;
+      if (!seq) {
+        seqBuffs.innerHTML = `
+          <div class="buff-panel" aria-label="부여된 디버프">
+            <div class="buff-split">
+              <div class="buff-party">
+                ${seqPlayers.map((player) => `
+                  <div class="buff-party-row">
+                    <div class="buff-job">${jobIcon(player.key, player.key)}</div>
+                    <div class="buff-personal-list">${empty}</div>
+                  </div>
+                `).join("")}
               </div>
-            `;
-          }).join("");
-          return {
-            truthEntry: "",
-            debuffEntries: releaseEntries ? `<div class="buff-release-list">${releaseEntries}</div>` : "",
-            release: true
-          };
-        }
-        const truthValues = [];
-        items.forEach((item) => {
-          if (item.truth && !truthValues.includes(item.truth)) truthValues.push(item.truth);
-        });
-        const groups = [];
-        items.forEach((item) => {
-          const resolved = seq && item.resolveStep ? (seq.step > item.resolveStep || seq.completedSteps.has(item.resolveStep)) : false;
-          const remain = seq && item.resolveAt && (!item.resolveStep || seq.step <= item.resolveStep) ? remainText(item.resolveAt) : "";
-          const key = `${remain}|${resolved}`;
-          let group = groups.find((entry) => entry.key === key);
-          if (!group) {
-            group = { key, remain, resolved, debuffs: [] };
-            groups.push(group);
-          }
-          if (item.debuff) group.debuffs.push(item.debuff);
-        });
-        const truthResolved = items.length > 0 && items.every((item) => (
-          item.resolveStep ? (seq && (seq.step > item.resolveStep || seq.completedSteps.has(item.resolveStep))) : false
-        ));
-        const truthEntry = truthValues.length ? `<div class="buff-entry ${truthResolved ? "resolved" : ""}">${truthValues.join("")}</div>` : "";
-        const debuffEntries = groups.map((group) => {
-          return `
-            <div class="buff-entry ${group.resolved ? "resolved" : ""}">
-              ${group.debuffs.join(" ")}${group.remain ? `<span class="buff-remain">${group.remain}</span>` : ""}
+              <div class="buff-memory">
+                ${["그랜드크로스 1회차", "카오스 1회차", "그랜드크로스 2회차", "카오스 2회차", "그랜드크로스 3회차", "선더가", "블리자가"].map((label) => `
+                  <div class="buff-memory-row">
+                    <div class="buff-memory-label">${label}</div>
+                    <div class="buff-memory-truth">${empty}</div>
+                  </div>
+                `).join("")}
+              </div>
             </div>
-          `;
-        }).join("");
-        return { truthEntry, debuffEntries };
+          </div>
+        `;
+        return;
+      }
+
+      const playerDebuffItem = (iconHtml, resolveStep, resolveAt) => {
+        const resolved = resolveStep ? (seq.step > resolveStep || seq.completedSteps.has(resolveStep)) : false;
+        const remain = resolveAt && (!resolveStep || seq.step <= resolveStep) ? remainText(resolveAt) : "";
+        return `
+          <span class="buff-personal-item ${resolved ? "resolved" : ""}">
+            ${iconHtml}
+            <span>${remain || "&nbsp;"}</span>
+          </span>
+        `;
       };
-      const columns = sourceKeys.map((source) => columnData(source));
+
+      const playerItemsFor = (playerName) => {
+        const items = [];
+        const addGcItems = (data, assigned, spreadEvent, gazeEvent) => {
+          if (!assigned || !data) return;
+          if (data.main === "물" || data.main === "번개") {
+            items.push(playerDebuffItem(mechanicIcon(data.main), spreadEvent.step, spreadEvent.time));
+          }
+          if (data.accel) {
+            items.push(playerDebuffItem(mechanicIcon("가속도"), spreadEvent.step, spreadEvent.time));
+          }
+          if (data.main === "마안") {
+            items.push(playerDebuffItem(mechanicIcon("마안"), gazeEvent.step, gazeEvent.time));
+          }
+        };
+        addGcItems(seq.gc1Assign?.[playerName], seq.step >= 2, seq.gcSchedule.gc1Spread, seq.gcSchedule.gc1Gaze);
+        if (seq.step >= 3) {
+          items.push(playerDebuffItem(mechanicIcon(seq.chaosFirst), seq.chaosFirst === "혼돈의 불" ? 12 : 15, seq.chaosFirst === "혼돈의 불" ? "01:41" : "02:04"));
+        }
+        addGcItems(seq.gc2Assign?.[playerName], seq.step >= 5, seq.gcSchedule.gc2Spread, seq.gcSchedule.gc2Gaze);
+        if (seq.step >= 6) {
+          items.push(playerDebuffItem(mechanicIcon(seq.chaosSecond), seq.chaosSecond === "혼돈의 불" ? 12 : 15, seq.chaosSecond === "혼돈의 불" ? "01:41" : "02:04"));
+        }
+        if (seq.step >= 8) {
+          const third = seq.gc3Assign?.[playerName];
+          if (third) {
+            items.push(playerDebuffItem(icon(third.wound === "산자의 상처" ? "산자의 상처.webp" : "죽은자의 상처.webp", third.wound), 9, "01:11"));
+            items.push(playerDebuffItem(icon(third.finalDebuff === "알라그 필드" ? "알라그 필드.webp" : "죽음 초월.webp", third.finalDebuff), 9, "01:11"));
+          }
+        }
+        return items.length ? items.join("") : empty;
+      };
+
+      const truthOrEmpty = (available, truth) => available ? truthIcon(truth) : empty;
+      const memoryRows = [
+        ["그랜드크로스 1회차", seq.step >= 2, seq.gc1],
+        ["카오스 1회차", seq.step >= 3, seq.chaos1Truth],
+        ["그랜드크로스 2회차", seq.step >= 5, seq.gc2],
+        ["카오스 2회차", seq.step >= 6, seq.chaos2Truth],
+        ["그랜드크로스 3회차", seq.step >= 8, seq.gc3],
+        ["선더가", seq.step >= 11, seq.thunderMemory],
+        ["블리자가", seq.step >= 13, seq.blizzardMemory]
+      ];
 
       seqBuffs.innerHTML = `
         <div class="buff-panel" aria-label="부여된 디버프">
-          <div class="buff-slot-grid">
-            <div class="buff-slot-title buff-corner"></div>
-            ${sources.map((source) => `<div class="buff-slot-title">${source}</div>`).join("")}
-            <div class="buff-row-label">진짜/가짜</div>
-            ${columns.map((column) => column.release ? `<div class="buff-value release-merged">${column.debuffEntries}</div>` : `<div class="buff-value">${column.truthEntry}</div>`).join("")}
-            <div class="buff-row-label">디버프</div>
-            ${columns.map((column) => column.release ? "" : `<div class="buff-value debuffs">${column.debuffEntries}</div>`).join("")}
+          <div class="buff-split">
+            <div class="buff-party">
+              ${seqPlayers.map((player) => `
+                <div class="buff-party-row">
+                  <div class="buff-job">${jobIcon(player.key, player.key)}</div>
+                  <div class="buff-personal-list">${playerItemsFor(player.name)}</div>
+                </div>
+              `).join("")}
+            </div>
+            <div class="buff-memory">
+              ${memoryRows.map(([label, available, truth]) => `
+                <div class="buff-memory-row">
+                  <div class="buff-memory-label">${label}</div>
+                  <div class="buff-memory-truth">${truthOrEmpty(available, truth)}</div>
+                </div>
+              `).join("")}
+            </div>
           </div>
         </div>
       `;
@@ -3235,7 +3425,7 @@
       seqStep.textContent = "0";
       seqPlayerBadge.textContent = "--";
       seqPrompt.textContent = "시작하기 전에 본인 자리를 선택하세요.";
-      clearResultState(seqResult, "T/H/D 선택에 따라 본대 위치가 달라집니다. 탱/힐 본대는 2번, 딜러 본대는 4번입니다.");
+      clearResultState(seqResult, "");
       seqScoreText.textContent = "직업을 선택하면 시작할 수 있습니다.";
       seqLog.innerHTML = "";
       seqLog.classList.remove("open");
@@ -3246,7 +3436,7 @@
       seqWrongFilter.classList.remove("active");
       updateSeqStats();
       seqChoices.innerHTML = seqPlayers.map((player) => (
-        `<button class="sim-choice" type="button" data-player="${player.name}">${player.key}</button>`
+        `<button class="sim-choice job-choice" type="button" data-player="${player.name}" data-key="${player.key}" aria-label="${player.key}">${jobIcon(player.key, player.key)} ${player.name}</button>`
       )).join("");
       seqNextBtn.disabled = true;
       seqNextBtn.textContent = "직업 선택 필요";
@@ -3261,8 +3451,8 @@
           button.classList.add("selected");
           seqNextBtn.disabled = false;
           seqNextBtn.textContent = "시작";
-          seqPlayerBadge.textContent = button.textContent;
-          clearResultState(seqResult, `${button.textContent} 선택됨. 시작을 누르면 1단계부터 진행합니다.`);
+          seqPlayerBadge.innerHTML = roleIconForKey(button.dataset.key);
+          clearResultState(seqResult, `${button.dataset.key} 선택됨. 시작을 누르면 1단계부터 진행합니다.`);
         });
       });
     }
@@ -3280,6 +3470,7 @@
         return;
       }
       const grandCrossAssignments = makeGrandCrossAssignments();
+      const grandCrossThirdAssign = makeGrandCrossThirdAssignment();
       seq = {
         step: 0,
         completedSteps: new Set(),
@@ -3288,14 +3479,13 @@
         player: selectedSeqPlayer,
         gc1Assign: grandCrossAssignments.first,
         gc2Assign: grandCrossAssignments.second,
+        gc3Assign: grandCrossThirdAssign,
         gc1: pick(["진짜", "가짜"]),
         gc2: pick(["진짜", "가짜"]),
         gc3: pick(["진짜", "가짜"]),
         chaosFirst: pick(["혼돈의 불", "혼돈의 물"]),
         chaos1Truth: pick(["진짜", "가짜"]),
         chaos2Truth: pick(["진짜", "가짜"]),
-        wound: pick(["산자의 상처", "죽은자의 상처"]),
-        finalDebuff: pick(["알라그 필드", "죽음 초월"]),
         flood: pick(["진짜", "가짜"]),
         thunderMemory: pick(["진짜", "가짜"]),
         blizzardMemory: pick(["진짜", "가짜"]),
@@ -3304,6 +3494,9 @@
       };
       seq.gc1Personal = seq.gc1Assign[seq.player];
       seq.gc2Personal = seq.gc2Assign[seq.player];
+      seq.gc3Personal = seq.gc3Assign[seq.player];
+      seq.wound = seq.gc3Personal.wound;
+      seq.finalDebuff = seq.gc3Personal.finalDebuff;
       seq.chaosSecond = seq.chaosFirst === "혼돈의 불" ? "혼돈의 물" : "혼돈의 불";
       seq.fireTruth = seq.chaosFirst === "혼돈의 불" ? seq.chaos1Truth : seq.chaos2Truth;
       seq.waterTruth = seq.chaosFirst === "혼돈의 물" ? seq.chaos1Truth : seq.chaos2Truth;
@@ -3315,7 +3508,7 @@
       seqCorrectFilter.classList.remove("active");
       seqWrongFilter.classList.remove("active");
       updateSeqStats();
-      seqPlayerBadge.textContent = seqPlayerKey();
+      seqPlayerBadge.innerHTML = roleIconForKey(seqPlayerKey());
       advanceSequential();
     }
 
