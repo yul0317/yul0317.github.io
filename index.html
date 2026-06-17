@@ -49,16 +49,6 @@
       border-bottom: 1px solid rgba(255, 255, 255, .12);
     }
 
-    .topbar {
-      width: min(1180px, calc(100% - 32px));
-      margin: 0 auto;
-      padding: 12px 0 10px;
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 20px;
-      align-items: end;
-    }
-
     h1 {
       margin: 0;
       font-size: clamp(20px, 3vw, 30px);
@@ -67,14 +57,14 @@
     }
 
     .subtitle {
-      margin: 4px 0 0;
+      margin: 3px 0 0;
       color: #c6ced8;
       font-size: 13px;
     }
 
     .meta {
       display: flex;
-      gap: 8px;
+      gap: 3px;
       flex-wrap: wrap;
       justify-content: flex-end;
     }
@@ -82,7 +72,7 @@
     .pill {
       border: 1px solid rgba(255, 255, 255, .2);
       color: #eef3f8;
-      padding: 4px 8px;
+      padding: 3px;
       border-radius: 999px;
       font-size: 12px;
       white-space: nowrap;
@@ -93,7 +83,7 @@
     }
 
     .tabs {
-      width: min(1180px, calc(100% - 32px));
+      width: min(1180px, calc(100% - 8px));
       margin: 0 auto;
       display: flex;
       gap: 2px;
@@ -104,10 +94,11 @@
       border: 0;
       background: transparent;
       color: #d5dbe3;
-      padding: 9px 14px;
-      min-width: 104px;
+      padding: 3px;
+      min-width: 86px;
       cursor: pointer;
-      border-bottom: 3px solid transparent;
+      border-bottom: 2px solid transparent;
+      font-size: 12px;
     }
 
     .tab[aria-selected="true"] {
@@ -117,8 +108,8 @@
     }
 
     main {
-      width: min(1180px, calc(100% - 32px));
-      margin: 12px auto 18px;
+      width: min(1180px, calc(100% - 8px));
+      margin: 3px auto;
       flex: 1;
     }
 
@@ -133,15 +124,15 @@
     .summary-grid {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 8px;
-      margin-bottom: 12px;
+      gap: 3px;
+      margin-bottom: 3px;
     }
 
     .summary {
       background: var(--panel);
       border: 1px solid var(--line);
       border-radius: 8px;
-      padding: 10px;
+      padding: 3px;
       box-shadow: var(--shadow);
     }
 
@@ -159,7 +150,7 @@
     .icon-strip {
       display: flex;
       flex-wrap: wrap;
-      gap: 6px;
+      gap: 3px;
       align-items: center;
     }
 
@@ -183,16 +174,16 @@
 
     .legend {
       display: grid;
-      gap: 6px;
-      margin: 10px 0 12px;
+      gap: 3px;
+      margin: 3px 0;
     }
 
     .legend-row {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 3px;
       flex-wrap: wrap;
-      padding: 7px;
+      padding: 3px;
       background: var(--panel);
       border: 1px solid var(--line);
       border-radius: 8px;
@@ -201,9 +192,9 @@
     .legend-item {
       display: inline-flex;
       align-items: center;
-      gap: 7px;
+      gap: 3px;
       min-height: 42px;
-      padding: 5px 8px;
+      padding: 3px;
       background: #f8fafc;
       border: 1px solid var(--line);
       border-radius: 6px;
@@ -244,12 +235,12 @@
     }
 
     .section {
-      margin-top: 14px;
-      padding-top: 2px;
+      margin-top: 3px;
+      padding-top: 0;
     }
 
     h2 {
-      margin: 0 0 8px;
+      margin: 0 0 3px;
       font-size: 18px;
       letter-spacing: 0;
     }
@@ -257,14 +248,14 @@
     .flow {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 8px;
+      gap: 3px;
     }
 
     .flow-item {
       background: var(--panel);
       border: 1px solid var(--line);
       border-radius: 8px;
-      padding: 9px;
+      padding: 3px;
     }
 
     .flow-time {
@@ -278,11 +269,11 @@
       color: var(--accent);
       font-weight: 700;
       font-size: 12px;
-      margin-bottom: 6px;
+      margin-bottom: 3px;
     }
 
     .flow-title {
-      margin: 0 0 6px;
+      margin: 0 0 3px;
       font-weight: 700;
     }
 
@@ -295,21 +286,21 @@
     .stage-grid {
       display: grid;
       grid-template-columns: 1fr;
-      gap: 8px;
+      gap: 3px;
     }
 
     .stage {
       background: var(--panel);
       border: 1px solid var(--line);
       border-radius: 8px;
-      padding: 9px;
+      padding: 3px;
       display: grid;
-      gap: 6px;
+      gap: 3px;
     }
 
     .stage-head {
       display: flex;
-      gap: 10px;
+      gap: 3px;
       align-items: center;
       justify-content: space-between;
     }
@@ -340,7 +331,7 @@
     .stage-images {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 8px;
+      gap: 3px;
       align-items: start;
     }
 
@@ -356,20 +347,20 @@
     .rule-list {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 8px;
-      margin-top: 8px;
+      gap: 3px;
+      margin-top: 3px;
     }
 
     .rule {
       background: #fff;
       border: 1px solid var(--line);
       border-radius: 8px;
-      padding: 8px;
+      padding: 3px;
     }
 
     .rule b {
       display: block;
-      margin-bottom: 4px;
+      margin-bottom: 3px;
     }
 
     .rule span {
@@ -390,7 +381,7 @@
     .example-table th,
     .example-table td {
       border: 1px solid var(--line);
-      padding: 5px 7px;
+      padding: 3px;
       text-align: center;
       vertical-align: middle;
     }
@@ -421,9 +412,9 @@
     .row {
       display: grid;
       grid-template-columns: 84px 128px 1fr 190px;
-      gap: 10px;
+      gap: 3px;
       align-items: center;
-      padding: 8px 10px;
+      padding: 3px;
       border-top: 1px solid var(--line);
     }
 
@@ -457,7 +448,7 @@
       justify-self: start;
       border: 1px solid var(--line);
       border-radius: 999px;
-      padding: 3px 7px;
+      padding: 3px;
       color: #4c5663;
       background: #fff;
       font-size: 11px;
@@ -466,21 +457,21 @@
 
     .tag.icons {
       display: inline-flex;
-      gap: 5px;
+      gap: 3px;
       align-items: center;
-      padding: 3px 6px;
+      padding: 3px;
     }
 
     .callouts {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 8px;
+      gap: 3px;
     }
 
     .callout {
       border-left: 5px solid var(--accent);
       background: var(--panel);
-      padding: 9px 10px;
+      padding: 3px;
       border-radius: 8px;
       border-top: 1px solid var(--line);
       border-right: 1px solid var(--line);
@@ -493,7 +484,7 @@
 
     .callout b {
       display: block;
-      margin-bottom: 4px;
+      margin-bottom: 3px;
     }
 
     .callout p {
@@ -504,7 +495,7 @@
     .quiz-layout {
       display: grid;
       grid-template-columns: minmax(0, 1fr) 240px;
-      gap: 12px;
+      gap: 3px;
       align-items: start;
     }
 
@@ -512,19 +503,19 @@
       background: var(--panel);
       border: 1px solid var(--line);
       border-radius: 8px;
-      padding: 10px;
-      margin-bottom: 9px;
+      padding: 3px;
+      margin-bottom: 3px;
       box-shadow: var(--shadow);
     }
 
     .question h3 {
-      margin: 0 0 8px;
+      margin: 0 0 3px;
       font-size: 14px;
     }
 
     .choices {
       display: grid;
-      gap: 6px;
+      gap: 3px;
     }
 
     .choice {
@@ -533,7 +524,7 @@
       border: 1px solid var(--line);
       background: #fff;
       border-radius: 8px;
-      padding: 8px 9px;
+      padding: 3px;
       cursor: pointer;
       color: var(--ink);
     }
@@ -560,8 +551,8 @@
 
     .explain {
       display: none;
-      margin: 8px 0 0;
-      padding: 8px 9px;
+      margin: 3px 0 0;
+      padding: 3px;
       border-radius: 8px;
       background: #f4f6f8;
       color: #4d5662;
@@ -579,7 +570,7 @@
       background: #222a32;
       color: #fff;
       border-radius: 8px;
-      padding: 12px;
+      padding: 3px;
       box-shadow: var(--shadow);
       display: flex;
       flex-direction: column;
@@ -592,7 +583,7 @@
       font-size: 34px;
       font-weight: 800;
       line-height: 1;
-      margin: 6px 0;
+      margin: 3px 0;
       font-variant-numeric: tabular-nums;
     }
 
@@ -600,26 +591,26 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 8px;
+      gap: 3px;
     }
 
     .role-badge {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 54px;
-      height: 54px;
+      width: 30px;
+      height: 30px;
       border: 1px solid rgba(255, 255, 255, .25);
-      border-radius: 8px;
-      padding: 6px;
+      border-radius: 6px;
+      padding: 3px;
       color: #fff;
       font-size: 13px;
       font-weight: 800;
     }
 
     .role-badge img {
-      width: 42px;
-      height: 42px;
+      width: 26px;
+      height: 26px;
       object-fit: contain;
     }
 
@@ -628,8 +619,8 @@
       align-items: center;
       justify-content: center;
       min-height: 54px;
-      padding: 7px 10px;
-      gap: 7px;
+      padding: 3px;
+      gap: 3px;
       white-space: nowrap;
     }
 
@@ -643,8 +634,8 @@
     .result-stats {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 6px;
-      margin: 8px 0 0;
+      gap: 3px;
+      margin: 3px 0 0;
       font-size: 12px;
       font-weight: 800;
     }
@@ -653,7 +644,7 @@
       display: block;
       border: 1px solid rgba(255, 255, 255, .16);
       border-radius: 8px;
-      padding: 5px 7px;
+      padding: 3px;
       background: rgba(255, 255, 255, .06);
       color: inherit;
       cursor: pointer;
@@ -675,14 +666,14 @@
     }
 
     .scorebox p {
-      margin: 0 0 10px;
+      margin: 0 0 3px;
       color: #cbd3dc;
       font-size: 12px;
     }
 
     .actions {
       display: grid;
-      gap: 6px;
+      gap: 3px;
     }
 
     .primary {
@@ -691,7 +682,7 @@
       background: #71c5bf;
       color: #102226;
       font-weight: 800;
-      padding: 8px 10px;
+      padding: 3px;
       cursor: pointer;
     }
 
@@ -700,16 +691,16 @@
       border-radius: 8px;
       background: transparent;
       color: #fff;
-      padding: 8px 10px;
+      padding: 3px;
       cursor: pointer;
     }
 
     .mini-list {
-      margin: 8px 0 0;
+      margin: 3px 0 0;
       padding: 0;
       list-style: none;
       display: grid;
-      gap: 5px;
+      gap: 3px;
       color: #dce5ec;
       font-size: 12px;
     }
@@ -725,13 +716,13 @@
     .sim-layout {
       display: grid;
       grid-template-columns: minmax(0, 1fr) 260px;
-      gap: 12px;
+      gap: 3px;
       align-items: start;
     }
 
     .sim-main {
       display: grid;
-      gap: 10px;
+      gap: 3px;
       min-width: 0;
     }
 
@@ -739,16 +730,16 @@
       background: var(--panel);
       border: 1px solid var(--line);
       border-radius: 8px;
-      padding: 12px;
+      padding: 3px;
       box-shadow: var(--shadow);
       display: grid;
-      gap: 10px;
+      gap: 3px;
     }
 
     .sim-head {
       display: flex;
       justify-content: space-between;
-      gap: 8px;
+      gap: 3px;
       align-items: center;
       flex-wrap: wrap;
     }
@@ -775,58 +766,298 @@
     .sim-facts {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 7px;
+      gap: 3px;
     }
 
     .sim-side {
       display: grid;
-      gap: 12px;
+      gap: 3px;
       align-items: start;
+    }
+
+    .seq-layout {
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr);
+      gap: 3px;
+      height: calc(100vh - 42px);
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    .seq-top {
+      display: grid;
+      grid-template-columns: 360px minmax(0, 1fr);
+      gap: 3px;
+      align-items: stretch;
+      background: #222a32;
+      color: #fff;
+      border-radius: 8px;
+      padding: 3px;
+      box-shadow: var(--shadow);
+      width: 100%;
+      position: sticky;
+      top: 0;
+      z-index: 12;
+    }
+
+    .seq-layout .scorebox {
+      position: static;
+      min-height: auto;
+      max-height: none;
+      height: 100%;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 3px;
+      align-content: start;
+      align-items: center;
+      padding: 0;
+      background: transparent;
+      border-radius: 0;
+      box-shadow: none;
+    }
+
+    .seq-layout .scorebox>div:first-child {
+      font-weight: 800;
+      white-space: nowrap;
+      font-size: 12px;
+      min-height: 30px;
+      display: flex;
+      align-items: center;
+    }
+
+    .seq-layout .score-line {
+      justify-content: flex-start;
+      gap: 3px;
+      min-height: 30px;
+    }
+
+    .seq-layout .score {
+      margin: 0;
+      font-size: 18px;
+    }
+
+    .seq-layout .actions {
+      grid-column: 2;
+      grid-row: 1 / span 2;
+      grid-template-columns: 1fr;
+      min-width: 0;
+      display: none;
+    }
+
+    .seq-layout .sim-status-slot {
+      grid-column: 1 / -1;
+    }
+
+    .seq-layout #seqNextBtn {
+      display: none;
+    }
+
+    .seq-layout #seqResetBtn {
+      width: 30px;
+      height: 30px;
+      padding: 0;
+      border-radius: 6px;
+      font-size: 15px;
+      line-height: 1;
+    }
+
+    .seq-layout .result-stats {
+      margin: 0;
+    }
+
+    .seq-layout .log-toggle {
+      margin: 0;
+    }
+
+    .seq-history .log-toggle {
+      display: block;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      color: #fff;
+      font-weight: 800;
+      font-size: 12px;
+      text-align: left;
+      cursor: default;
+      pointer-events: none;
+      min-height: 30px;
+      line-height: 30px;
+    }
+
+    .seq-layout .sim-log {
+      max-height: none;
+      min-height: 0;
+      margin-top: 0;
+    }
+
+    .seq-history {
+      display: grid;
+      grid-template-rows: auto auto minmax(0, 1fr);
+      align-content: start;
+      gap: 3px;
+      min-width: 0;
+      min-height: 0;
+    }
+
+    .seq-content {
+      min-width: 0;
+      min-height: 0;
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(34, 42, 50, .32) transparent;
+    }
+
+    .seq-content::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    .seq-content::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .seq-content::-webkit-scrollbar-thumb {
+      background: rgba(34, 42, 50, .28);
+      border: 3px solid transparent;
+      border-radius: 999px;
+      background-clip: content-box;
+    }
+
+    .seq-accordion {
+      display: grid;
+      gap: 3px;
+      min-width: 0;
+    }
+
+    .seq-expansion {
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: #fff;
+      overflow: hidden;
+    }
+
+    .seq-expansion-head {
+      width: 100%;
+      min-height: 31px;
+      border: 0;
+      background: #f3f6f8;
+      color: var(--ink);
+      display: grid;
+      grid-template-columns: 18px minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 3px;
+      padding: 3px;
+      text-align: left;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .seq-expansion-head:disabled {
+      cursor: not-allowed;
+      opacity: .45;
+    }
+
+    .seq-expansion.open .seq-expansion-head {
+      background: #e7f5f4;
+    }
+
+    .seq-expansion.done .seq-expansion-head {
+      background: #f7fbfb;
+    }
+
+    .seq-expansion-chevron {
+      color: var(--muted);
+      transform: rotate(0deg);
+      transition: transform .15s ease;
+    }
+
+    .seq-expansion.open .seq-expansion-chevron {
+      transform: rotate(90deg);
+    }
+
+    .seq-expansion-title {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .seq-expansion-state {
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .seq-expansion-body {
+      display: none;
+      border-top: 1px solid var(--line);
+      padding: 3px;
+    }
+
+    .seq-expansion.open .seq-expansion-body {
+      display: block;
+    }
+
+    .seq-expansion-placeholder {
+      color: var(--muted);
+      font-size: 12px;
+      padding: 3px;
     }
 
     .buff-panel {
       width: 100%;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      overflow-x: auto;
-      background: #fff;
+      border: 1px solid rgba(255, 255, 255, .16);
+      border-radius: 6px;
+      overflow: hidden;
+      background: #222a32;
     }
 
     .buff-split {
       display: grid;
-      grid-template-columns: 200px minmax(130px, 170px);
-      gap: 6px;
-      min-width: 520px;
-      padding: 3px;
+      grid-template-columns: 186px 1px 126px 28px;
+      gap: 3px;
+      min-width: 0;
+      padding: 2px;
+    }
+
+    .buff-divider {
+      width: 1px;
+      background: rgba(255, 255, 255, .82);
+      border-radius: 999px;
     }
 
     .buff-party,
-    .buff-memory {
-      border: 1px solid var(--line);
-      border-radius: 8px;
+    .buff-memory,
+    .buff-truths {
+      border: 1px solid rgba(255, 255, 255, .24);
+      border-radius: 6px;
       overflow: hidden;
-      background: #fff;
+      background: #28313a;
+      display: grid;
+      gap: 0;
     }
 
     .buff-party-row,
-    .buff-memory-row {
+    .buff-memory-row,
+    .buff-truth-row {
       display: grid;
       align-items: center;
-      border-bottom: 1px solid var(--line);
-      min-height: 27px;
+      min-height: 23px;
+      background: rgba(255, 255, 255, .07);
     }
 
     .buff-party-row {
-      grid-template-columns: 26px 1fr;
+      grid-template-columns: 24px 1fr;
     }
 
     .buff-memory-row {
-      grid-template-columns: 26px 1fr;
+      grid-template-columns: 1fr;
+      padding-left: 4px;
     }
 
-    .buff-party-row:last-child,
-    .buff-memory-row:last-child {
-      border-bottom: 0;
+    .buff-truth-row {
+      justify-items: center;
     }
 
     .buff-job,
@@ -837,8 +1068,9 @@
       align-items: center;
       justify-content: center;
       padding: 1px;
-      background: #f3f7f9;
-      border-right: 1px solid var(--line);
+      background: transparent;
+      border-right: 1px solid rgba(255, 255, 255, .22);
+      color: #f3f7fb;
       font-size: 11px;
       font-weight: 800;
       text-align: center;
@@ -846,28 +1078,29 @@
     }
 
     .buff-job img {
-      width: 21px;
-      height: 21px;
+      width: 19px;
+      height: 19px;
       object-fit: contain;
     }
 
     .buff-memory-label {
       justify-content: flex-start;
-      padding-left: 4px;
+      padding-left: 0;
       border-right: 0;
-      background: #fff;
+      background: transparent;
+      color: #f1f5f9;
       font-size: 11px;
     }
 
     .buff-memory-truth {
-      min-height: 27px;
-      background: #f3f7f9;
-      border-right: 1px solid var(--line);
+      min-height: 23px;
+      background: transparent;
+      border-right: 0;
     }
 
     .buff-memory-truth .icon.small {
-      width: 21px;
-      height: 21px;
+      width: 20px;
+      height: 20px;
     }
 
     .buff-personal-list {
@@ -875,12 +1108,12 @@
       align-items: center;
       gap: 0;
       padding: 0;
-      min-height: 27px;
+      min-height: 23px;
       flex-wrap: nowrap;
     }
 
     .buff-personal-empty {
-      color: var(--muted);
+      color: #dce5ec;
       font-size: 11px;
     }
 
@@ -888,10 +1121,11 @@
       display: grid;
       justify-items: center;
       gap: 0;
-      width: 23px;
-      color: var(--warn);
-      font-size: 9px;
+      width: 19px;
+      color: #f4c542;
+      font-size: 8px;
       line-height: 1;
+      margin: 1px 0;
     }
 
     .buff-personal-item.resolved {
@@ -900,8 +1134,14 @@
     }
 
     .buff-personal-item .icon.small {
-      width: 20px;
-      height: 20px;
+      width: 18px;
+      height: 18px;
+      margin-bottom: -2px;
+    }
+
+    .buff-personal-item span {
+      position: relative;
+      top: -2px;
     }
 
     .sim-status-slot {
@@ -910,7 +1150,7 @@
 
     .buff-panel-title {
       margin: 0;
-      padding: 9px 12px;
+      padding: 3px;
       background: #edf4f5;
       border-bottom: 1px solid var(--line);
       font-size: 13px;
@@ -929,7 +1169,7 @@
       justify-content: center;
       gap: 3px;
       min-height: 38px;
-      padding: 6px;
+      padding: 3px;
       border-right: 1px solid var(--line);
       border-bottom: 1px solid var(--line);
       font-size: 12px;
@@ -957,7 +1197,7 @@
 
     .buff-slot-title {
       height: 44px;
-      padding: 5px;
+      padding: 3px;
       background: #eaf1f2;
       color: var(--ink);
       font-weight: 800;
@@ -979,7 +1219,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 4px 3px;
+      padding: 3px;
       background: #f7f9fb;
       border-right: 1px solid var(--line);
       border-bottom: 1px solid var(--line);
@@ -994,8 +1234,8 @@
       display: grid;
       align-content: center;
       justify-items: center;
-      gap: 4px;
-      padding: 4px;
+      gap: 3px;
+      padding: 3px;
       min-width: 0;
       min-height: 30px;
       border-right: 1px solid var(--line);
@@ -1039,14 +1279,14 @@
 
     .buff-release-list {
       display: grid;
-      gap: 4px;
+      gap: 3px;
       width: 100%;
     }
 
     .buff-release-entry {
       display: grid;
       grid-template-columns: 22px 1fr 34px;
-      gap: 4px;
+      gap: 3px;
       align-items: center;
       color: var(--warn);
       font-size: 11px;
@@ -1069,7 +1309,7 @@
       border-radius: 8px;
       background: #fff;
       overflow: hidden;
-      margin-bottom: 16px;
+      margin-bottom: 3px;
     }
 
     .timeline-row {
@@ -1083,7 +1323,7 @@
     }
 
     .timeline-label {
-      padding: 9px 12px;
+      padding: 3px;
       color: var(--ink);
       font-weight: 800;
       background: #f7f9fb;
@@ -1093,14 +1333,14 @@
     .timeline-items {
       display: flex;
       flex-wrap: wrap;
-      gap: 6px;
-      padding: 8px;
+      gap: 3px;
+      padding: 3px;
     }
 
     .timeline-chip {
       border: 1px solid var(--line);
       border-radius: 999px;
-      padding: 4px 8px;
+      padding: 3px;
       color: var(--warn);
       background: #fff;
       font-size: 12px;
@@ -1115,7 +1355,7 @@
     .sim-choices {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 7px;
+      gap: 3px;
     }
 
     .sim-choice-guide {
@@ -1123,7 +1363,7 @@
       border: 1px solid var(--line);
       border-radius: 8px;
       background: #fff;
-      padding: 6px;
+      padding: 3px;
     }
 
     .sim-choice-guide.layered {
@@ -1135,6 +1375,14 @@
       width: 100%;
       max-height: 260px;
       object-fit: contain;
+    }
+
+    .sim-choice-placeholder {
+      width: 100%;
+      min-height: 220px;
+      border-radius: 6px;
+      background:
+        linear-gradient(135deg, rgba(113, 197, 191, .12), rgba(34, 42, 50, .05));
     }
 
     .release-water-image {
@@ -1153,15 +1401,17 @@
     .release-choice-row {
       display: grid;
       grid-column: 1 / -1;
-      grid-template-columns: 92px repeat(2, minmax(0, 1fr));
-      gap: 7px;
+      grid-template-columns: max-content repeat(2, max-content);
+      gap: 3px;
       align-items: center;
+      min-height: 30px;
     }
 
     .release-choice-label {
       color: var(--ink);
       font-size: 13px;
       font-weight: 800;
+      white-space: nowrap;
     }
 
     .sim-overlay-icon {
@@ -1170,8 +1420,8 @@
       right: 10px;
       display: inline-flex;
       align-items: center;
-      gap: 4px;
-      padding: 5px 7px;
+      gap: 3px;
+      padding: 3px;
       border-radius: 999px;
       background: rgba(255, 255, 255, .88);
       color: var(--ink);
@@ -1183,13 +1433,13 @@
     .sim-choice-board {
       grid-column: 1 / -1;
       display: grid;
-      gap: 8px;
+      gap: 3px;
     }
 
     .sim-choice-group {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 7px;
+      gap: 3px;
     }
 
     .sim-choice-group.image-choices {
@@ -1201,23 +1451,27 @@
       color: var(--muted);
       font-size: 12px;
       font-weight: 800;
+      white-space: nowrap;
     }
 
     .sim-choice {
       border: 1px solid var(--line);
       border-radius: 8px;
       background: #fff;
-      padding: 8px 9px;
+      padding: 3px;
       text-align: left;
       cursor: pointer;
       color: var(--ink);
       font-weight: 700;
+      white-space: nowrap;
+      width: fit-content;
+      min-width: max-content;
     }
 
     .sim-choice.image-choice {
-      padding: 6px;
+      padding: 3px;
       display: grid;
-      gap: 5px;
+      gap: 3px;
       text-align: center;
     }
 
@@ -1249,17 +1503,263 @@
       background: #fff0f0;
     }
 
+    .seq-active-panel {
+      display: grid;
+      gap: 3px;
+      border: 0;
+      border-radius: 0;
+      box-shadow: none;
+      padding: 0;
+      background: transparent;
+    }
+
+    .seq-active-panel .sim-head {
+      display: none;
+    }
+
+    .seq-active-panel .sim-title {
+      font-size: 16px;
+    }
+
+    .seq-active-panel .sim-prompt {
+      margin: 0;
+      font-size: 13px;
+    }
+
+    .seq-active-panel .sim-choices {
+      grid-template-columns: repeat(auto-fit, minmax(96px, 1fr));
+    }
+
+    .seq-active-panel .sim-choice {
+      min-height: 27px;
+      padding: 2px 3px;
+      border-radius: 6px;
+      font-size: 11px;
+      line-height: 1.25;
+    }
+
+    .seq-active-panel .sim-choice-label {
+      font-size: 11px;
+    }
+
+    .seq-active-panel .sim-choice-group {
+      grid-template-columns: repeat(auto-fit, minmax(76px, 1fr));
+    }
+
+    .seq-active-panel .sim-choice-guide img {
+      max-height: 220px;
+    }
+
+    .seq-choice-controls {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      min-width: 0;
+      overflow: visible;
+      scrollbar-width: thin;
+    }
+
+    .seq-choice-list {
+      flex-direction: row;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .seq-choice-list .sim-choice-label {
+      flex: 0 0 100%;
+    }
+
+    .seq-choice-controls .sim-choice-board {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .seq-choice-controls .sim-choice-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 3px;
+      align-items: center;
+    }
+
+    .seq-choice-controls .sim-choice-group .sim-choice-label {
+      flex: 0 0 100%;
+    }
+
+    .seq-choice-controls .sim-choice {
+      min-width: 36px;
+      width: fit-content;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .seq-choice-controls .release-choice-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .seq-active-panel:has(.sim-choice-guide) {
+      grid-template-columns: minmax(220px, 28%) minmax(230px, 27%) minmax(360px, 1fr);
+      grid-template-rows: auto auto auto;
+      align-items: start;
+      gap: 3px;
+    }
+
+    .seq-active-panel:has(.sim-choice-guide) .sim-prompt {
+      grid-column: 2;
+      grid-row: 1;
+      padding-bottom: 3px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .seq-active-panel:has(.sim-choice-guide) .sim-choices {
+      display: contents;
+    }
+
+    .seq-active-panel:has(.sim-choice-guide) .sim-choice-guide {
+      grid-column: 1;
+      grid-row: 1 / span 3;
+      min-width: 0;
+      align-self: stretch;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .seq-active-panel:has(.sim-choice-guide) .seq-choice-controls {
+      grid-column: 2;
+      grid-row: 2;
+      align-self: start;
+    }
+
+    .seq-active-panel:has(.sim-choice-guide) .seq-inline-next {
+      grid-column: 2;
+      grid-row: 3;
+      align-self: end;
+      justify-self: end;
+      margin-top: 3px;
+    }
+
+    .seq-active-panel:has(.sim-choice-guide) .sim-result {
+      grid-column: 3;
+      grid-row: 1 / span 3;
+      min-width: 0;
+      align-self: stretch;
+      height: min(230px, calc(100vh - 250px));
+      max-height: min(230px, calc(100vh - 250px));
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      overflow-y: hidden;
+      overflow-x: hidden;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(34, 42, 50, .32) transparent;
+    }
+
+    .seq-active-panel:has(.sim-choice-guide) .sim-result::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    .seq-active-panel:has(.sim-choice-guide) .sim-result::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .seq-active-panel:has(.sim-choice-guide) .sim-result::-webkit-scrollbar-thumb {
+      background: rgba(34, 42, 50, .28);
+      border: 3px solid transparent;
+      border-radius: 999px;
+      background-clip: content-box;
+    }
+
+    .seq-active-panel:has(.sim-choice-guide) .sim-result .stage-images {
+      display: flex;
+      flex-wrap: nowrap;
+      gap: 3px;
+      overflow-x: auto;
+      overflow-y: hidden;
+      padding-bottom: 3px;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(34, 42, 50, .32) transparent;
+    }
+
+    .seq-active-panel:has(.sim-choice-guide) .sim-result .stage-images::-webkit-scrollbar {
+      height: 10px;
+    }
+
+    .seq-active-panel:has(.sim-choice-guide) .sim-result .stage-images::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .seq-active-panel:has(.sim-choice-guide) .sim-result .stage-images::-webkit-scrollbar-thumb {
+      background: rgba(34, 42, 50, .28);
+      border: 3px solid transparent;
+      border-radius: 999px;
+      background-clip: content-box;
+    }
+
+    .seq-active-panel:has(.sim-choice-guide) .sim-result .stage-images>* {
+      flex: 0 0 min(280px, 80vw);
+    }
+
+    .seq-active-panel:has(.sim-choice-guide) .sim-result .stage {
+      min-width: min(520px, 100%);
+      width: 100%;
+      max-width: none;
+    }
+
+    .seq-result-fixed {
+      flex: 0 0 auto;
+      max-height: 96px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(34, 42, 50, .32) transparent;
+    }
+
+    .seq-result-stage-scroll {
+      flex: 1 1 auto;
+      min-height: 0;
+      overflow-y: auto;
+      overflow-x: hidden;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(34, 42, 50, .32) transparent;
+    }
+
+    .seq-result-stage-scroll::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    .seq-result-stage-scroll::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .seq-result-stage-scroll::-webkit-scrollbar-thumb {
+      background: rgba(34, 42, 50, .28);
+      border: 3px solid transparent;
+      border-radius: 999px;
+      background-clip: content-box;
+    }
+
+    .seq-inline-next {
+      justify-self: end;
+      min-height: 28px;
+      padding: 3px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+    }
+
     .sim-result {
       min-height: 34px;
       border-radius: 8px;
       background: #f4f6f8;
       color: #4d5662;
-      padding: 8px 9px;
+      padding: 3px;
       font-size: 12px;
     }
 
     .sim-result .stage {
-      margin-top: 8px;
+      margin-top: 3px;
       background: #fff;
       box-shadow: none;
       text-align: left;
@@ -1274,12 +1774,12 @@
     }
 
     .sim-log {
-      margin: 8px 0 0;
+      margin: 3px 0 0;
       padding: 0;
       list-style: none;
       display: grid;
       align-content: start;
-      gap: 5px;
+      gap: 3px;
       color: #dce5ec;
       font-size: 11px;
       flex: 1;
@@ -1292,7 +1792,7 @@
 
     .sim-log li {
       border-top: 1px solid rgba(255, 255, 255, .16);
-      padding-top: 5px;
+      padding-top: 3px;
     }
 
     .sim-log::-webkit-scrollbar {
@@ -1341,6 +1841,8 @@
       .topbar,
       .quiz-layout,
       .sim-layout,
+      .seq-top,
+      .seq-content,
       .summary-grid,
       .flow,
       .legend,
@@ -1351,11 +1853,59 @@
       }
 
       .sim-layout {
-        gap: 8px;
+        gap: 3px;
+      }
+
+      .seq-layout .scorebox {
+        grid-template-columns: 1fr auto;
+        gap: 3px;
+      }
+
+      .seq-top {
+        grid-template-columns: 1fr;
+      }
+
+      .buff-split {
+        grid-template-columns: minmax(150px, 1fr) 1px minmax(96px, .7fr) 26px;
+      }
+
+      .seq-layout .actions {
+        min-width: 0;
+      }
+
+      .seq-layout .sim-log {
+        max-height: 160px;
+      }
+
+      .seq-history .log-toggle {
+        display: block;
+        padding: 3px;
+        border: 1px solid rgba(255, 255, 255, .24);
+        border-radius: 8px;
+        background: transparent;
+        color: #fff;
+        text-align: center;
+        cursor: pointer;
+        pointer-events: auto;
+        min-height: 0;
+        line-height: 1.2;
+      }
+
+      .seq-history .result-stats,
+      .seq-history .sim-log {
+        display: none;
+      }
+
+      .seq-history.log-open .result-stats {
+        display: grid;
+      }
+
+      .seq-history .sim-log.open {
+        display: grid;
       }
 
       .sim-card {
-        padding: 9px;
+        padding: 3px;
       }
 
       .sim-title {
@@ -1385,7 +1935,7 @@
 
       .row {
         grid-template-columns: 74px 1fr;
-        gap: 6px 12px;
+        gap: 3px;
       }
 
       .tag {
@@ -1412,22 +1962,438 @@
         display: grid;
       }
     }
+
+    @media (max-width: 640px) {
+      body {
+        background: #eef1f5;
+        font-size: 11px;
+        line-height: 1.3;
+      }
+
+      header {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+      }
+
+      .tabs {
+        width: 100%;
+        padding: 0 4px;
+        gap: 3px;
+      }
+
+      .tab {
+        flex: 1 0 auto;
+        min-width: 0;
+        padding: 3px;
+        font-size: 12px;
+        font-weight: 800;
+      }
+
+      main {
+        width: 100%;
+        margin: 3px 0;
+        padding: 0 3px;
+      }
+
+      .section {
+        margin-top: 8px;
+      }
+
+      h2 {
+        margin: 0 0 3px;
+        font-size: 14px;
+      }
+
+      .rule-list,
+      .legend,
+      .flow,
+      .callouts {
+        gap: 3px;
+      }
+
+      .rule,
+      .legend-row,
+      .flow-item,
+      .callout,
+      .sim-card,
+      .stage,
+      .timeline,
+      .timeline-panel {
+        border-radius: 6px;
+        box-shadow: none;
+      }
+
+      .rule,
+      .flow-item,
+      .callout,
+      .stage {
+        padding: 3px;
+      }
+
+      .legend-row {
+        padding: 3px;
+        gap: 3px;
+      }
+
+      .legend-item {
+        min-height: 34px;
+        padding: 3px;
+        gap: 3px;
+      }
+
+      .legend-item b,
+      .legend-item>div>span,
+      .rule span,
+      .flow-copy,
+      .stage p {
+        font-size: 11px;
+      }
+
+      .icon {
+        width: 20px;
+        height: 20px;
+      }
+
+      .icon.large {
+        width: 26px;
+        height: 26px;
+      }
+
+      .stage-grid {
+        gap: 3px;
+      }
+
+      .stage {
+        border-left: 4px solid #71c5bf;
+      }
+
+      .stage-head {
+        gap: 3px;
+      }
+
+      .stage-title {
+        font-size: 12px;
+      }
+
+      .stage-time {
+        font-size: 11px;
+      }
+
+      .stage-images,
+      .sim-result .stage-images {
+        grid-template-columns: 1fr;
+        gap: 3px;
+      }
+
+      .stage-image,
+      .sim-result .stage-image {
+        max-height: 210px;
+        border-radius: 6px;
+      }
+
+      .timeline {
+        font-size: 11px;
+      }
+
+      .row {
+        grid-template-columns: 54px 1fr;
+        gap: 3px;
+        padding: 3px;
+      }
+
+      .time {
+        font-size: 11px;
+      }
+
+      .event {
+        font-size: 12px;
+      }
+
+      .note {
+        grid-column: 2;
+        font-size: 11px;
+      }
+
+      .tag {
+        grid-column: 2;
+        justify-self: start;
+        font-size: 10px;
+        padding: 2px 3px;
+      }
+
+      .sim-layout,
+      .seq-layout {
+        gap: 3px;
+      }
+
+      .scorebox {
+        padding: 3px;
+        border-radius: 6px;
+      }
+
+      .seq-top {
+        padding: 3px;
+        gap: 3px;
+        border-radius: 6px;
+      }
+
+      .seq-layout .scorebox {
+        grid-template-columns: 1fr auto;
+        gap: 3px;
+      }
+
+      .seq-layout .score-line {
+        gap: 3px;
+      }
+
+      .seq-layout .score {
+        font-size: 18px;
+      }
+
+      .role-badge {
+        width: 28px;
+        height: 28px;
+      }
+
+      .role-badge img {
+        width: 22px;
+        height: 22px;
+      }
+
+      .buff-panel {
+        border-radius: 5px;
+      }
+
+      .buff-split {
+        gap: 3px;
+        padding: 2px;
+      }
+
+      .buff-party-row,
+      .buff-memory-row {
+        min-height: 23px;
+      }
+
+      .buff-party-row,
+      .buff-memory-row {
+        grid-template-columns: 23px 1fr;
+      }
+
+      .buff-memory-row {
+        grid-template-columns: 1fr;
+      }
+
+      .buff-memory-row,
+      .buff-truth-row {
+        min-height: 22px;
+      }
+
+      .buff-job img,
+      .buff-memory-truth .icon.small {
+        width: 18px;
+        height: 18px;
+      }
+
+      .buff-memory-label,
+      .buff-job,
+      .buff-memory-truth {
+        font-size: 10px;
+      }
+
+      .buff-personal-item {
+        width: 18px;
+        font-size: 8px;
+      }
+
+      .buff-personal-item .icon.small {
+        width: 18px;
+        height: 18px;
+      }
+
+      .seq-history {
+        display: grid;
+      }
+
+      .seq-history .result-stats {
+        display: none;
+      }
+
+      .seq-history .sim-log {
+        display: none;
+      }
+
+      .seq-history.log-open .result-stats {
+        display: grid;
+      }
+
+      .seq-history .sim-log.open {
+        display: grid;
+      }
+
+      .sim-card {
+        padding: 3px;
+        gap: 3px;
+      }
+
+      .sim-head {
+        gap: 3px;
+      }
+
+      .sim-title {
+        font-size: 14px;
+      }
+
+      .sim-time {
+        font-size: 12px;
+      }
+
+      .sim-prompt {
+        font-size: 12px;
+      }
+
+      .sim-choices {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 3px;
+      }
+
+      .sim-choice {
+        min-height: 40px;
+        padding: 3px;
+        border-radius: 6px;
+        font-size: 12px;
+      }
+
+      .job-choice {
+        min-height: 42px;
+      }
+
+      .job-choice img {
+        width: 28px;
+        height: 28px;
+      }
+
+      .release-choice-row {
+        grid-template-columns: max-content repeat(2, max-content);
+        gap: 3px;
+      }
+
+      .release-choice-label {
+        font-size: 11px;
+      }
+
+      .sim-choice-guide {
+        padding: 3px;
+        border-radius: 6px;
+      }
+
+      .sim-choice-guide img {
+        max-height: 230px;
+      }
+
+      .seq-active-panel:has(.sim-choice-guide) {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto;
+      }
+
+      .seq-active-panel:has(.sim-choice-guide) .sim-choices {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 3px;
+        grid-column: 1;
+        grid-row: auto;
+      }
+
+      .seq-active-panel:has(.sim-choice-guide) .sim-prompt,
+      .seq-active-panel:has(.sim-choice-guide) .sim-choice-guide,
+      .seq-active-panel:has(.sim-choice-guide) .seq-choice-controls,
+      .seq-active-panel:has(.sim-choice-guide) .sim-choice-board,
+      .seq-active-panel:has(.sim-choice-guide) .sim-choice-group,
+      .seq-active-panel:has(.sim-choice-guide) .release-choice-row,
+      .seq-active-panel:has(.sim-choice-guide) .sim-choices>.sim-choice {
+        grid-column: 1;
+        grid-row: auto;
+      }
+
+      .seq-active-panel:has(.sim-choice-guide) .sim-result,
+      .seq-active-panel:has(.sim-choice-guide) .seq-inline-next {
+        grid-column: 1;
+        grid-row: auto;
+      }
+
+      .seq-active-panel:has(.sim-choice-guide) .sim-result {
+        height: auto;
+        max-height: none;
+        overflow: visible;
+      }
+
+      .seq-result-stage-scroll {
+        overflow-y: visible;
+      }
+
+      .seq-active-panel:has(.sim-choice-guide) .sim-choices>.sim-choice:nth-of-type(n) {
+        grid-row: auto;
+      }
+
+      .seq-active-panel:has(.sim-choice-guide) .seq-inline-next {
+        margin-top: 3px;
+        justify-self: stretch;
+      }
+
+      .seq-active-panel:has(.sim-choice-guide) .sim-prompt {
+        border-bottom: 0;
+        padding-bottom: 0;
+      }
+
+      .seq-active-panel:has(.sim-choice-guide) .sim-choice-guide {
+        display: block;
+      }
+
+      .seq-active-panel:has(.sim-choice-guide) .seq-choice-controls {
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+      }
+
+      .seq-active-panel:has(.sim-choice-guide) .sim-choice-group {
+        display: flex;
+        flex-wrap: wrap;
+      }
+
+      .seq-active-panel:has(.sim-choice-guide) .sim-choice-board {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .seq-active-panel:has(.sim-choice-guide) .sim-result .stage-images {
+        display: flex;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+      }
+
+      .seq-active-panel:has(.sim-choice-guide) .sim-result .stage {
+        min-width: 0;
+        width: 100%;
+      }
+
+      .seq-active-panel .sim-choice {
+        min-height: 27px;
+        font-size: 11px;
+      }
+
+      .sim-result {
+        min-height: 30px;
+        padding: 3px;
+        font-size: 11px;
+        border-radius: 6px;
+      }
+    }
   </style>
 </head>
 
 <body>
   <div class="shell">
     <header>
-      <div class="topbar">
-        <div>
-          <h1>4페이즈 타임라인 트레이너</h1>
-          <p class="subtitle">케프카 4페이즈 디버프 해제와 처리 순서 정리</p>
-        </div>
-        <div class="meta" aria-label="핵심 구간">
-          <span class="pill">01:11~02:05 처리</span>
-          <span class="pill">02:14 전멸기</span>
-        </div>
-      </div>
       <nav aria-label="페이지 탭">
         <div class="tabs">
           <button class="tab" type="button" aria-selected="true" data-tab="guide">설명</button>
@@ -2105,10 +3071,37 @@
       </section>
 
       <section id="simulation" class="panel" aria-labelledby="simulation-tab">
-        <div class="sim-layout">
-          <div class="sim-main">
-            <div id="seqBuffs" class="sim-status-slot"></div>
-            <article class="sim-card">
+        <div class="seq-layout">
+          <div class="seq-top">
+            <div class="sim-side">
+              <aside class="scorebox" aria-live="polite">
+                <div>시뮬레이션</div>
+                <div class="score-line">
+                  <div class="score"><span id="seqStep">0</span>/16</div>
+                  <span class="role-badge" id="seqPlayerBadge">--</span>
+                  <button class="secondary" type="button" id="seqResetBtn" aria-label="처음부터">↺</button>
+                </div>
+                <div class="actions">
+                  <button class="primary" type="button" id="seqNextBtn">시작</button>
+                </div>
+                <div id="seqBuffs" class="sim-status-slot"></div>
+              </aside>
+            </div>
+
+            <div class="seq-history">
+              <button class="secondary log-toggle" type="button" id="seqLogToggle">기록 보기</button>
+              <div class="result-stats">
+                <button class="result-correct" type="button" id="seqCorrectFilter">맞춤 <b
+                    id="seqCorrectCount">0</b></button>
+                <button class="result-wrong" type="button" id="seqWrongFilter">틀림 <b id="seqWrongCount">0</b></button>
+              </div>
+              <ul class="sim-log" id="seqLog"></ul>
+            </div>
+          </div>
+
+          <div class="seq-content">
+            <div class="seq-accordion" id="seqAccordion" aria-label="시뮬레이션 단계"></div>
+            <article class="sim-card seq-active-panel" id="seqActivePanel">
               <div class="sim-head">
                 <h2 class="sim-title" id="seqTitle">1단계부터 순차 진행</h2>
                 <span class="sim-time" id="seqTime">00:25</span>
@@ -2116,29 +3109,8 @@
               <p class="sim-prompt" id="seqPrompt">시작을 누르면 1단계부터 디버프가 차례대로 부여됩니다.</p>
               <div class="sim-choices" id="seqChoices"></div>
               <div class="sim-result" id="seqResult">부여된 디버프를 보면서 해당 처리 타이밍에 올바른 행동을 선택합니다.</div>
+              <button class="primary seq-inline-next" type="button" id="seqInlineNextBtn" disabled>다음 단계</button>
             </article>
-          </div>
-
-          <div class="sim-side">
-            <aside class="scorebox" aria-live="polite">
-              <div>시뮬레이션</div>
-              <div class="score-line">
-                <div class="score"><span id="seqStep">0</span>/16</div>
-                <span class="role-badge" id="seqPlayerBadge">--</span>
-              </div>
-              <p id="seqScoreText">부여된 디버프와 현재 처리 타이밍을 같이 보세요.</p>
-              <div class="actions">
-                <button class="primary" type="button" id="seqNextBtn">시작</button>
-                <button class="secondary" type="button" id="seqResetBtn">처음부터</button>
-              </div>
-              <div class="result-stats">
-                <button class="result-correct" type="button" id="seqCorrectFilter">맞춤 <b
-                    id="seqCorrectCount">0</b></button>
-                <button class="result-wrong" type="button" id="seqWrongFilter">틀림 <b id="seqWrongCount">0</b></button>
-              </div>
-              <button class="secondary log-toggle" type="button" id="seqLogToggle">기록 보기</button>
-              <ul class="sim-log" id="seqLog"></ul>
-            </aside>
           </div>
         </div>
       </section>
@@ -2183,9 +3155,11 @@
     const seqCorrectFilter = document.getElementById("seqCorrectFilter");
     const seqWrongFilter = document.getElementById("seqWrongFilter");
     const seqLogToggle = document.getElementById("seqLogToggle");
-    const seqScoreText = document.getElementById("seqScoreText");
     const seqLog = document.getElementById("seqLog");
     const seqNextBtn = document.getElementById("seqNextBtn");
+    const seqInlineNextBtn = document.getElementById("seqInlineNextBtn");
+    const seqAccordion = document.getElementById("seqAccordion");
+    const seqActivePanel = document.getElementById("seqActivePanel");
     let currentSim = null;
     let simStats = { correct: 0, total: 0 };
     let seqStats = { correct: 0, wrong: 0 };
@@ -2193,6 +3167,7 @@
     let seqLogFilter = "";
     let seq = null;
     let selectedSeqPlayer = "";
+    let seqChoiceHandler = null;
     const seqPlayers = [
       { key: "T1", name: "탱커 1" },
       { key: "T2", name: "탱커 2" },
@@ -2202,6 +3177,25 @@
       { key: "D2", name: "딜러 2" },
       { key: "D3", name: "딜러 3" },
       { key: "D4", name: "딜러 4" }
+    ];
+    const seqStepMeta = [
+      { step: 0, title: "0. 직업 선택", time: "--:--" },
+      { step: 1, title: "1. 알쏭달쏭 마법", time: "00:25" },
+      { step: 2, title: "2. 그랜드 크로스 1회차", time: "00:29" },
+      { step: 3, title: "3. 카오스 화염 또는 해일", time: "00:35" },
+      { step: 4, title: "4. 알쏭달쏭 마법 2회차", time: "00:40" },
+      { step: 5, title: "5. 그랜드 크로스 2회차", time: "00:44" },
+      { step: 6, title: "6. 카오스 반대 공격", time: "00:49" },
+      { step: 7, title: "7. 알쏭달쏭 마법 3회차", time: "00:55" },
+      { step: 8, title: "8. 그랜드 크로스 3회차", time: "00:59" },
+      { step: 9, title: "9. 무의 범람", time: "01:11" },
+      { step: 10, title: "10. 처리 1", time: "01:21" },
+      { step: 11, title: "11. 처리 2 + 선더가", time: "01:28" },
+      { step: 12, title: "12. 혼돈의 불 + 알테마", time: "01:41" },
+      { step: 13, title: "13. 처리 3 + 블리자가", time: "01:46" },
+      { step: 14, title: "14. 처리 4", time: "01:54" },
+      { step: 15, title: "15. 마력 방출 + 혼돈의 물", time: "02:00" },
+      { step: 16, title: "16. 전멸기 / 5페이즈 전환", time: "02:09" }
     ];
 
     function jobIcon(key, alt = key) {
@@ -2214,6 +3208,19 @@
       if (key.startsWith("D")) return jobIcon("DPSRole", "DPS");
       return "--";
     }
+
+    function playerIconForKey(key) {
+      return key && key !== "--" ? jobIcon(key, key) : "--";
+    }
+
+    seqChoices.addEventListener("click", (event) => {
+      if (!seqChoiceHandler) return;
+      const button = event.target.closest(".sim-choice");
+      if (!button || !seqChoices.contains(button) || button.disabled) return;
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      seqChoiceHandler(button);
+    }, true);
 
     tabs.forEach((tab) => {
       tab.addEventListener("click", () => {
@@ -2453,6 +3460,7 @@
 
     function toggleLog(target, button) {
       const opened = target.classList.toggle("open");
+      target.closest(".seq-history")?.classList.toggle("log-open", opened);
       button.textContent = opened ? "기록 숨기기" : "기록 보기";
     }
 
@@ -3077,11 +4085,18 @@
                   </div>
                 `).join("")}
               </div>
+              <div class="buff-divider" aria-hidden="true"></div>
               <div class="buff-memory">
                 ${memoryLabels.map(([label]) => `
                   <div class="buff-memory-row">
-                    <div class="buff-memory-truth">${empty}</div>
                     <div class="buff-memory-label">${label}</div>
+                  </div>
+                `).join("")}
+              </div>
+              <div class="buff-truths">
+                ${memoryLabels.map(() => `
+                  <div class="buff-truth-row">
+                    <div class="buff-memory-truth">${empty}</div>
                   </div>
                 `).join("")}
               </div>
@@ -3156,11 +4171,18 @@
                 </div>
               `).join("")}
             </div>
+            <div class="buff-divider" aria-hidden="true"></div>
             <div class="buff-memory">
               ${memoryRows.map(([label, available, truth]) => `
                 <div class="buff-memory-row">
-                  <div class="buff-memory-truth">${truthOrEmpty(available, truth)}</div>
                   <div class="buff-memory-label">${label}</div>
+                </div>
+              `).join("")}
+            </div>
+            <div class="buff-truths">
+              ${memoryRows.map(([, available, truth]) => `
+                <div class="buff-truth-row">
+                  <div class="buff-memory-truth">${truthOrEmpty(available, truth)}</div>
                 </div>
               `).join("")}
             </div>
@@ -3170,8 +4192,9 @@
     }
 
     function seqStageGuideHtml() {
-      if (!seq || seq.step < 10) return "";
-      const stage = document.querySelectorAll(".stage-grid .stage")[seq.step - 1];
+      if (!seq || seq.step < 9) return "";
+      const stages = [...document.querySelectorAll(".stage-grid .stage")];
+      const stage = stages.find((item) => item.querySelector(".stage-title")?.textContent.trim().startsWith(`${seq.step}.`)) || stages[seq.step - 1];
       if (!stage) return "";
       return stage.cloneNode(true).outerHTML;
     }
@@ -3180,44 +4203,57 @@
       const guide = seqStageGuideHtml();
       if (!guide) return fallback;
       const prefixLines = [options.myDebuff, options.handlingDebuff].filter(Boolean);
-      const prefix = prefixLines.length ? `${prefixLines.join("<br>")}<br><br>` : "";
-      return `${prefix}${guide}`;
+      const prefix = prefixLines.length ? `<div class="seq-result-fixed">${prefixLines.join("<br>")}</div>` : "";
+      return `${prefix}<div class="seq-result-stage-scroll">${guide}</div>`;
     }
 
     function setSeqChoices(choices, answer, explain, options = {}) {
+      seqChoiceHandler = null;
       seqNextBtn.disabled = true;
       seqNextBtn.textContent = "선택 필요";
       const guide = options.image
         ? `<div class="sim-choice-guide"><img src="img/${options.image}" alt="${options.imageAlt || ""}"></div>`
-        : "";
-      seqChoices.innerHTML = guide + choices.map((choice) => (
-        `<button class="sim-choice" type="button" data-answer="${choice}">${choice}</button>`
-      )).join("");
+        : options.placeholder
+          ? `<div class="sim-choice-guide"><div class="sim-choice-placeholder" aria-hidden="true"></div></div>`
+          : "";
+      seqChoices.innerHTML = guide + `
+        <div class="seq-choice-controls seq-choice-list">
+          <div class="sim-choice-label">${options.choiceLabel || "어떻게 처리할까요?"}</div>
+          ${choices.map((choice) => `<button class="sim-choice" type="button" data-answer="${choice}">${choice}</button>`).join("")}
+        </div>
+      `;
+      const handleChoice = (button) => {
+        const selected = button.dataset.answer;
+        const correct = selected === answer;
+        document.querySelectorAll("#seqChoices .sim-choice").forEach((choice) => {
+          choice.disabled = true;
+          if (choice.dataset.answer === answer) choice.classList.add("correct");
+        });
+        if (!correct) button.classList.add("wrong");
+        setResultState(
+          seqResult,
+          correct,
+          seqResultDetail(`정답: ${answer}.<br>${explain}`, { handlingDebuff: options.handlingDebuff })
+        );
+        seq.completedSteps.add(seq.step);
+        renderSeqBuffs();
+        updateSeqStats(correct);
+        seqNextBtn.disabled = false;
+        addResultLog(seqLog, `${seq.time} ${seq.title}`, selected, answer, correct);
+        seqNextBtn.textContent = seq.step >= 16 ? "완료" : "다음 단계";
+        updateSeqAccordionState();
+        syncSeqInlineNext();
+      };
+      seqChoiceHandler = handleChoice;
       document.querySelectorAll("#seqChoices .sim-choice").forEach((button) => {
         button.addEventListener("click", () => {
-          const selected = button.dataset.answer;
-          const correct = selected === answer;
-          document.querySelectorAll("#seqChoices .sim-choice").forEach((choice) => {
-            choice.disabled = true;
-            if (choice.dataset.answer === answer) choice.classList.add("correct");
-          });
-          if (!correct) button.classList.add("wrong");
-          setResultState(
-            seqResult,
-            correct,
-            seqResultDetail(`정답: ${answer}.<br>${explain}`, { handlingDebuff: options.handlingDebuff })
-          );
-          seq.completedSteps.add(seq.step);
-          renderSeqBuffs();
-          updateSeqStats(correct);
-          seqNextBtn.disabled = false;
-          addResultLog(seqLog, `${seq.time} ${seq.title}`, selected, answer, correct);
-          seqNextBtn.textContent = seq.step >= 16 ? "완료" : "다음 단계";
+          handleChoice(button);
         });
       });
     }
 
     function setSeqPositionMoveChoices(config) {
+      seqChoiceHandler = null;
       seqNextBtn.disabled = true;
       seqNextBtn.textContent = "선택 필요";
       const state = { marker: "", movement: "" };
@@ -3226,6 +4262,7 @@
         <div class="sim-choice-guide">
           <img src="img/simul/${config.image}" alt="${config.imageAlt || ""}">
         </div>
+        <div class="seq-choice-controls">
         <div class="sim-choice-board">
           <div class="sim-choice-group" data-group="marker">
             <div class="sim-choice-label">어디로 갈까요?</div>
@@ -3236,49 +4273,57 @@
             ${config.movementChoices.map((choice) => `<button class="sim-choice" type="button" data-part="movement" data-answer="${choice}">${choice}</button>`).join("")}
           </div>
         </div>
+        </div>
       `;
+
+      const handleChoice = (button) => {
+        const part = button.dataset.part;
+        state[part] = button.dataset.answer;
+        document.querySelectorAll(`#seqChoices .sim-choice[data-part="${part}"]`).forEach((choice) => {
+          choice.classList.remove("selected");
+        });
+        button.classList.add("selected");
+
+        if (!state.marker || !state.movement) return;
+
+        const movementCorrect = config.anyMovement || state.movement === config.answerMovement;
+        const correct = answerMarkers.includes(state.marker) && movementCorrect;
+        document.querySelectorAll("#seqChoices .sim-choice").forEach((choice) => {
+          choice.disabled = true;
+          if (
+            (choice.dataset.part === "marker" && answerMarkers.includes(choice.dataset.answer)) ||
+            (choice.dataset.part === "movement" && (config.anyMovement || choice.dataset.answer === config.answerMovement))
+          ) {
+            choice.classList.add("correct");
+          }
+        });
+        document.querySelectorAll("#seqChoices .sim-choice.selected").forEach((choice) => {
+          const isCorrect =
+            (choice.dataset.part === "marker" && answerMarkers.includes(choice.dataset.answer)) ||
+            (choice.dataset.part === "movement" && (config.anyMovement || choice.dataset.answer === config.answerMovement));
+          if (!isCorrect) choice.classList.add("wrong");
+        });
+        const answer = `${answerMarkers.join(", ")} / ${config.anyMovement ? "움직임 상관없음" : config.answerMovement}`;
+        const selected = `${state.marker} / ${state.movement}`;
+        setResultState(
+          seqResult,
+          correct,
+          seqResultDetail(`정답: ${answer}.<br>${config.explain}`, { myDebuff: config.myDebuff })
+        );
+        seq.completedSteps.add(seq.step);
+        renderSeqBuffs();
+        updateSeqStats(correct);
+        seqNextBtn.disabled = false;
+        seqNextBtn.textContent = seq.step >= 16 ? "완료" : "다음 단계";
+        updateSeqAccordionState();
+        syncSeqInlineNext();
+        addResultLog(seqLog, `${seq.time} ${seq.title}`, selected, answer, correct);
+      };
+      seqChoiceHandler = handleChoice;
 
       document.querySelectorAll("#seqChoices .sim-choice").forEach((button) => {
         button.addEventListener("click", () => {
-          const part = button.dataset.part;
-          state[part] = button.dataset.answer;
-          document.querySelectorAll(`#seqChoices .sim-choice[data-part="${part}"]`).forEach((choice) => {
-            choice.classList.remove("selected");
-          });
-          button.classList.add("selected");
-
-          if (!state.marker || !state.movement) return;
-
-          const movementCorrect = config.anyMovement || state.movement === config.answerMovement;
-          const correct = answerMarkers.includes(state.marker) && movementCorrect;
-          document.querySelectorAll("#seqChoices .sim-choice").forEach((choice) => {
-            choice.disabled = true;
-            if (
-              (choice.dataset.part === "marker" && answerMarkers.includes(choice.dataset.answer)) ||
-              (choice.dataset.part === "movement" && (config.anyMovement || choice.dataset.answer === config.answerMovement))
-            ) {
-              choice.classList.add("correct");
-            }
-          });
-          document.querySelectorAll("#seqChoices .sim-choice.selected").forEach((choice) => {
-            const isCorrect =
-              (choice.dataset.part === "marker" && answerMarkers.includes(choice.dataset.answer)) ||
-              (choice.dataset.part === "movement" && (config.anyMovement || choice.dataset.answer === config.answerMovement));
-            if (!isCorrect) choice.classList.add("wrong");
-          });
-          const answer = `${answerMarkers.join(", ")} / ${config.anyMovement ? "움직임 상관없음" : config.answerMovement}`;
-          const selected = `${state.marker} / ${state.movement}`;
-          setResultState(
-            seqResult,
-            correct,
-            seqResultDetail(`정답: ${answer}.<br>${config.explain}`, { myDebuff: config.myDebuff })
-          );
-          seq.completedSteps.add(seq.step);
-          renderSeqBuffs();
-          updateSeqStats(correct);
-          seqNextBtn.disabled = false;
-          seqNextBtn.textContent = seq.step >= 16 ? "완료" : "다음 단계";
-          addResultLog(seqLog, `${seq.time} ${seq.title}`, selected, answer, correct);
+          handleChoice(button);
         });
       });
     }
@@ -3294,31 +4339,41 @@
           <img src="img/simul/${config.image}" alt="${config.imageAlt || ""}">
           ${overlay}
         </div>
+        <div class="seq-choice-controls">
         <div class="sim-choice-group">
+          <div class="sim-choice-label">${config.choiceLabel || "어디로 갈까요?"}</div>
           ${config.choices.map((choice) => `<button class="sim-choice" type="button" data-answer="${choice}">${choice}번</button>`).join("")}
+        </div>
         </div>
       `;
 
+      const handleChoice = (button) => {
+        const selected = button.dataset.answer;
+        const correct = selected === config.answer;
+        document.querySelectorAll("#seqChoices .sim-choice").forEach((choice) => {
+          choice.disabled = true;
+          if (choice.dataset.answer === config.answer) choice.classList.add("correct");
+        });
+        if (!correct) button.classList.add("wrong");
+        setResultState(
+          seqResult,
+          correct,
+          seqResultDetail(`정답: ${config.answer}.<br>${config.explain}`, { myDebuff: config.myDebuff, handlingDebuff: config.handlingDebuff })
+        );
+        seq.completedSteps.add(seq.step);
+        renderSeqBuffs();
+        updateSeqStats(correct);
+        seqNextBtn.disabled = false;
+        seqNextBtn.textContent = seq.step >= 16 ? "완료" : "다음 단계";
+        updateSeqAccordionState();
+        syncSeqInlineNext();
+        addResultLog(seqLog, `${seq.time} ${seq.title}`, selected, config.answer, correct);
+      };
+      seqChoiceHandler = handleChoice;
+
       document.querySelectorAll("#seqChoices .sim-choice").forEach((button) => {
         button.addEventListener("click", () => {
-          const selected = button.dataset.answer;
-          const correct = selected === config.answer;
-          document.querySelectorAll("#seqChoices .sim-choice").forEach((choice) => {
-            choice.disabled = true;
-            if (choice.dataset.answer === config.answer) choice.classList.add("correct");
-          });
-          if (!correct) button.classList.add("wrong");
-          setResultState(
-            seqResult,
-            correct,
-            seqResultDetail(`정답: ${config.answer}.<br>${config.explain}`, { handlingDebuff: config.handlingDebuff })
-          );
-          seq.completedSteps.add(seq.step);
-          renderSeqBuffs();
-          updateSeqStats(correct);
-          seqNextBtn.disabled = false;
-          seqNextBtn.textContent = seq.step >= 16 ? "완료" : "다음 단계";
-          addResultLog(seqLog, `${seq.time} ${seq.title}`, selected, config.answer, correct);
+          handleChoice(button);
         });
       });
     }
@@ -3393,11 +4448,17 @@
           ].join("<br>")
         });
       } else {
-        setSeqChoices(["산개 / 멈춤", "산개 / 움직임", "산개 / 가속도 없음", "본대 / 멈춤", "본대 / 움직임", "본대 / 가속도 없음"], answer, `${eventLabel(event)} 최종 처리는 ${answer}.`);
+        setSeqChoices(
+          ["산개 / 멈춤", "산개 / 움직임", "산개 / 가속도 없음", "본대 / 멈춤", "본대 / 움직임", "본대 / 가속도 없음"],
+          answer,
+          `${eventLabel(event)} 최종 처리는 ${answer}.`,
+          { placeholder: options.placeholder }
+        );
       }
     }
 
     function setSeqThunderGazeChoices(config) {
+      seqChoiceHandler = null;
       seqNextBtn.disabled = true;
       seqNextBtn.textContent = "선택 필요";
       const state = { marker: "", gaze: "" };
@@ -3405,6 +4466,7 @@
         <div class="sim-choice-guide">
           <img src="img/simul/${config.image}" alt="${config.imageAlt || ""}">
         </div>
+        <div class="seq-choice-controls">
         <div class="sim-choice-board">
           <div class="sim-choice-group">
             <div class="sim-choice-label">어디로 갈까요?</div>
@@ -3415,53 +4477,62 @@
             ${["마안 본다", "마안 안본다"].map((choice) => `<button class="sim-choice" type="button" data-part="gaze" data-answer="${choice}">${choice}</button>`).join("")}
           </div>
         </div>
+        </div>
       `;
+
+      const handleChoice = (button) => {
+        const part = button.dataset.part;
+        state[part] = button.dataset.answer;
+        document.querySelectorAll(`#seqChoices .sim-choice[data-part="${part}"]`).forEach((choice) => {
+          choice.classList.remove("selected");
+        });
+        button.classList.add("selected");
+
+        if (!state.marker || !state.gaze) return;
+
+        const markerCorrect = config.markerAnswers.includes(state.marker);
+        const gazeCorrect = state.gaze === config.gazeAnswer;
+        const correct = markerCorrect && gazeCorrect;
+        document.querySelectorAll("#seqChoices .sim-choice").forEach((choice) => {
+          choice.disabled = true;
+          if (
+            (choice.dataset.part === "marker" && config.markerAnswers.includes(choice.dataset.answer)) ||
+            (choice.dataset.part === "gaze" && choice.dataset.answer === config.gazeAnswer)
+          ) {
+            choice.classList.add("correct");
+          }
+        });
+        document.querySelectorAll("#seqChoices .sim-choice.selected").forEach((choice) => {
+          const isCorrect =
+            (choice.dataset.part === "marker" && config.markerAnswers.includes(choice.dataset.answer)) ||
+            (choice.dataset.part === "gaze" && choice.dataset.answer === config.gazeAnswer);
+          if (!isCorrect) choice.classList.add("wrong");
+        });
+        setResultState(
+          seqResult,
+          correct,
+          seqResultDetail(`정답 위치: ${config.markerAnswers.join(", ")}번 / ${config.gazeAnswer}.<br>${config.explain}`, { handlingDebuff: config.handlingDebuff })
+        );
+        seq.completedSteps.add(seq.step);
+        renderSeqBuffs();
+        updateSeqStats(correct);
+        seqNextBtn.disabled = false;
+        seqNextBtn.textContent = seq.step >= 16 ? "완료" : "다음 단계";
+        updateSeqAccordionState();
+        syncSeqInlineNext();
+        addResultLog(seqLog, `${seq.time} ${seq.title}`, `${state.marker}번 / ${state.gaze}`, `${config.markerAnswers.join(", ")}번 / ${config.gazeAnswer}`, correct);
+      };
+      seqChoiceHandler = handleChoice;
 
       document.querySelectorAll("#seqChoices .sim-choice").forEach((button) => {
         button.addEventListener("click", () => {
-          const part = button.dataset.part;
-          state[part] = button.dataset.answer;
-          document.querySelectorAll(`#seqChoices .sim-choice[data-part="${part}"]`).forEach((choice) => {
-            choice.classList.remove("selected");
-          });
-          button.classList.add("selected");
-
-          if (!state.marker || !state.gaze) return;
-
-          const markerCorrect = config.markerAnswers.includes(state.marker);
-          const gazeCorrect = state.gaze === config.gazeAnswer;
-          const correct = markerCorrect && gazeCorrect;
-          document.querySelectorAll("#seqChoices .sim-choice").forEach((choice) => {
-            choice.disabled = true;
-            if (
-              (choice.dataset.part === "marker" && config.markerAnswers.includes(choice.dataset.answer)) ||
-              (choice.dataset.part === "gaze" && choice.dataset.answer === config.gazeAnswer)
-            ) {
-              choice.classList.add("correct");
-            }
-          });
-          document.querySelectorAll("#seqChoices .sim-choice.selected").forEach((choice) => {
-            const isCorrect =
-              (choice.dataset.part === "marker" && config.markerAnswers.includes(choice.dataset.answer)) ||
-              (choice.dataset.part === "gaze" && choice.dataset.answer === config.gazeAnswer);
-            if (!isCorrect) choice.classList.add("wrong");
-          });
-          setResultState(
-            seqResult,
-            correct,
-            seqResultDetail(`정답 위치: ${config.markerAnswers.join(", ")}번 / ${config.gazeAnswer}.<br>${config.explain}`, { handlingDebuff: config.handlingDebuff })
-          );
-          seq.completedSteps.add(seq.step);
-          renderSeqBuffs();
-          updateSeqStats(correct);
-          seqNextBtn.disabled = false;
-          seqNextBtn.textContent = seq.step >= 16 ? "완료" : "다음 단계";
-          addResultLog(seqLog, `${seq.time} ${seq.title}`, `${state.marker}번 / ${state.gaze}`, `${config.markerAnswers.join(", ")}번 / ${config.gazeAnswer}`, correct);
+          handleChoice(button);
         });
       });
     }
 
     function setSeqReleaseWaterChoices(config) {
+      seqChoiceHandler = null;
       seqNextBtn.disabled = true;
       seqNextBtn.textContent = "선택 필요";
       const overlay = `마력방출_${releaseTruthFileName(config.releaseTop)}_${releaseTruthFileName(config.releaseBottom)}.png`;
@@ -3475,62 +4546,71 @@
           <img src="img/simul/${config.image}" alt="마력 방출 혼돈의 물 처리 이미지">
           <img class="release-water-center" src="img/simul/${overlay}" alt="마력 방출 ${config.releaseTop} ${config.releaseBottom}">
         </div>
-        <div class="release-choice-row">
-          <div class="release-choice-label">히트박스</div>
+        <div class="seq-choice-controls">
+        <div class="release-choice-row" data-row="1">
+          <div class="release-choice-label">히트박스?</div>
           <button type="button" class="sim-choice" data-part="water" data-answer="안">안</button>
           <button type="button" class="sim-choice" data-part="water" data-answer="밖">밖</button>
         </div>
-        <div class="release-choice-row">
-          <div class="release-choice-label">선더가</div>
+        <div class="release-choice-row" data-row="2">
+          <div class="release-choice-label">선더가?</div>
           <button type="button" class="sim-choice" data-part="thunder" data-answer="피함">피함</button>
           <button type="button" class="sim-choice" data-part="thunder" data-answer="밟음">밟음</button>
         </div>
-        <div class="release-choice-row">
-          <div class="release-choice-label">블리자가</div>
+        <div class="release-choice-row" data-row="3">
+          <div class="release-choice-label">블리자가?</div>
           <button type="button" class="sim-choice" data-part="blizzard" data-answer="피함">피함</button>
           <button type="button" class="sim-choice" data-part="blizzard" data-answer="밟음">밟음</button>
         </div>
+        </div>
       `;
+
+      const handleChoice = (choice) => {
+        if (choice.disabled) return;
+        const part = choice.dataset.part;
+        state[part] = choice.dataset.answer;
+        seqChoices.querySelectorAll(`.sim-choice[data-part="${part}"]`).forEach((item) => {
+          item.classList.toggle("selected", item === choice);
+        });
+        if (!state.water || !state.thunder || !state.blizzard) return;
+        const correct =
+          state.water === correctWater &&
+          state.thunder === correctThunder &&
+          state.blizzard === correctBlizzard;
+        seqChoices.querySelectorAll(".sim-choice").forEach((item) => {
+          item.disabled = true;
+          const isCorrect =
+            (item.dataset.part === "water" && item.dataset.answer === correctWater) ||
+            (item.dataset.part === "thunder" && item.dataset.answer === correctThunder) ||
+            (item.dataset.part === "blizzard" && item.dataset.answer === correctBlizzard);
+          if (isCorrect) item.classList.add("correct");
+        });
+        seqChoices.querySelectorAll(".sim-choice.selected").forEach((item) => {
+          const isCorrect =
+            (item.dataset.part === "water" && item.dataset.answer === correctWater) ||
+            (item.dataset.part === "thunder" && item.dataset.answer === correctThunder) ||
+            (item.dataset.part === "blizzard" && item.dataset.answer === correctBlizzard);
+          if (!isCorrect) item.classList.add("wrong");
+        });
+        setResultState(
+          seqResult,
+          correct,
+          seqResultDetail(`정답: ${answer}.`, { handlingDebuff: config.handlingDebuff })
+        );
+        seq.completedSteps.add(seq.step);
+        renderSeqBuffs();
+        updateSeqStats(correct);
+        seqNextBtn.disabled = false;
+        seqNextBtn.textContent = seq.step >= 16 ? "완료" : "다음 단계";
+        updateSeqAccordionState();
+        syncSeqInlineNext();
+        addResultLog(seqLog, `${seq.time} ${seq.title}`, `히트박스 ${state.water} / 선더가 ${state.thunder} / 블리자가 ${state.blizzard}`, answer, correct);
+      };
+      seqChoiceHandler = handleChoice;
 
       seqChoices.querySelectorAll(".sim-choice").forEach((choice) => {
         choice.addEventListener("click", () => {
-          if (choice.disabled) return;
-          const part = choice.dataset.part;
-          state[part] = choice.dataset.answer;
-          seqChoices.querySelectorAll(`.sim-choice[data-part="${part}"]`).forEach((item) => {
-            item.classList.toggle("selected", item === choice);
-          });
-          if (!state.water || !state.thunder || !state.blizzard) return;
-          const correct =
-            state.water === correctWater &&
-            state.thunder === correctThunder &&
-            state.blizzard === correctBlizzard;
-          seqChoices.querySelectorAll(".sim-choice").forEach((item) => {
-            item.disabled = true;
-            const isCorrect =
-              (item.dataset.part === "water" && item.dataset.answer === correctWater) ||
-              (item.dataset.part === "thunder" && item.dataset.answer === correctThunder) ||
-              (item.dataset.part === "blizzard" && item.dataset.answer === correctBlizzard);
-            if (isCorrect) item.classList.add("correct");
-          });
-          seqChoices.querySelectorAll(".sim-choice.selected").forEach((item) => {
-            const isCorrect =
-              (item.dataset.part === "water" && item.dataset.answer === correctWater) ||
-              (item.dataset.part === "thunder" && item.dataset.answer === correctThunder) ||
-              (item.dataset.part === "blizzard" && item.dataset.answer === correctBlizzard);
-            if (!isCorrect) item.classList.add("wrong");
-          });
-          setResultState(
-            seqResult,
-            correct,
-            seqResultDetail(`정답: ${answer}.`, { handlingDebuff: config.handlingDebuff })
-          );
-          seq.completedSteps.add(seq.step);
-          renderSeqBuffs();
-          updateSeqStats(correct);
-          seqNextBtn.disabled = false;
-          seqNextBtn.textContent = seq.step >= 16 ? "완료" : "다음 단계";
-          addResultLog(seqLog, `${seq.time} ${seq.title}`, `히트박스 ${state.water} / 선더가 ${state.thunder} / 블리자가 ${state.blizzard}`, answer, correct);
+          handleChoice(choice);
         });
       });
     }
@@ -3539,18 +4619,124 @@
       return label === "피하기" ? "피함" : "밟음";
     }
 
+    function syncSeqInlineNext() {
+      if (!seqInlineNextBtn || !seqNextBtn) return;
+      seqInlineNextBtn.disabled = seqNextBtn.disabled;
+      seqInlineNextBtn.textContent = seqNextBtn.textContent;
+    }
+
+    function seqStepUnlocked(step) {
+      if (step === 0) return true;
+      if (!seq) return false;
+      return step <= seq.step || seq.completedSteps.has(step);
+    }
+
+    function renderSeqAccordion() {
+      seqAccordion.innerHTML = seqStepMeta.map((item) => `
+        <section class="seq-expansion" data-step="${item.step}">
+          <button class="seq-expansion-head" type="button" data-step="${item.step}" aria-expanded="false">
+            <span class="seq-expansion-chevron">›</span>
+            <span class="seq-expansion-title">${item.title}</span>
+            <span class="seq-expansion-state">${item.time}</span>
+          </button>
+          <div class="seq-expansion-body">
+            <div class="seq-expansion-placeholder">아직 진행 전입니다.</div>
+          </div>
+        </section>
+      `).join("");
+
+      seqAccordion.querySelectorAll(".seq-expansion-head").forEach((button) => {
+        button.addEventListener("click", () => {
+          const step = Number(button.dataset.step);
+          if (!seqStepUnlocked(step)) return;
+          const item = button.closest(".seq-expansion");
+          const wasOpen = item.classList.contains("open");
+          closeSeqExpansions();
+          if (!wasOpen) openSeqExpansion(step, { keepOthersClosed: true });
+        });
+      });
+      mountSeqPanel(0);
+      updateSeqAccordionState();
+    }
+
+    function closeSeqExpansions() {
+      seqAccordion.querySelectorAll(".seq-expansion").forEach((item) => {
+        item.classList.remove("open");
+        item.querySelector(".seq-expansion-head")?.setAttribute("aria-expanded", "false");
+      });
+    }
+
+    function mountSeqPanel(step) {
+      const body = seqAccordion.querySelector(`.seq-expansion[data-step="${step}"] .seq-expansion-body`);
+      if (!body || !seqActivePanel) return;
+      if (body.contains(seqActivePanel)) return;
+      body.innerHTML = "";
+      body.appendChild(seqActivePanel);
+    }
+
+    function snapshotSeqStep(step) {
+      const body = seqAccordion.querySelector(`.seq-expansion[data-step="${step}"] .seq-expansion-body`);
+      if (!body || !body.contains(seqActivePanel)) return;
+      const snapshot = seqActivePanel.cloneNode(true);
+      snapshot.removeAttribute("id");
+      snapshot.classList.add("seq-step-snapshot");
+      snapshot.querySelectorAll("[id]").forEach((node) => node.removeAttribute("id"));
+      snapshot.querySelectorAll("button").forEach((button) => {
+        button.disabled = true;
+      });
+      snapshot.querySelector(".seq-inline-next")?.remove();
+      body.innerHTML = "";
+      body.appendChild(snapshot);
+    }
+
+    function openSeqExpansion(step, options = {}) {
+      const item = seqAccordion.querySelector(`.seq-expansion[data-step="${step}"]`);
+      if (!item || !seqStepUnlocked(step)) return;
+      if (!options.keepOthersClosed) closeSeqExpansions();
+      const isLiveStep = (!seq && step === 0) || (seq && seq.step === step);
+      if (isLiveStep) mountSeqPanel(step);
+      item.classList.add("open");
+      item.querySelector(".seq-expansion-head")?.setAttribute("aria-expanded", "true");
+      updateSeqAccordionState();
+    }
+
+    function updateSeqAccordionState() {
+      seqAccordion.querySelectorAll(".seq-expansion").forEach((item) => {
+        const step = Number(item.dataset.step);
+        const meta = seqStepMeta[step];
+        const head = item.querySelector(".seq-expansion-head");
+        const title = item.querySelector(".seq-expansion-title");
+        const state = item.querySelector(".seq-expansion-state");
+        const unlocked = seqStepUnlocked(step);
+        const done = step === 0 ? Boolean(selectedSeqPlayer) : Boolean(seq && (step < seq.step || seq.completedSteps?.has(step)));
+        const active = Boolean(seq && seq.step === step);
+        item.classList.toggle("done", done);
+        item.classList.toggle("active", active);
+        if (head) head.disabled = !unlocked;
+        if (title) title.textContent = active && seq?.title ? seq.title : meta.title;
+        if (state) {
+          if (!unlocked) state.textContent = "잠김";
+          else if (active) state.textContent = seq?.time || meta.time;
+          else if (done) state.textContent = "완료";
+          else state.textContent = meta.time;
+        }
+      });
+    }
+
     function renderSeqPlayerPicker() {
       seq = null;
       selectedSeqPlayer = "";
+      seqChoiceHandler = null;
+      renderSeqAccordion();
       seqTitle.textContent = "시뮬레이션 직업 선택";
       seqTime.textContent = "--:--";
       seqStep.textContent = "0";
       seqPlayerBadge.textContent = "--";
       seqPrompt.textContent = "시작하기 전에 본인 자리를 선택하세요.";
       clearResultState(seqResult, "");
-      seqScoreText.textContent = "직업을 선택하면 시작할 수 있습니다.";
       seqLog.innerHTML = "";
       seqLog.classList.remove("open");
+      seqLog.closest(".seq-history")?.classList.remove("log-open");
       seqLogToggle.textContent = "기록 보기";
       seqStats = { correct: 0, wrong: 0 };
       seqLogFilter = "";
@@ -3563,6 +4749,8 @@
       seqNextBtn.disabled = true;
       seqNextBtn.textContent = "직업 선택 필요";
       renderSeqBuffs();
+      updateSeqAccordionState();
+      syncSeqInlineNext();
 
       document.querySelectorAll("#seqChoices .sim-choice").forEach((button) => {
         button.addEventListener("click", () => {
@@ -3573,17 +4761,22 @@
           button.classList.add("selected");
           seqNextBtn.disabled = false;
           seqNextBtn.textContent = "시작";
-          seqPlayerBadge.innerHTML = roleIconForKey(button.dataset.key);
+          seqPlayerBadge.innerHTML = playerIconForKey(button.dataset.key);
           clearResultState(seqResult, `${button.dataset.key} 선택됨. 시작을 누르면 1단계부터 진행합니다.`);
+          updateSeqAccordionState();
+          syncSeqInlineNext();
         });
       });
     }
 
     function noSeqChoice(message) {
+      seqChoiceHandler = null;
       seqChoices.innerHTML = "";
       clearResultState(seqResult, message);
       seqNextBtn.disabled = false;
       seqNextBtn.textContent = seq.step >= 16 ? "완료" : "다음 단계";
+      updateSeqAccordionState();
+      syncSeqInlineNext();
     }
 
     function initSequential() {
@@ -3624,24 +4817,26 @@
       seq.waterTruth = seq.chaosFirst === "혼돈의 물" ? seq.chaos1Truth : seq.chaos2Truth;
       seqLog.innerHTML = "";
       seqLog.classList.remove("open");
+      seqLog.closest(".seq-history")?.classList.remove("log-open");
       seqLogToggle.textContent = "기록 보기";
       seqStats = { correct: 0, wrong: 0 };
       seqLogFilter = "";
       seqCorrectFilter.classList.remove("active");
       seqWrongFilter.classList.remove("active");
       updateSeqStats();
-      seqPlayerBadge.innerHTML = roleIconForKey(seqPlayerKey());
+      seqPlayerBadge.innerHTML = playerIconForKey(seqPlayerKey());
       advanceSequential();
     }
 
     function advanceSequential() {
       if (!seq) initSequential();
       if (seq.step >= 16) return;
+      snapshotSeqStep(seq.step);
       seq.step += 1;
       seqStep.textContent = seq.step;
+      seqChoiceHandler = null;
       seqChoices.innerHTML = "";
       clearResultState(seqResult);
-      seqScoreText.textContent = "부여된 디버프와 현재 처리 타이밍을 확인";
 
       const spreadAnswer = (truth) => truth === "진짜" ? "번개 산개" : "물 산개";
       const accelAnswer = (truth) => truth === "진짜" ? "멈춤" : "움직임";
@@ -3740,13 +4935,8 @@
             imageAlt: `무의 범람 ${seq.flood} 처리`,
             choices: ["1", "2"],
             answer: floodMarkerAnswer,
-            explain: [
-              `내 디버프: ${woundIcon} ${seq.wound} / ${finalDebuffIcon} ${seq.finalDebuff}`,
-              '',
-              `알라그 필드(${icon("알라그 필드.webp", "알라그 필드")})는 죽은자(${icon("죽은자의 상처.webp", "죽은자의 상처")})/산자(${icon("산자의 상처.webp", "산자의 상처")}) 상처색과 <span class="red">다른 색</span>`,
-              `죽음 초월(${icon("죽음 초월.webp", "죽음 초월")})은 죽은자(${icon("죽은자의 상처.webp", "죽은자의 상처")})/산자(${icon("산자의 상처.webp", "산자의 상처")}) 상처색과 <span class="red">같은 색</span>`,
-              `*주의: 무의 범람이 가짜면 반대로 처리. 다른색 -> 같은색 / 같은색 -> 다른색`
-            ].join("<br>")
+            myDebuff: `내 디버프: ${woundIcon} ${seq.wound} / ${finalDebuffIcon} ${seq.finalDebuff}`,
+            explain: ""
           });
         },
         10: () => {
@@ -3858,10 +5048,10 @@
               gazeChoices(action.hasGaze),
               gazeChoiceAnswer(action.hasGaze, truth),
               `${eventLabel(event)}은 ${truth}이므로 ${gazeChoiceAnswer(action.hasGaze, truth)}.`,
-              { handlingDebuff: handlingDebuffLine(icon("저주의 외침.webp", "저주의 외침"), truth) }
+              { handlingDebuff: handlingDebuffLine(icon("저주의 외침.webp", "저주의 외침"), truth), placeholder: true }
             );
           } else {
-            setSeqSpreadChoices(event, action);
+            setSeqSpreadChoices(event, action, { placeholder: true });
           }
         },
         15: () => {
@@ -3894,6 +5084,9 @@
       stages[seq.step]();
       seqTitle.textContent = seq.title;
       seqTime.textContent = seq.time;
+      openSeqExpansion(seq.step);
+      updateSeqAccordionState();
+      syncSeqInlineNext();
     }
 
     document.getElementById("gradeBtn")?.addEventListener("click", gradeQuiz);
@@ -3909,6 +5102,15 @@
     seqNextBtn.addEventListener("click", () => {
       if (!seq || seq.step >= 16) initSequential();
       else advanceSequential();
+    });
+    seqInlineNextBtn.addEventListener("click", () => {
+      if (!seq || seq.step >= 16) initSequential();
+      else advanceSequential();
+    });
+    new MutationObserver(syncSeqInlineNext).observe(seqNextBtn, {
+      attributes: true,
+      childList: true,
+      subtree: true
     });
     document.getElementById("seqResetBtn").addEventListener("click", renderSeqPlayerPicker);
     if (questionRoot) renderQuiz();
