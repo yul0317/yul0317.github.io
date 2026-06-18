@@ -1,0 +1,371 @@
+/* 설명 탭의 기믹 카드, 처리 규칙과 타임라인을 정의합니다. */
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 3px;
+  margin-bottom: 3px;
+}
+
+.summary {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 3px;
+  box-shadow: var(--shadow);
+}
+
+.summary b {
+  display: block;
+  font-size: 14px;
+  margin-bottom: 3px;
+}
+
+.summary span {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.icon-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+  align-items: center;
+}
+
+.icon {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  vertical-align: middle;
+  image-rendering: auto;
+}
+
+.icon.large {
+  width: 34px;
+  height: 34px;
+}
+
+.icon.small {
+  width: 18px;
+  height: 18px;
+}
+
+.legend {
+  display: grid;
+  gap: 3px;
+  margin: 3px 0;
+}
+
+.legend-row {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  flex-wrap: wrap;
+  padding: 3px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  min-height: 42px;
+  padding: 3px;
+  background: #f8fafc;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}
+
+.legend-item > div {
+  display: grid;
+  gap: 3px;
+}
+
+.legend-item b {
+  display: inline;
+  font-size: 12px;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.legend-item > div > span {
+  display: block;
+  color: var(--muted);
+  font-size: 11px;
+  margin-top: 0;
+  white-space: nowrap;
+}
+
+.legend-item > div > span span {
+  display: inline;
+}
+
+.legend-item .true {
+  color: #1f64c8;
+  font-weight: 800;
+}
+
+.legend-item .false {
+  color: #c43d3d;
+  font-weight: 800;
+}
+
+.section {
+  margin-top: 3px;
+  padding-top: 0;
+}
+
+h2 {
+  margin: 0 0 3px;
+  font-size: 18px;
+  letter-spacing: 0;
+}
+
+.flow {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 3px;
+}
+
+.flow-item {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 3px;
+}
+
+.flow-time {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 68px;
+  height: 24px;
+  border-radius: 999px;
+  background: #eef5f5;
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 12px;
+  margin-bottom: 3px;
+}
+
+.flow-title {
+  margin: 0 0 3px;
+  font-weight: 700;
+}
+
+.flow-copy {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.stage-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 3px;
+}
+
+.stage {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 3px;
+  display: grid;
+  gap: 3px;
+}
+
+.stage-head {
+  display: flex;
+  gap: 3px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.stage-title {
+  margin: 0;
+  font-weight: 800;
+}
+
+.stage-time {
+  color: var(--accent);
+  font-weight: 800;
+  font-size: 12px;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.stage p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.stage strong {
+  color: var(--ink);
+}
+
+.stage-images {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 3px;
+  align-items: start;
+}
+
+.stage-image {
+  width: 100%;
+  max-height: 260px;
+  object-fit: contain;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #f7f9fb;
+}
+
+.rule-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 3px;
+  margin-top: 3px;
+}
+
+.rule {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 3px;
+}
+
+.rule b {
+  display: block;
+  margin-bottom: 3px;
+}
+
+.rule span {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.example-table {
+  width: 100%;
+  border-collapse: collapse;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+  font-size: 12px;
+}
+
+.example-table th,
+.example-table td {
+  border: 1px solid var(--line);
+  padding: 3px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.example-table th {
+  background: #f3f6f8;
+  color: var(--ink);
+  font-weight: 800;
+}
+
+.example-table td {
+  color: var(--muted);
+}
+
+.example-table .result {
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.timeline {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 84px 128px 1fr 190px;
+  gap: 3px;
+  align-items: center;
+  padding: 3px;
+  border-top: 1px solid var(--line);
+}
+
+.row:first-child {
+  border-top: 0;
+}
+
+.row.key {
+  background: #f2f7f6;
+}
+
+.row.danger {
+  background: #fff5f2;
+}
+
+.time {
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.event {
+  font-weight: 700;
+}
+
+.note {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.tag {
+  justify-self: start;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 3px;
+  color: #4c5663;
+  background: #fff;
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.tag.icons {
+  display: inline-flex;
+  gap: 3px;
+  align-items: center;
+  padding: 3px;
+}
+
+.callouts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 3px;
+}
+
+.callout {
+  border-left: 5px solid var(--accent);
+  background: var(--panel);
+  padding: 3px;
+  border-radius: 8px;
+  border-top: 1px solid var(--line);
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.callout.warn {
+  border-left-color: var(--accent-2);
+}
+
+.callout b {
+  display: block;
+  margin-bottom: 3px;
+}
+
+.callout p {
+  margin: 0;
+  color: var(--muted);
+}

@@ -1,0 +1,31 @@
+<section id="quiz" class="panel" aria-labelledby="quiz-tab">
+  <div class="sim-layout">
+    <article class="sim-card">
+      <div class="sim-head">
+        <h2 class="sim-title" id="simTitle">상황 생성</h2>
+        <span class="sim-time" id="simTime">--:--</span>
+      </div>
+      <p class="sim-prompt" id="simPrompt">시작을 누르면 랜덤 처리 상황이 나옵니다.</p>
+      <div class="sim-facts" id="simFacts"></div>
+      <div class="sim-choices" id="simChoices"></div>
+      <div class="sim-result" id="simResult">무의 범람, 물/번개, 가속도, 마안, 혼돈 장판, 마력 방출 중 하나가 출제됩니다.</div>
+    </article>
+
+    <aside class="scorebox" aria-live="polite">
+      <div>퀴즈</div>
+      <div class="score"><span id="simScore">0</span>/<span id="simCount">0</span></div>
+      <p id="simScoreText">랜덤 상황을 빠르게 판단해 보세요.</p>
+      <div class="actions">
+        <button class="primary" type="button" id="nextSimBtn">새 문제</button>
+        <button class="secondary" type="button" id="resetSimBtn">기록 초기화</button>
+      </div>
+      <div class="result-stats">
+        <button class="result-correct" type="button" id="simCorrectFilter">맞춤 <b
+            id="simCorrectCount">0</b></button>
+        <button class="result-wrong" type="button" id="simWrongFilter">틀림 <b id="simWrongCount">0</b></button>
+      </div>
+      <button class="secondary log-toggle" type="button" id="simLogToggle">기록 보기</button>
+      <ul class="sim-log" id="simLog"></ul>
+    </aside>
+  </div>
+</section>

@@ -1,0 +1,190 @@
+/* 컨닝페이퍼의 선택 버튼과 결과 카드를 정의합니다. */
+.cheat-sheet {
+  display: grid;
+  gap: 3px;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.cheat-card,
+.cheat-result {
+  border: 1px solid var(--line);
+  border-radius: 0;
+  background: #fff;
+  padding: 1px;
+  box-shadow: none;
+}
+
+.cheat-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 50%;
+  gap: 1px;
+  align-items: center;
+  min-height: 24px;
+  border-bottom: 1px solid #eef2f5;
+}
+
+.cheat-row:last-child {
+  border-bottom: 0;
+}
+
+.cheat-title {
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.cheat-subtitle,
+.cheat-auto {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.cheat-buttons {
+  display: flex;
+  gap: 1px;
+  flex-wrap: nowrap;
+  width: 100%;
+}
+
+.cheat-buttons button {
+  flex: 1 1 0;
+  width: 25%;
+  min-width: 0;
+  min-height: 25px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  border: 1px solid var(--line);
+  border-radius: 0;
+  background: #fff;
+  color: var(--ink);
+  font-weight: 900;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.cheat-buttons button img {
+  width: 15px;
+  height: 15px;
+  flex: 0 0 15px;
+  object-fit: contain;
+}
+
+.cheat-buttons button.active {
+  border-color: var(--accent);
+  background: #e7f7f5;
+  color: #102226;
+}
+
+.cheat-buttons button:disabled {
+  cursor: default;
+  opacity: .75;
+}
+
+.cheat-result {
+  display: grid;
+  gap: 1px;
+  position: sticky;
+  bottom: 3px;
+  z-index: 4;
+}
+
+.cheat-result-card {
+  display: grid;
+  grid-template-columns: minmax(0, 42%) minmax(0, 58%);
+  align-items: center;
+  gap: 4px;
+  border: 1px solid #46515e;
+  border-radius: 0;
+  padding: 3px 4px;
+  background: #202833;
+}
+
+.cheat-result-card b {
+  color: #f3f7fb;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.cheat-result-card span {
+  color: #e7edf4;
+  font-size: 14px;
+  font-weight: 900;
+}
+
+.cheat-result-body {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.cheat-result-line {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: 6px;
+  align-items: center;
+}
+
+.cheat-result-line .cheat-result-action {
+  color: #e7edf4;
+  text-align: right;
+  white-space: normal;
+}
+
+.cheat-action-blue {
+  color: #60a5fa !important;
+}
+
+.cheat-action-red {
+  color: #f87171 !important;
+}
+
+.cheat-accel {
+  border: 2px solid #f8fafc;
+  background: #111827;
+  box-shadow: none;
+}
+
+.cheat-accel span {
+  color: #f8fafc;
+  font-weight: 900;
+}
+
+.cheat-accel-title .accel-r {
+  color: #ef4444;
+}
+
+.cheat-accel-title .accel-y {
+  color: #facc15;
+}
+
+.cheat-accel-title .accel-b {
+  color: #60a5fa;
+}
+
+.cheat-alert {
+  color: var(--bad);
+  font-weight: 900;
+}
+
+.cheat-truth-true {
+  color: #2563eb !important;
+  font-weight: 900;
+}
+
+.cheat-truth-false {
+  color: var(--bad) !important;
+  font-weight: 900;
+}
+
+.sim-log li.hidden {
+  display: none;
+}
+
+.log-toggle {
+  display: none;
+  margin-top: 8px;
+}
