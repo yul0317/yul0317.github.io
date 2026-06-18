@@ -43,6 +43,33 @@
       flex-direction: column;
     }
 
+    body.simulation-active {
+      overflow: hidden;
+    }
+
+    body.simulation-active .shell {
+      height: 100vh;
+      height: 100dvh;
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    body.simulation-active header {
+      flex: 0 0 auto;
+    }
+
+    body.simulation-active main {
+      flex: 1 1 auto;
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    body.simulation-active #simulation.active {
+      height: 100%;
+      min-height: 0;
+      overflow: hidden;
+    }
+
     header {
       background: #1f252c;
       color: #fff;
@@ -784,6 +811,11 @@
       overflow: hidden;
     }
 
+    body.simulation-active .seq-layout {
+      height: 100%;
+      max-height: 100%;
+    }
+
     .seq-top {
       display: grid;
       grid-template-columns: 360px minmax(0, 1fr);
@@ -903,6 +935,7 @@
       min-width: 0;
       min-height: 0;
       overflow-y: auto;
+      overscroll-behavior: contain;
       scrollbar-width: thin;
       scrollbar-color: rgba(34, 42, 50, .32) transparent;
     }
@@ -1142,6 +1175,7 @@
     .buff-personal-item span {
       position: relative;
       top: -2px;
+      color: #fff;
     }
 
     .sim-status-slot {
@@ -1848,7 +1882,7 @@
 
     .cheat-row {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) auto;
+      grid-template-columns: minmax(0, 1fr) 50%;
       gap: 1px;
       align-items: center;
       min-height: 24px;
@@ -1876,11 +1910,18 @@
       display: flex;
       gap: 1px;
       flex-wrap: nowrap;
+      width: 100%;
     }
 
     .cheat-buttons button {
-      min-width: 44px;
-      min-height: 24px;
+      flex: 1 1 0;
+      width: 25%;
+      min-width: 0;
+      min-height: 25px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
       border: 1px solid var(--line);
       border-radius: 0;
       background: #fff;
@@ -1888,6 +1929,13 @@
       font-weight: 900;
       cursor: pointer;
       white-space: nowrap;
+    }
+
+    .cheat-buttons button img {
+      width: 15px;
+      height: 15px;
+      flex: 0 0 15px;
+      object-fit: contain;
     }
 
     .cheat-buttons button.active {
@@ -1910,8 +1958,8 @@
     }
 
     .cheat-result-card {
-      display: flex;
-      justify-content: space-between;
+      display: grid;
+      grid-template-columns: minmax(0, 42%) minmax(0, 58%);
       align-items: center;
       gap: 4px;
       border: 1px solid #46515e;
@@ -1922,15 +1970,41 @@
 
     .cheat-result-card b {
       color: #f3f7fb;
-      font-size: 13px;
+      font-size: 14px;
       white-space: nowrap;
     }
 
     .cheat-result-card span {
       color: #e7edf4;
-      font-size: 13px;
+      font-size: 14px;
       font-weight: 900;
+    }
+
+    .cheat-result-body {
+      display: grid;
+      gap: 2px;
+      min-width: 0;
+    }
+
+    .cheat-result-line {
+      display: grid;
+      grid-template-columns: max-content minmax(0, 1fr);
+      gap: 6px;
+      align-items: center;
+    }
+
+    .cheat-result-line .cheat-result-action {
+      color: #e7edf4;
       text-align: right;
+      white-space: normal;
+    }
+
+    .cheat-action-blue {
+      color: #60a5fa !important;
+    }
+
+    .cheat-action-red {
+      color: #f87171 !important;
     }
 
     .cheat-accel {
@@ -1978,6 +2052,52 @@
     .log-toggle {
       display: none;
       margin-top: 8px;
+    }
+
+    @media (min-width: 861px) {
+      body {
+        font-size: 14px;
+      }
+
+      .tabs {
+        width: min(1240px, calc(100% - 8px));
+      }
+
+      main {
+        width: min(1240px, calc(100% - 8px));
+      }
+
+      .tab,
+      .seq-expansion-head,
+      .seq-layout .scorebox>div:first-child,
+      .seq-history .log-toggle {
+        font-size: 13px;
+      }
+
+      .seq-expansion-head {
+        min-height: 33px;
+      }
+
+      .seq-active-panel .sim-prompt,
+      .seq-active-panel .sim-result,
+      .seq-active-panel .sim-choice {
+        font-size: 13px;
+      }
+
+      .buff-job img {
+        width: 20px;
+        height: 20px;
+      }
+
+      .buff-personal-item {
+        width: 20px;
+        font-size: 9px;
+      }
+
+      .buff-personal-item .icon.small {
+        width: 19px;
+        height: 19px;
+      }
     }
 
     @media (max-width: 860px) {
@@ -3267,16 +3387,6 @@
         <div class="cheat-sheet">
           <div class="cheat-card">
             <div class="cheat-row">
-              <div class="cheat-title">0. 가속도</div>
-              <div class="cheat-buttons" data-cheat-key="accelTruth">
-                <button type="button" data-value="진짜">진짜</button>
-                <button type="button" data-value="가짜">가짜</button>
-              </div>
-            </div>
-          </div>
-
-          <div class="cheat-card">
-            <div class="cheat-row">
               <div class="cheat-title">1. 그랜드크로스 1회차</div>
               <div class="cheat-buttons" data-cheat-key="gc1Truth">
                 <button type="button" data-value="진짜">진짜</button>
@@ -3288,6 +3398,12 @@
               <div class="cheat-buttons" data-cheat-key="gc1Timing">
                 <button type="button" data-value="빠른">빠른</button>
                 <button type="button" data-value="느린">느린</button>
+              </div>
+            </div>
+            <div class="cheat-row">
+              <div class="cheat-subtitle">가속도 부여</div>
+              <div class="cheat-buttons cheat-toggle-buttons" data-cheat-key="accelRound">
+                <button type="button" data-value="1회차">1회차</button>
               </div>
             </div>
           </div>
@@ -3324,6 +3440,12 @@
                 <button type="button" data-value="느린" disabled>느린</button>
               </div>
             </div>
+            <div class="cheat-row">
+              <div class="cheat-subtitle">가속도 부여</div>
+              <div class="cheat-buttons cheat-toggle-buttons" data-cheat-key="accelRound">
+                <button type="button" data-value="2회차">2회차</button>
+              </div>
+            </div>
           </div>
 
           <div class="cheat-card">
@@ -3333,10 +3455,6 @@
                 <button type="button" data-value="진짜">진짜</button>
                 <button type="button" data-value="가짜">가짜</button>
               </div>
-            </div>
-            <div class="cheat-row">
-              <div class="cheat-subtitle">디버프</div>
-              <div class="cheat-auto" id="cheatChaos2Type">자동</div>
             </div>
           </div>
 
@@ -3390,7 +3508,6 @@
     const seqAccordion = document.getElementById("seqAccordion");
     const seqActivePanel = document.getElementById("seqActivePanel");
     const cheatResult = document.getElementById("cheatResult");
-    const cheatChaos2Type = document.getElementById("cheatChaos2Type");
     const cheatGc1SpreadTarget = document.getElementById("cheatGc1SpreadTarget");
     const cheatGc2SpreadTarget = document.getElementById("cheatGc2SpreadTarget");
     let currentSim = null;
@@ -3402,7 +3519,7 @@
     let selectedSeqPlayer = "";
     let seqChoiceHandler = null;
     const cheatState = {
-      accelTruth: "진짜",
+      accelRound: "",
       gc1Truth: "진짜",
       gc1Timing: "빠른",
       chaos1Truth: "진짜",
@@ -3475,6 +3592,11 @@
         const id = tab.dataset.tab;
         tabs.forEach((item) => item.setAttribute("aria-selected", String(item === tab)));
         panels.forEach((panel) => panel.classList.toggle("active", panel.id === id));
+        document.body.classList.toggle("simulation-active", id === "simulation");
+        if (id === "simulation") {
+          window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+          document.querySelector(".seq-content")?.scrollTo({ top: 0, left: 0, behavior: "auto" });
+        }
       });
     });
 
@@ -3482,14 +3604,17 @@
       return cheatState.gc1Timing === "빠른" ? "느린" : "빠른";
     }
 
-    function cheatChaos2TypeValue() {
-      return cheatState.chaos1Type === "혼돈의 불" ? "혼돈의 물" : "혼돈의 불";
-    }
-
     function cheatSpreadText(truth) {
       return truth === "진짜"
         ? "번개 산개 / 물 본대"
         : "물 산개 / 번개 본대";
+    }
+
+    function cheatSpreadHtml(truth) {
+      const spread = truth === "진짜" ? "번개" : "물";
+      const stack = truth === "진짜" ? "물" : "번개";
+      const color = truth === "진짜" ? "cheat-action-blue" : "cheat-action-red";
+      return `${spread} <span class="${color}">산개</span> / ${stack} 본대`;
     }
 
     function cheatSpreadTarget(truth) {
@@ -3501,12 +3626,23 @@
     }
 
     function cheatAccelText() {
-      return cheatState.accelTruth === "진짜" ? "안 움직임" : "움직임";
+      const truth = cheatAccelTruth();
+      if (!truth) return "미선택";
+      return truth === "진짜" ? "안 움직임" : "움직임";
+    }
+
+    function cheatAccelTruth() {
+      return cheatState.accelRound === "1회차"
+        ? cheatState.gc1Truth
+        : cheatState.accelRound === "2회차"
+          ? cheatState.gc2Truth
+          : "";
     }
 
     function cheatAccelHtml() {
       const text = cheatAccelText();
-      return `<span class="${text === "안 움직임" ? "cheat-truth-true" : "cheat-truth-false"}">${text}</span>`;
+      if (text === "미선택") return `<span>${text}</span>`;
+      return `<span class="${text === "안 움직임" ? "cheat-action-blue" : "cheat-action-red"}">${text}</span>`;
     }
 
     function cheatSoakHtml(action) {
@@ -3516,6 +3652,27 @@
 
     function cheatGazeText(truth) {
       return truth === "진짜" ? "마안 안본다" : "마안 본다";
+    }
+
+    function cheatGazeHtml(truth) {
+      const action = cheatGazeText(truth);
+      const keyword = truth === "진짜" ? "안본다" : "본다";
+      return `마안 <span class="${truth === "진짜" ? "cheat-action-blue" : "cheat-action-red"}">${keyword}</span>`;
+    }
+
+    function cheatChaosActionHtml(type, truth) {
+      const action = chaosAnswerFor(type, truth);
+      const blue = (type === "혼돈의 불" && action === "밖") || (type === "혼돈의 물" && action === "안");
+      return `히트박스 <span class="${blue ? "cheat-action-blue" : "cheat-action-red"}">${action}</span>`;
+    }
+
+    function cheatResultLine(truth, actionHtml) {
+      return `
+        <div class="cheat-result-line">
+          ${cheatTruthHtml(truth)}
+          <span class="cheat-result-action">${actionHtml}</span>
+        </div>
+      `;
     }
 
     function cheatSelectorHtml(title, key, choices = ["진짜", "가짜"]) {
@@ -3531,13 +3688,36 @@
       `;
     }
 
+    function cheatChoiceIcon(key, value) {
+      if (value === "진짜") return ["img/진실.png", "진짜"];
+      if (value === "가짜") return ["img/거짓.png", "가짜"];
+      if (value === "혼돈의 불") return ["img/혼돈의 불.webp", "혼돈의 불"];
+      if (value === "혼돈의 물") return ["img/혼돈의 물.webp", "혼돈의 물"];
+      if (key === "accelRound") return ["img/가속도 폭탄.webp", `${value} 가속도`];
+      if (key === "gc1Timing" || key === "gc2Timing") {
+        return value === "빠른"
+          ? ["img/simul/attack_1.png", "빠른 디버프"]
+          : ["img/simul/bind_1.png", "느린 디버프"];
+      }
+      return null;
+    }
+
     function updateCheatButtonStates(root = document) {
       const gc2Timing = cheatGc2Timing();
       root.querySelectorAll(".cheat-buttons").forEach((group) => {
         const key = group.dataset.cheatKey;
         const value = key === "gc2Timing" ? gc2Timing : cheatState[key];
         group.querySelectorAll("button").forEach((button) => {
+          const buttonValue = button.dataset.value;
+          const iconData = cheatChoiceIcon(key, buttonValue);
+          const label = buttonValue === "혼돈의 불" ? "불" : buttonValue === "혼돈의 물" ? "물" : buttonValue;
+          button.innerHTML = iconData
+            ? `<img src="${iconData[0]}" alt="${iconData[1]}"><span>${label}</span>`
+            : `<span>${label}</span>`;
           button.classList.toggle("active", button.dataset.value === value);
+          if (key === "accelRound") {
+            button.disabled = Boolean(cheatState.accelRound && button.dataset.value !== cheatState.accelRound);
+          }
         });
       });
     }
@@ -3545,29 +3725,35 @@
     function renderCheatSheet() {
       if (!cheatResult) return;
       const gc2Timing = cheatGc2Timing();
-      const chaos2Type = cheatChaos2TypeValue();
       const fireTruth = cheatState.chaos1Type === "혼돈의 불" ? cheatState.chaos1Truth : cheatState.chaos2Truth;
       const waterTruth = cheatState.chaos1Type === "혼돈의 물" ? cheatState.chaos1Truth : cheatState.chaos2Truth;
-      cheatChaos2Type.textContent = chaos2Type === "혼돈의 불" ? "불" : "물";
       cheatGc1SpreadTarget.textContent = `산개징: ${cheatSpreadTarget(cheatState.gc1Truth)}`;
       cheatGc2SpreadTarget.textContent = `산개징: ${cheatSpreadTarget(cheatState.gc2Truth)}`;
       const spreadByTiming = {
-        [cheatState.gc1Timing]: `${cheatTruthHtml(cheatState.gc1Truth)} ${cheatSpreadText(cheatState.gc1Truth)}`,
-        [gc2Timing]: `${cheatTruthHtml(cheatState.gc2Truth)} ${cheatSpreadText(cheatState.gc2Truth)}`
+        [cheatState.gc1Timing]: cheatResultLine(cheatState.gc1Truth, cheatSpreadHtml(cheatState.gc1Truth)),
+        [gc2Timing]: cheatResultLine(cheatState.gc2Truth, cheatSpreadHtml(cheatState.gc2Truth))
       };
       const releaseThunder = releasePatternAnswer(cheatState.thunderMemory, cheatState.releaseTop);
       const releaseBlizzard = releasePatternAnswer(cheatState.blizzardMemory, cheatState.releaseBottom);
-      const releaseText = `${thunderDisplay} ${cheatSoakHtml(releaseThunder)} / ${blizzardDisplay} ${cheatSoakHtml(releaseBlizzard)}`;
+      const releaseThunderTruth = releaseThunder === "피하기" ? "진짜" : "가짜";
+      const releaseBlizzardTruth = releaseBlizzard === "피하기" ? "진짜" : "가짜";
       const chaosBody = (type, truth) => {
-        const base = `${cheatTruthHtml(truth)} 히트박스 ${chaosAnswerFor(type, truth)}`;
-        return type === "혼돈의 물" ? `${base}<br>${releaseText}` : base;
+        const base = cheatResultLine(truth, cheatChaosActionHtml(type, truth));
+        if (type !== "혼돈의 물") return base;
+        return [
+          base,
+          cheatResultLine(releaseThunderTruth, `${thunderDisplay} ${cheatSoakHtml(releaseThunder)}`),
+          cheatResultLine(releaseBlizzardTruth, `${blizzardDisplay} ${cheatSoakHtml(releaseBlizzard)}`)
+        ].join("");
       };
 
       const rows = [
         {
           order: -1,
           title: `<span class="cheat-accel-title"><span class="accel-r">가</span><span class="accel-y">속</span><span class="accel-b">도</span></span>`,
-          body: cheatAccelHtml(),
+          body: cheatAccelTruth()
+            ? cheatResultLine(cheatAccelTruth(), cheatAccelHtml())
+            : `<div class="cheat-result-line"><span></span><span class="cheat-result-action">미선택</span></div>`,
           className: "cheat-accel"
         },
         {
@@ -3578,7 +3764,7 @@
         {
           order: 1,
           title: "빠른 마안",
-          body: `${cheatTruthHtml(cheatState.gc1Truth)} ${cheatGazeText(cheatState.gc1Truth)}`
+          body: cheatResultLine(cheatState.gc1Truth, cheatGazeHtml(cheatState.gc1Truth))
         },
         {
           order: 1.5,
@@ -3601,7 +3787,7 @@
         {
           order: 4,
           title: "느린 마안",
-          body: `${cheatTruthHtml(cheatState.gc2Truth)} ${cheatGazeText(cheatState.gc2Truth)}`
+          body: cheatResultLine(cheatState.gc2Truth, cheatGazeHtml(cheatState.gc2Truth))
         },
         {
           order: 4.2,
@@ -3623,7 +3809,7 @@
         .map((row) => row.selector || `
           <div class="cheat-result-card ${row.className || ""}">
             <b>${row.title}</b>
-            <span>${row.body}</span>
+            <div class="cheat-result-body">${row.body}</div>
           </div>
         `).join("");
 
@@ -3635,7 +3821,10 @@
       root.querySelectorAll(".cheat-buttons:not(.locked) button").forEach((button) => {
         button.addEventListener("click", () => {
           const group = button.closest(".cheat-buttons");
-          cheatState[group.dataset.cheatKey] = button.dataset.value;
+          const key = group.dataset.cheatKey;
+          cheatState[key] = key === "accelRound" && cheatState[key] === button.dataset.value
+            ? ""
+            : button.dataset.value;
           renderCheatSheet();
         });
       });
@@ -4308,7 +4497,7 @@
       if (!resolveAt || !seq?.timePoint) return "";
       const diff = parseSeconds(resolveAt) - parseSeconds(seq.timePoint);
       if (diff <= 0) return "";
-      if (diff >= 60) return `${Math.ceil(diff / 60)}m`;
+      if (diff >= 60) return `${Math.floor(diff / 60)}m`;
       return `${diff}s`;
     }
 
