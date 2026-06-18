@@ -105,18 +105,26 @@ function cheatChoiceIcon(key, value) {
   return null;
 }
 
+function initializeCheatButtons(root = document) {
+  root.querySelectorAll(".cheat-buttons button").forEach((button) => {
+    const group = button.closest(".cheat-buttons");
+    const key = group?.dataset.cheatKey;
+    const value = button.dataset.value;
+    const iconData = cheatChoiceIcon(key, value);
+    const label = value === "혼돈의 불" ? "불" : value === "혼돈의 물" ? "물" : value;
+
+    button.innerHTML = iconData
+      ? `<img src="${iconData[0]}" alt="${iconData[1]}"><span>${label}</span>`
+      : `<span>${label}</span>`;
+  });
+}
+
 function updateCheatButtonStates(root = document) {
   const gc2Timing = cheatGc2Timing();
   root.querySelectorAll(".cheat-buttons").forEach((group) => {
     const key = group.dataset.cheatKey;
     const value = key === "gc2Timing" ? gc2Timing : cheatState[key];
     group.querySelectorAll("button").forEach((button) => {
-      const buttonValue = button.dataset.value;
-      const iconData = cheatChoiceIcon(key, buttonValue);
-      const label = buttonValue === "혼돈의 불" ? "불" : buttonValue === "혼돈의 물" ? "물" : buttonValue;
-      button.innerHTML = iconData
-        ? `<img src="${iconData[0]}" alt="${iconData[1]}"><span>${label}</span>`
-        : `<span>${label}</span>`;
       button.classList.toggle("active", button.dataset.value === value);
     });
   });
@@ -201,6 +209,7 @@ function renderCheatSheet() {
 }
 
 function bindCheatButtons(root = document) {
+  initializeCheatButtons(root);
   root.querySelectorAll(".cheat-buttons:not(.locked) button").forEach((button) => {
     button.addEventListener("click", () => {
       const group = button.closest(".cheat-buttons");
