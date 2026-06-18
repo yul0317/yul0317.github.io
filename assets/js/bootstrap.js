@@ -14,6 +14,7 @@ tabs.forEach((tab) => {
     tabs.forEach((item) => item.setAttribute("aria-selected", String(item === tab)));
     panels.forEach((panel) => panel.classList.toggle("active", panel.id === id));
     document.body.classList.toggle("simulation-active", id === "simulation");
+    document.body.classList.toggle("cheatsheet-active", id === "cheatsheet");
     if (id === "simulation") {
       window.scrollTo({ top: 0, left: 0, behavior: "auto" });
       document.querySelector(".seq-content")?.scrollTo({ top: 0, left: 0, behavior: "auto" });
@@ -44,6 +45,7 @@ new MutationObserver(syncSeqInlineNext).observe(seqNextBtn, {
 });
 document.getElementById("seqResetBtn").addEventListener("click", renderSeqPlayerPicker);
 bindCheatButtons();
+bindCheatPager();
 nextSimulation();
 renderSeqPlayerPicker();
 renderCheatSheet();

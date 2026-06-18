@@ -1,31 +1,128 @@
-/* 컨닝페이퍼의 선택 버튼과 결과 카드를 정의합니다. */
+/* 컨닝페이퍼의 위·아래 선택/결과 작업 영역을 정의합니다. */
+body.cheatsheet-active {
+  overflow: hidden;
+}
+
+body.cheatsheet-active .shell {
+  height: 100vh;
+  height: 100dvh;
+  min-height: 0;
+  overflow: hidden;
+}
+
+body.cheatsheet-active header {
+  flex: 0 0 auto;
+}
+
+body.cheatsheet-active main {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+}
+
+body.cheatsheet-active #cheatsheet.active {
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
 .cheat-sheet {
   display: grid;
+  grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
   gap: 3px;
-  max-width: 720px;
+  width: min(720px, 100%);
+  height: 100%;
+  min-height: 0;
   margin: 0 auto;
 }
 
-.cheat-card,
-.cheat-result {
-  border: 1px solid var(--line);
-  border-radius: 0;
+.cheat-selector-pane,
+.cheat-result-pane {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.cheat-selector-pane {
+  display: flex;
+  flex-direction: column;
+  background: #f4f6f8;
+}
+
+.cheat-page-nav {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  flex: 0 0 auto;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 3px;
+  padding: 3px;
+  background: #28303a;
+}
+
+.cheat-page-nav button {
+  min-height: 28px;
+  border: 0;
   background: #fff;
-  padding: 1px;
-  box-shadow: none;
+  color: var(--ink);
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.cheat-page-nav button:last-child {
+  justify-self: stretch;
+}
+
+.cheat-page-nav button:disabled {
+  opacity: .4;
+  cursor: default;
+}
+
+.cheat-page-nav strong {
+  min-width: 48px;
+  color: #fff;
+  text-align: center;
+  font-size: 12px;
+}
+
+.cheat-page-scroll,
+.cheat-result-pane {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+}
+
+.cheat-page-scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.cheat-page {
+  display: grid;
+  gap: 3px;
+  padding: 3px;
+}
+
+.cheat-page[hidden] {
+  display: none;
+}
+
+.cheat-card {
+  background: #fff;
+  padding: 2px;
 }
 
 .cheat-row {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 50%;
-  gap: 1px;
+  gap: 2px;
   align-items: center;
-  min-height: 24px;
-  border-bottom: 1px solid #eef2f5;
+  min-height: 28px;
 }
 
-.cheat-row:last-child {
-  border-bottom: 0;
+.cheat-row + .cheat-row {
+  margin-top: 2px;
 }
 
 .cheat-title {
@@ -43,23 +140,20 @@
 
 .cheat-buttons {
   display: flex;
-  gap: 1px;
-  flex-wrap: nowrap;
+  gap: 2px;
   width: 100%;
 }
 
 .cheat-buttons button {
   flex: 1 1 0;
-  width: 25%;
   min-width: 0;
-  min-height: 25px;
+  min-height: 28px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 3px;
-  border: 1px solid var(--line);
-  border-radius: 0;
-  background: #fff;
+  border: 0;
+  background: #e8edf2;
   color: var(--ink);
   font-weight: 900;
   cursor: pointer;
@@ -67,29 +161,30 @@
 }
 
 .cheat-buttons button img {
-  width: 15px;
-  height: 15px;
-  flex: 0 0 15px;
+  width: 16px;
+  height: 16px;
+  flex: 0 0 16px;
   object-fit: contain;
 }
 
 .cheat-buttons button.active {
-  border-color: var(--accent);
-  background: #e7f7f5;
+  background: #bfe9e4;
   color: #102226;
 }
 
 .cheat-buttons button:disabled {
   cursor: default;
-  opacity: .75;
+  opacity: .7;
+}
+
+.cheat-result-pane {
+  background: #202833;
+  padding: 3px;
 }
 
 .cheat-result {
   display: grid;
-  gap: 1px;
-  position: sticky;
-  bottom: 3px;
-  z-index: 4;
+  gap: 3px;
 }
 
 .cheat-result-card {
@@ -97,9 +192,7 @@
   grid-template-columns: minmax(0, 42%) minmax(0, 58%);
   align-items: center;
   gap: 4px;
-  border: 1px solid #46515e;
-  border-radius: 0;
-  padding: 3px 4px;
+  padding: 4px;
   background: #202833;
 }
 
@@ -117,7 +210,7 @@
 
 .cheat-result-body {
   display: grid;
-  gap: 2px;
+  gap: 3px;
   min-width: 0;
 }
 
@@ -140,12 +233,6 @@
 
 .cheat-action-red {
   color: #f87171 !important;
-}
-
-.cheat-accel {
-  border: 2px solid #f8fafc;
-  background: #111827;
-  box-shadow: none;
 }
 
 .cheat-accel span {
@@ -171,20 +258,11 @@
 }
 
 .cheat-truth-true {
-  color: #2563eb !important;
+  color: #60a5fa !important;
   font-weight: 900;
 }
 
 .cheat-truth-false {
-  color: var(--bad) !important;
+  color: #f87171 !important;
   font-weight: 900;
-}
-
-.sim-log li.hidden {
-  display: none;
-}
-
-.log-toggle {
-  display: none;
-  margin-top: 8px;
 }

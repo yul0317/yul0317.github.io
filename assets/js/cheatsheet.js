@@ -1,4 +1,27 @@
-// 컨닝페이퍼의 선택 상태, 결과 계산, 화면 렌더링을 담당합니다.
+// 컨닝페이퍼의 선택 상태, 페이지 전환, 결과 계산과 화면 렌더링을 담당합니다.
+let cheatPage = 1;
+
+function setCheatPage(page) {
+  cheatPage = Math.max(1, Math.min(2, page));
+  document.querySelectorAll(".cheat-page").forEach((panel) => {
+    const active = Number(panel.dataset.cheatPage) === cheatPage;
+    panel.hidden = !active;
+    panel.classList.toggle("active", active);
+  });
+  const label = document.getElementById("cheatPageLabel");
+  const previous = document.getElementById("cheatPrevPage");
+  const next = document.getElementById("cheatNextPage");
+  if (label) label.textContent = `${cheatPage} / 2`;
+  if (previous) previous.disabled = cheatPage === 1;
+  if (next) next.disabled = cheatPage === 2;
+  document.querySelector(".cheat-page-scroll")?.scrollTo({ top: 0, behavior: "auto" });
+}
+
+function bindCheatPager() {
+  document.getElementById("cheatPrevPage")?.addEventListener("click", () => setCheatPage(cheatPage - 1));
+  document.getElementById("cheatNextPage")?.addEventListener("click", () => setCheatPage(cheatPage + 1));
+  setCheatPage(1);
+}
 function cheatGc2Timing() {
   return cheatState.gc1Timing === "빠른" ? "느린" : "빠른";
 }
@@ -64,19 +87,6 @@ function cheatResultLine(truth, actionHtml) {
     <div class="cheat-result-line">
       ${cheatTruthHtml(truth)}
       <span class="cheat-result-action">${actionHtml}</span>
-    </div>
-  `;
-}
-
-function cheatSelectorHtml(title, key, choices = ["진짜", "가짜"]) {
-  return `
-    <div class="cheat-card">
-      <div class="cheat-row">
-        <div class="cheat-title">${title}</div>
-        <div class="cheat-buttons" data-cheat-key="${key}">
-          ${choices.map((choice) => `<button type="button" data-value="${choice}">${choice}</button>`).join("")}
-        </div>
-      </div>
     </div>
   `;
 }
@@ -160,10 +170,6 @@ function renderCheatSheet() {
       body: cheatResultLine(cheatState.gc1Truth, cheatGazeHtml(cheatState.gc1Truth))
     },
     {
-      order: 1.5,
-      selector: cheatSelectorHtml(`${thunderDisplay}`, "thunderMemory")
-    },
-    {
       order: 2,
       title: "혼돈의 불",
       body: chaosBody("혼돈의 불", fireTruth)
@@ -174,21 +180,9 @@ function renderCheatSheet() {
       body: spreadByTiming["느린"]
     },
     {
-      order: 3.5,
-      selector: cheatSelectorHtml(`${blizzardDisplay}`, "blizzardMemory")
-    },
-    {
       order: 4,
       title: "느린 마안",
       body: cheatResultLine(cheatState.gc2Truth, cheatGazeHtml(cheatState.gc2Truth))
-    },
-    {
-      order: 4.2,
-      selector: cheatSelectorHtml(`마력방출 위(${thunderDisplay})`, "releaseTop")
-    },
-    {
-      order: 4.4,
-      selector: cheatSelectorHtml(`마력방출 밑(${blizzardDisplay})`, "releaseBottom")
     },
     {
       order: 5,
@@ -199,14 +193,13 @@ function renderCheatSheet() {
 
   cheatResult.innerHTML = rows
     .sort((a, b) => a.order - b.order)
-    .map((row) => row.selector || `
+    .map((row) => `
       <div class="cheat-result-card ${row.className || ""}">
         <b>${row.title}</b>
         <div class="cheat-result-body">${row.body}</div>
       </div>
     `).join("");
 
-  bindCheatButtons(cheatResult);
   updateCheatButtonStates();
 }
 
