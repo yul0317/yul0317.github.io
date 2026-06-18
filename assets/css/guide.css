@@ -236,11 +236,12 @@ h2 {
 }
 
 .stage-image {
-  flex: 0 0 min(520px, 80vw);
-  width: min(520px, 80vw);
+  flex: 0 0 auto;
+  width: auto;
+  max-width: none;
+  height: auto;
   scroll-snap-align: start;
   max-height: 260px;
-  object-fit: contain;
   border: 1px solid var(--line);
   border-radius: 8px;
   background: #f7f9fb;
