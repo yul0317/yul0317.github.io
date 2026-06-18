@@ -57,7 +57,15 @@ function makeSpreadSim() {
   const isGc1 = event.startsWith("gc1");
   const data = isGc1 ? state.gc1Personal : state.gc2Personal;
   const truth = isGc1 ? state.gc1 : state.gc2;
-  const action = personalGrandCrossAction(data, truth);
+  const timing = spreadTimingForEvent(state.schedule, event);
+  const accelAssignment = accelAssignmentAtTiming(
+    state.gc1Personal,
+    state.gc2Personal,
+    state.gc1,
+    state.gc2,
+    timing
+  );
+  const action = personalGrandCrossAction(data, truth, accelAssignment);
   const eventTime = state.schedule[event].time;
   const marker = spreadMarkerFor(state.player, action.spread);
   const movement = movementAnswerFor(action.accel);
@@ -72,13 +80,18 @@ function makeSpreadSim() {
     ? markerAnswers.flatMap((answerMarker) => [`${answerMarker} / 움직임`, `${answerMarker} / 안 움직임`, `${answerMarker} / 움직임 상관없음`])
     : markerAnswers.map((answerMarker) => `${answerMarker} / ${movement}`);
   return {
-    title: `${hasBlizzard ? "느린" : "빠른"} 물/번개/가속도`,
+    title: `${timing} 물/번개/가속도`,
     time: eventTime,
     prompt: "부여된 디버프 기준으로 몇 번 위치에서 어떻게 처리할까?",
     facts: [
       fact("플레이어", state.player),
-      fact("판정", `${quizTruthIcon(truth)} ${truth}`),
-      fact("디버프", `${quizMainIcon(data.main)} ${data.accel ? icon("가속도 폭탄.webp", "가속도 폭탄") : ""}`)
+      fact("물/번개", `${quizMainIcon(data.main)} ${quizTruthIcon(truth)} ${truth}`),
+      fact(
+        "가속도",
+        accelAssignment
+          ? `${icon("가속도 폭탄.webp", "가속도 폭탄")} ${accelAssignment.round}회차 ${accelAssignment.truth}`
+          : "-"
+      )
     ],
     answer,
     answers,
@@ -92,8 +105,8 @@ function makeSpreadSim() {
     answerMovement: movement === "움직임 상관없음" ? "움직임" : movement,
     anyMovement: movement === "움직임 상관없음",
     explain: hasBlizzard
-      ? `물/번개는 진짜면 번개 산개, 가짜면 물 산개. ${blizzardDisplay}는 ${state.blizzardMemory}이므로 ${state.blizzardMemory === "가짜" ? "밟기" : "피하기"}: ${blizzardGroups.blizzardMarkers.join(", ")}번. ${action.spread === "산개" ? "산개 대상자" : "본대 대상자"} 위치는 ${blizzardGroups.spreadMarkers.join(", ")}번. 최종 위치는 ${markerAnswers.join(", ")}번. 가속도 처리는 ${movement}.`
-      : `물/번개는 진짜면 번개 산개, 가짜면 물 산개. ${state.player} 기준 최종 위치는 ${marker}번. 가속도 처리는 ${movement}.`
+      ? `물/번개는 진짜면 번개 산개, 가짜면 물 산개. ${blizzardDisplay}는 ${state.blizzardMemory}이므로 ${state.blizzardMemory === "가짜" ? "밟기" : "피하기"}: ${blizzardGroups.blizzardMarkers.join(", ")}번. ${action.spread === "산개" ? "산개 대상자" : "본대 대상자"} 위치는 ${blizzardGroups.spreadMarkers.join(", ")}번. 최종 위치는 ${markerAnswers.join(", ")}번. ${accelAssignment ? `가속도는 ${accelAssignment.round}회차 ${accelAssignment.truth} 판정으로 ${movement}.` : "이 시간에 처리할 가속도는 없음."}`
+      : `물/번개는 진짜면 번개 산개, 가짜면 물 산개. ${state.player} 기준 최종 위치는 ${marker}번. ${accelAssignment ? `가속도는 ${accelAssignment.round}회차 ${accelAssignment.truth} 판정으로 ${movement}.` : "이 시간에 처리할 가속도는 없음."}`
   };
 }
 

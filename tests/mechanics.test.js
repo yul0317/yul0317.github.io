@@ -23,7 +23,7 @@ vm.createContext(context);
 vm.runInContext(
   `const seqPlayers = ${JSON.stringify(seqPlayers)};
   ${mechanicsSource}
-  globalThis.mechanicsApi = { makeEncounterState };`,
+  globalThis.mechanicsApi = { makeEncounterState, accelAssignmentAtTiming };`,
   context
 );
 
@@ -56,12 +56,51 @@ function verifyEncounter(encounter) {
     assert(first.main !== second.main, `${player}: 같은 디버프가 연속 배정됨`);
     assert(!bothWaterOrThunder, `${player}: 물/번개가 연속 배정됨`);
     assert(first.accel !== second.accel, `${player}: 가속도 처리 횟수가 잘못됨`);
+    const accelData = first.accel ? first : second;
+    assert(
+      ["빠른", "느린"].includes(accelData.accelTiming),
+      `${player}: 가속도 처리 시간이 배정되지 않음`
+    );
   });
 
   assert(
     playerNames.filter((player) => encounter.gc1Assign[player].accel).length === 4,
     "1회차 가속도 대상자가 4명이 아님"
   );
+  assert(
+    playerNames.filter((player) => encounter.gc2Assign[player].accel).length === 4,
+    "2회차 가속도 대상자가 4명이 아님"
+  );
+  const allAccelAssignments = playerNames.map((player) => (
+    encounter.gc1Assign[player].accel
+      ? encounter.gc1Assign[player]
+      : encounter.gc2Assign[player]
+  ));
+  assert(
+    allAccelAssignments.filter((assignment) => assignment.accelTiming === "빠른").length === 4,
+    "빠른 가속도 대상자가 4명이 아님"
+  );
+  assert(
+    allAccelAssignments.filter((assignment) => assignment.accelTiming === "느린").length === 4,
+    "느린 가속도 대상자가 4명이 아님"
+  );
+  playerNames.forEach((player) => {
+    const fast = context.mechanicsApi.accelAssignmentAtTiming(
+      encounter.gc1Assign[player],
+      encounter.gc2Assign[player],
+      encounter.gc1,
+      encounter.gc2,
+      "빠른"
+    );
+    const slow = context.mechanicsApi.accelAssignmentAtTiming(
+      encounter.gc1Assign[player],
+      encounter.gc2Assign[player],
+      encounter.gc1,
+      encounter.gc2,
+      "느린"
+    );
+    assert(Boolean(fast) !== Boolean(slow), `${player}: 가속도 처리 시간이 하나로 결정되지 않음`);
+  });
   assert(
     playerNames.filter((player) => encounter.gc3Assign[player].wound === "산자의 상처").length === 4,
     "산자의 상처 대상자가 4명이 아님"

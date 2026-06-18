@@ -2,6 +2,11 @@
 const TRUTH_VALUES = Object.freeze(["진짜", "가짜"]);
 const CHAOS_TYPES = Object.freeze(["혼돈의 불", "혼돈의 물"]);
 const GRAND_CROSS_MECHANICS = Object.freeze(["물", "번개", "마안", "없음"]);
+const ACCEL_TIMINGS = Object.freeze(["빠른", "느린"]);
+const ACCEL_TIMING_EVENTS = Object.freeze({
+  빠른: Object.freeze({ step: 10, time: "01:21" }),
+  느린: Object.freeze({ step: 13, time: "01:46" })
+});
 const PARTY_PLAYER_NAMES = Object.freeze(seqPlayers.map((player) => player.name));
 const GRAND_CROSS_GROUPS = Object.freeze([
   Object.freeze(PARTY_PLAYER_NAMES.slice(0, 4)),
@@ -122,7 +127,7 @@ function makeGrandCrossMainAssignment() {
 
   GRAND_CROSS_GROUPS.forEach((group) => {
     shuffle(group).forEach((player, index) => {
-      result[player] = { main: GRAND_CROSS_MECHANICS[index], accel: false };
+      result[player] = { main: GRAND_CROSS_MECHANICS[index], accel: false, accelTiming: "" };
     });
   });
 
@@ -146,7 +151,7 @@ function makeNextGrandCrossMainAssignment(previous) {
     const next = pick(validAssignments);
 
     group.forEach((player, index) => {
-      result[player] = { main: next[index], accel: false };
+      result[player] = { main: next[index], accel: false, accelTiming: "" };
     });
   });
 
@@ -173,6 +178,17 @@ function makeGrandCrossAssignments() {
     second[player].accel = !first[player].accel;
   });
 
+  const accelAssignments = PARTY_PLAYER_NAMES.map((player) => (
+    first[player].accel ? first[player] : second[player]
+  ));
+  const timingPool = shuffle([
+    ...Array(PARTY_PLAYER_NAMES.length / 2).fill(ACCEL_TIMINGS[0]),
+    ...Array(PARTY_PLAYER_NAMES.length / 2).fill(ACCEL_TIMINGS[1])
+  ]);
+  accelAssignments.forEach((assignment, index) => {
+    assignment.accelTiming = timingPool[index];
+  });
+
   return { first, second };
 }
 
@@ -193,10 +209,35 @@ function makeGrandCrossThirdAssignment() {
   ]));
 }
 
-function personalGrandCrossAction(data, truth) {
+function accelAssignmentAtTiming(firstData, secondData, firstTruth, secondTruth, timing) {
+  if (firstData.accel && firstData.accelTiming === timing) {
+    return { data: firstData, truth: firstTruth, round: 1, timing };
+  }
+  if (secondData.accel && secondData.accelTiming === timing) {
+    return { data: secondData, truth: secondTruth, round: 2, timing };
+  }
+  return null;
+}
+
+function spreadTimingForEvent(schedule, event) {
+  return schedule[event].step === ACCEL_TIMING_EVENTS.빠른.step ? "빠른" : "느린";
+}
+
+function personalGrandCrossAction(data, truth, accelAssignment = null) {
   const spread = isSpreadTarget(data.main, truth) ? "산개" : "본대";
-  const accel = data.accel ? (truth === "진짜" ? "멈춤" : "움직임") : "가속도 없음";
-  return { spread, accel, main: data.main, hasGaze: data.main === "마안" };
+  const accel = accelAssignment
+    ? (accelAssignment.truth === "진짜" ? "멈춤" : "움직임")
+    : "가속도 없음";
+  return {
+    spread,
+    accel,
+    main: data.main,
+    hasGaze: data.main === "마안",
+    hasAccel: Boolean(accelAssignment),
+    accelRound: accelAssignment?.round || null,
+    accelTruth: accelAssignment?.truth || "",
+    accelTiming: accelAssignment?.timing || ""
+  };
 }
 
 function makeGrandCrossSchedule() {

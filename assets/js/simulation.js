@@ -35,11 +35,15 @@ function mechanicIcon(name) {
   return map[name] || name;
 }
 
-function personalDebuffLine(data, truth) {
+function personalDebuffLine(data, truth, action = null) {
   const debuffs = [];
-  if (data.main && data.main !== "없음") debuffs.push(mechanicIcon(data.main));
-  if (data.accel) debuffs.push(mechanicIcon("가속도"));
-  const value = debuffs.length ? `${debuffs.join(" ")} (${truthIcon(truth)})` : "없음";
+  if (data.main && data.main !== "없음") {
+    debuffs.push(`${mechanicIcon(data.main)} (${truthIcon(truth)})`);
+  }
+  if (action?.hasAccel) {
+    debuffs.push(`${mechanicIcon("가속도")} ${action.accelRound}회차 (${truthIcon(action.accelTruth)})`);
+  }
+  const value = debuffs.length ? debuffs.join(" / ") : "없음";
   return `내 디버프: ${value}`;
 }
 
@@ -48,15 +52,18 @@ function handlingDebuffLine(debuff, truth) {
 }
 
 function addPersonalGrandCross(data, truth, spreadStep, spreadAt, gazeStep, gazeAt, source) {
-  const spreadIcons = [];
   if (data.main === "물" || data.main === "번개") {
-    spreadIcons.push(mechanicIcon(data.main));
+    addSeqBuff(truthIcon(truth), mechanicIcon(data.main), spreadStep, spreadAt, source);
   }
   if (data.accel) {
-    spreadIcons.push(mechanicIcon("가속도"));
-  }
-  if (spreadIcons.length) {
-    addSeqBuff(truthIcon(truth), spreadIcons.join(" "), spreadStep, spreadAt, source);
+    const accelEvent = ACCEL_TIMING_EVENTS[data.accelTiming];
+    addSeqBuff(
+      truthIcon(truth),
+      mechanicIcon("가속도"),
+      accelEvent.step,
+      accelEvent.time,
+      `${source} · ${data.accelTiming}`
+    );
   }
   if (data.main === "마안") {
     addSeqBuff(truthIcon(truth), mechanicIcon("마안"), gazeStep, gazeAt, source);
@@ -67,14 +74,24 @@ function scheduledEvent(step) {
   return Object.entries(seq.gcSchedule).find(([, event]) => event.step === step)?.[0] || "";
 }
 
-function eventLabel(key) {
-  const labels = {
-    gc1Spread: "빠른 물/번개/가속도",
-    gc1Gaze: "빠른 마안",
-    gc2Spread: "느린 물/번개/가속도",
-    gc2Gaze: "느린 마안"
-  };
-  return labels[key] || "";
+function eventLabel(key, schedule = seq?.gcSchedule) {
+  if (key === "gc1Gaze") return "빠른 마안";
+  if (key === "gc2Gaze") return "느린 마안";
+  if (key.endsWith("Spread") && schedule) {
+    return `${spreadTimingForEvent(schedule, key)} 물/번개/가속도`;
+  }
+  return "";
+}
+
+function accelAssignmentForEvent(event) {
+  if (!event.endsWith("Spread")) return null;
+  return accelAssignmentAtTiming(
+    seq.gc1Personal,
+    seq.gc2Personal,
+    seq.gc1,
+    seq.gc2,
+    spreadTimingForEvent(seq.gcSchedule, event)
+  );
 }
 
 function renderSeqBuffs() {
@@ -144,7 +161,8 @@ function renderSeqBuffs() {
         addItem(20, playerDebuffItem(mechanicIcon(data.main), spreadEvent.step, spreadEvent.time));
       }
       if (data.accel) {
-        addItem(30, playerDebuffItem(mechanicIcon("가속도"), spreadEvent.step, spreadEvent.time));
+        const accelEvent = ACCEL_TIMING_EVENTS[data.accelTiming];
+        addItem(30, playerDebuffItem(mechanicIcon("가속도"), accelEvent.step, accelEvent.time));
       }
     };
     addGcItems(seq.gc1Assign?.[playerName], seq.step >= 2, seq.gcSchedule.gc1Spread, seq.gcSchedule.gc1Gaze);
@@ -413,7 +431,7 @@ function setSeqSpreadChoices(event, action, options = {}) {
       answerMarkers: markerGroups.markerAnswers,
       answerMovement,
       anyMovement: action.accel === "가속도 없음",
-      myDebuff: personalDebuffLine(data, truth),
+      myDebuff: personalDebuffLine(data, truth, action),
       explain: [
         `${blizzardDisplay}는 ${seq.blizzardMemory}입니다.`,
         shouldSoakBlizzard
@@ -425,7 +443,7 @@ function setSeqSpreadChoices(event, action, options = {}) {
         `최종 위치는 ${markerGroups.markerAnswers.join(", ")}번입니다.`,
         action.accel === "가속도 없음"
           ? "가속도 폭탄이 없으므로 움직임 여부는 정답에 영향을 주지 않습니다."
-          : `가속도 폭탄은 ${action.accel === "멈춤" ? "안 움직임" : "움직임"} 처리입니다.`
+          : `가속도 폭탄은 ${action.accelRound}회차 ${action.accelTruth} 판정이라 ${action.accel === "멈춤" ? "안 움직임" : "움직임"} 처리입니다.`
       ].join("<br>")
     });
     return;
@@ -442,8 +460,8 @@ function setSeqSpreadChoices(event, action, options = {}) {
     const spreadReason = data.main === "물" || data.main === "번개"
       ? `${truth} 판정에서는 ${spreadTarget} 대상자가 산개합니다. 현재 ${data.main} 디버프이므로 ${action.spread} 처리입니다.`
       : `현재 물/번개 디버프가 없으므로 쉐어 본대 처리입니다.`;
-    const accelReason = data.accel
-      ? `가속도 폭탄은 ${truth} 판정이라 ${action.accel === "멈춤" ? "안 움직임" : "움직임"} 처리입니다.`
+    const accelReason = action.hasAccel
+      ? `가속도 폭탄은 ${action.accelRound}회차 ${action.accelTruth} 판정이라 ${action.accel === "멈춤" ? "안 움직임" : "움직임"} 처리입니다.`
       : "가속도 폭탄이 없으므로 움직임 여부는 정답에 영향을 주지 않습니다.";
     const answerMarker = spreadMarkerFor(seq.player, action.spread);
     const answerMovement = movementAnswerFor(action.accel) === "움직임 상관없음" ? "움직임" : movementAnswerFor(action.accel);
@@ -455,7 +473,7 @@ function setSeqSpreadChoices(event, action, options = {}) {
       answerMarker,
       answerMovement,
       anyMovement: action.accel === "가속도 없음",
-      myDebuff: personalDebuffLine(data, truth),
+      myDebuff: personalDebuffLine(data, truth, action),
       explain: [
         `선택 직업: ${seq.player} (${roleText}).`,
         spreadReason,
@@ -946,7 +964,8 @@ function advanceSequential() {
       seq.title = `10. ${eventLabel(event)}`;
       seq.time = "01:21";
       seq.timePoint = "01:21";
-      const action = personalGrandCrossAction(data, truth);
+      const accelAssignment = accelAssignmentForEvent(event);
+      const action = personalGrandCrossAction(data, truth, accelAssignment);
       seqPrompt.textContent = `${eventLabel(event)}를 어떻게 처리할까요?`;
       renderSeqBuffs();
       if (isGaze) {
@@ -965,7 +984,8 @@ function advanceSequential() {
       seq.time = "01:28";
       seq.timePoint = "01:28";
       addSeqBuff(truthIcon(seq.thunderMemory), thunderDisplay, 15, "02:00", "마력 방출 기억");
-      const action = personalGrandCrossAction(data, truth);
+      const accelAssignment = accelAssignmentForEvent(event);
+      const action = personalGrandCrossAction(data, truth, accelAssignment);
       seqPrompt.textContent = `${thunderDisplay}를 기억하고, ${eventLabel(event)}를 처리합니다.`;
       renderSeqBuffs();
       if (isGaze) {
@@ -1020,7 +1040,8 @@ function advanceSequential() {
       seq.time = "01:46";
       seq.timePoint = "01:46";
       addSeqBuff(truthIcon(seq.blizzardMemory), blizzardDisplay, 15, "02:00", "마력 방출 기억");
-      const action = personalGrandCrossAction(data, truth);
+      const accelAssignment = accelAssignmentForEvent(event);
+      const action = personalGrandCrossAction(data, truth, accelAssignment);
       seqPrompt.textContent = `${eventLabel(event)}를 어떻게 처리할까요?`;
       renderSeqBuffs();
       if (isGaze) {
@@ -1039,7 +1060,8 @@ function advanceSequential() {
       seq.time = "01:54";
       seq.timePoint = "01:54";
       seqPrompt.textContent = `${eventLabel(event)}를 어떻게 처리할까요?`;
-      const action = personalGrandCrossAction(data, truth);
+      const accelAssignment = accelAssignmentForEvent(event);
+      const action = personalGrandCrossAction(data, truth, accelAssignment);
       renderSeqBuffs();
       if (isGaze) {
         setSeqChoices(
