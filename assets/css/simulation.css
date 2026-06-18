@@ -603,9 +603,12 @@ body.simulation-active .seq-layout {
 
 .sim-choice-guide img {
   display: block;
-  width: 100%;
+  width: auto;
+  max-width: 100%;
+  height: auto;
   max-height: 260px;
   object-fit: contain;
+  margin: 0 auto;
 }
 
 .sim-choice-placeholder {
