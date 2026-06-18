@@ -1,0 +1,154 @@
+/* 공통 색상, 기본 스타일, 전체 레이아웃과 탭 메뉴를 정의합니다. */
+:root {
+  --bg: #f6f7f9;
+  --panel: #ffffff;
+  --ink: #20242b;
+  --muted: #68707d;
+  --line: #d9dee7;
+  --accent: #2f6f73;
+  --accent-2: #b74f38;
+  --warn: #8d6b10;
+  --good: #1f7a4d;
+  --bad: #b23b3b;
+  --shadow: 0 12px 30px rgba(22, 31, 45, .09);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: "Segoe UI", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  font-size: 13px;
+  line-height: 1.38;
+}
+
+button {
+  font: inherit;
+}
+
+.shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+body.simulation-active {
+  overflow: hidden;
+}
+
+body.simulation-active .shell {
+  height: 100vh;
+  height: 100dvh;
+  min-height: 0;
+  overflow: hidden;
+}
+
+body.simulation-active header {
+  flex: 0 0 auto;
+}
+
+body.simulation-active main {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+}
+
+body.simulation-active #simulation.active {
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+header {
+  background: #1f252c;
+  color: #fff;
+  border-bottom: 1px solid rgba(255, 255, 255, .12);
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(20px, 3vw, 30px);
+  letter-spacing: 0;
+  line-height: 1.15;
+}
+
+.subtitle {
+  margin: 3px 0 0;
+  color: #c6ced8;
+  font-size: 13px;
+}
+
+.meta {
+  display: flex;
+  gap: 3px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.pill {
+  border: 1px solid rgba(255, 255, 255, .2);
+  color: #eef3f8;
+  padding: 3px;
+  border-radius: 999px;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+nav {
+  background: #28303a;
+}
+
+.tabs {
+  width: min(1180px, calc(100% - 8px));
+  margin: 0 auto;
+  display: flex;
+  gap: 2px;
+}
+
+.tab {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: #d5dbe3;
+  padding: 3px;
+  min-width: 86px;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  font-size: 12px;
+}
+
+.tab[aria-selected="true"] {
+  color: #fff;
+  border-color: #71c5bf;
+  background: rgba(255, 255, 255, .06);
+}
+
+main {
+  width: min(1180px, calc(100% - 8px));
+  margin: 3px auto;
+  flex: 1;
+}
+
+.panel {
+  display: none;
+}
+
+.panel.active {
+  display: block;
+}

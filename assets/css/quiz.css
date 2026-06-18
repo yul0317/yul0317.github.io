@@ -1,0 +1,283 @@
+/* 퀴즈 화면과 공통 점수·결과 UI를 정의합니다. */
+.quiz-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 240px;
+  gap: 3px;
+  align-items: start;
+}
+
+.question {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 3px;
+  margin-bottom: 3px;
+  box-shadow: var(--shadow);
+}
+
+.question h3 {
+  margin: 0 0 3px;
+  font-size: 14px;
+}
+
+.choices {
+  display: grid;
+  gap: 3px;
+}
+
+.choice {
+  width: 100%;
+  text-align: left;
+  border: 1px solid var(--line);
+  background: #fff;
+  border-radius: 8px;
+  padding: 3px;
+  cursor: pointer;
+  color: var(--ink);
+}
+
+.choice:hover {
+  border-color: #9ab9b7;
+  background: #f7fbfb;
+}
+
+.choice.selected {
+  border-color: var(--accent);
+  background: #eef8f7;
+}
+
+.choice.correct {
+  border-color: var(--good);
+  background: #edf8f1;
+}
+
+.choice.wrong {
+  border-color: var(--bad);
+  background: #fff0f0;
+}
+
+.explain {
+  display: none;
+  margin: 3px 0 0;
+  padding: 3px;
+  border-radius: 8px;
+  background: #f4f6f8;
+  color: #4d5662;
+  font-size: 12px;
+}
+
+.explain.show {
+  display: block;
+}
+
+.scorebox {
+  position: sticky;
+  top: 132px;
+  max-height: calc(100vh - 150px);
+  background: #222a32;
+  color: #fff;
+  border-radius: 8px;
+  padding: 3px;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  min-height: calc(100vh - 150px);
+}
+
+.score {
+  font-size: 34px;
+  font-weight: 800;
+  line-height: 1;
+  margin: 3px 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.score-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 3px;
+}
+
+.role-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border: 1px solid rgba(255, 255, 255, .25);
+  border-radius: 6px;
+  padding: 3px;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.role-badge img {
+  width: 26px;
+  height: 26px;
+  object-fit: contain;
+}
+
+.job-choice {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 54px;
+  padding: 3px;
+  gap: 3px;
+  white-space: nowrap;
+}
+
+.job-choice img {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+  display: block;
+}
+
+.result-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3px;
+  margin: 3px 0 0;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.result-stats button {
+  display: block;
+  border: 1px solid rgba(255, 255, 255, .16);
+  border-radius: 8px;
+  padding: 3px;
+  background: rgba(255, 255, 255, .06);
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+}
+
+.result-stats button.active {
+  border-color: currentColor;
+  background: rgba(255, 255, 255, .14);
+}
+
+.result-correct {
+  color: #69a7ff !important;
+}
+
+.result-wrong {
+  color: #ff6b6b !important;
+}
+
+.scorebox p {
+  margin: 0 0 3px;
+  color: #cbd3dc;
+  font-size: 12px;
+}
+
+.actions {
+  display: grid;
+  gap: 3px;
+}
+
+.primary {
+  border: 0;
+  border-radius: 8px;
+  background: #71c5bf;
+  color: #102226;
+  font-weight: 800;
+  padding: 3px;
+  cursor: pointer;
+}
+
+.secondary {
+  border: 1px solid rgba(255, 255, 255, .24);
+  border-radius: 8px;
+  background: transparent;
+  color: #fff;
+  padding: 3px;
+  cursor: pointer;
+}
+
+.mini-list {
+  margin: 3px 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 3px;
+  color: #dce5ec;
+  font-size: 12px;
+}
+
+.red {
+  color: var(--bad) !important;
+}
+
+.mini {
+  font-size: 10px;
+}
+
+.sim-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 260px;
+  gap: 3px;
+  align-items: start;
+}
+
+.sim-main {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+
+.sim-card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 3px;
+  box-shadow: var(--shadow);
+  display: grid;
+  gap: 3px;
+}
+
+.sim-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 3px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.sim-title {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 800;
+}
+
+.sim-time {
+  color: var(--accent);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.sim-prompt {
+  margin: 0;
+  color: var(--ink);
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.sim-facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 3px;
+}
+
+.sim-side {
+  display: grid;
+  gap: 3px;
+  align-items: start;
+}

@@ -1,0 +1,602 @@
+/* 화면 크기에 따른 공통 반응형 스타일입니다. 항상 마지막에 불러옵니다. */
+@media (min-width: 861px) {
+  body {
+    font-size: 14px;
+  }
+
+  .tabs {
+    width: min(1240px, calc(100% - 8px));
+  }
+
+  main {
+    width: min(1240px, calc(100% - 8px));
+  }
+
+  .tab,
+  .seq-expansion-head,
+  .seq-layout .scorebox>div:first-child,
+  .seq-history .log-toggle {
+    font-size: 13px;
+  }
+
+  .seq-expansion-head {
+    min-height: 33px;
+  }
+
+  .seq-active-panel .sim-prompt,
+  .seq-active-panel .sim-result,
+  .seq-active-panel .sim-choice {
+    font-size: 13px;
+  }
+
+  .buff-job img {
+    width: 20px;
+    height: 20px;
+  }
+
+  .buff-personal-item {
+    width: 20px;
+    font-size: 9px;
+  }
+
+  .buff-personal-item .icon.small {
+    width: 19px;
+    height: 19px;
+  }
+}
+
+@media (max-width: 860px) {
+  body {
+    font-size: 12px;
+  }
+
+  .topbar,
+  .quiz-layout,
+  .sim-layout,
+  .seq-top,
+  .seq-content,
+  .summary-grid,
+  .flow,
+  .legend,
+  .stage-grid,
+  .rule-list,
+  .callouts {
+    grid-template-columns: 1fr;
+  }
+
+  .sim-layout {
+    gap: 3px;
+  }
+
+  .seq-layout .scorebox {
+    grid-template-columns: 1fr auto;
+    gap: 3px;
+  }
+
+  .seq-top {
+    grid-template-columns: 1fr;
+  }
+
+  .buff-split {
+    grid-template-columns: minmax(150px, 1fr) 1px minmax(96px, .7fr) 26px;
+  }
+
+  .seq-layout .actions {
+    min-width: 0;
+  }
+
+  .seq-layout .sim-log {
+    max-height: 160px;
+  }
+
+  .seq-history .log-toggle {
+    display: block;
+    padding: 3px;
+    border: 1px solid rgba(255, 255, 255, .24);
+    border-radius: 8px;
+    background: transparent;
+    color: #fff;
+    text-align: center;
+    cursor: pointer;
+    pointer-events: auto;
+    min-height: 0;
+    line-height: 1.2;
+  }
+
+  .seq-history .result-stats,
+  .seq-history .sim-log {
+    display: none;
+  }
+
+  .seq-history.log-open .result-stats {
+    display: grid;
+  }
+
+  .seq-history .sim-log.open {
+    display: grid;
+  }
+
+  .sim-card {
+    padding: 3px;
+  }
+
+  .sim-title {
+    font-size: 15px;
+  }
+
+  .sim-prompt {
+    font-size: 13px;
+  }
+
+  .score {
+    font-size: 28px;
+  }
+
+  #quiz .scorebox,
+  .sim-side {
+    order: -1;
+  }
+
+  .meta {
+    justify-content: flex-start;
+  }
+
+  .tabs {
+    overflow-x: auto;
+  }
+
+  .row {
+    grid-template-columns: 74px 1fr;
+    gap: 3px;
+  }
+
+  .tag {
+    grid-column: 2;
+  }
+
+  .scorebox {
+    position: static;
+    max-height: none;
+    min-height: auto;
+  }
+
+  .log-toggle {
+    display: block;
+  }
+
+  .sim-log {
+    display: none;
+    max-height: 160px;
+    flex: none;
+  }
+
+  .sim-log.open {
+    display: grid;
+  }
+}
+
+@media (max-width: 640px) {
+  body {
+    background: #eef1f5;
+    font-size: 11px;
+    line-height: 1.3;
+  }
+
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+  }
+
+  .tabs {
+    width: 100%;
+    padding: 0 4px;
+    gap: 3px;
+  }
+
+  .tab {
+    flex: 1 0 auto;
+    min-width: 0;
+    padding: 3px;
+    font-size: 12px;
+    font-weight: 800;
+  }
+
+  main {
+    width: 100%;
+    margin: 3px 0;
+    padding: 0 3px;
+  }
+
+  .section {
+    margin-top: 8px;
+  }
+
+  h2 {
+    margin: 0 0 3px;
+    font-size: 14px;
+  }
+
+  .rule-list,
+  .legend,
+  .flow,
+  .callouts {
+    gap: 3px;
+  }
+
+  .rule,
+  .legend-row,
+  .flow-item,
+  .callout,
+  .sim-card,
+  .stage,
+  .timeline,
+  .timeline-panel {
+    border-radius: 6px;
+    box-shadow: none;
+  }
+
+  .rule,
+  .flow-item,
+  .callout,
+  .stage {
+    padding: 3px;
+  }
+
+  .legend-row {
+    padding: 3px;
+    gap: 3px;
+  }
+
+  .legend-item {
+    min-height: 34px;
+    padding: 3px;
+    gap: 3px;
+  }
+
+  .legend-item b,
+  .legend-item>div>span,
+  .rule span,
+  .flow-copy,
+  .stage p {
+    font-size: 11px;
+  }
+
+  .icon {
+    width: 20px;
+    height: 20px;
+  }
+
+  .icon.large {
+    width: 26px;
+    height: 26px;
+  }
+
+  .stage-grid {
+    gap: 3px;
+  }
+
+  .stage {
+    border-left: 4px solid #71c5bf;
+  }
+
+  .stage-head {
+    gap: 3px;
+  }
+
+  .stage-title {
+    font-size: 12px;
+  }
+
+  .stage-time {
+    font-size: 11px;
+  }
+
+  .stage-images,
+  .sim-result .stage-images {
+    grid-template-columns: 1fr;
+    gap: 3px;
+  }
+
+  .stage-image,
+  .sim-result .stage-image {
+    max-height: 210px;
+    border-radius: 6px;
+  }
+
+  .timeline {
+    font-size: 11px;
+  }
+
+  .row {
+    grid-template-columns: 54px 1fr;
+    gap: 3px;
+    padding: 3px;
+  }
+
+  .time {
+    font-size: 11px;
+  }
+
+  .event {
+    font-size: 12px;
+  }
+
+  .note {
+    grid-column: 2;
+    font-size: 11px;
+  }
+
+  .tag {
+    grid-column: 2;
+    justify-self: start;
+    font-size: 10px;
+    padding: 2px 3px;
+  }
+
+  .sim-layout,
+  .seq-layout {
+    gap: 3px;
+  }
+
+  .scorebox {
+    padding: 3px;
+    border-radius: 6px;
+  }
+
+  .seq-top {
+    padding: 3px;
+    gap: 3px;
+    border-radius: 6px;
+  }
+
+  .seq-layout .scorebox {
+    grid-template-columns: 1fr auto;
+    gap: 3px;
+  }
+
+  .seq-layout .score-line {
+    gap: 3px;
+  }
+
+  .seq-layout .score {
+    font-size: 18px;
+  }
+
+  .role-badge {
+    width: 28px;
+    height: 28px;
+  }
+
+  .role-badge img {
+    width: 22px;
+    height: 22px;
+  }
+
+  .buff-panel {
+    border-radius: 5px;
+  }
+
+  .buff-split {
+    gap: 3px;
+    padding: 2px;
+  }
+
+  .buff-party-row,
+  .buff-memory-row {
+    min-height: 23px;
+  }
+
+  .buff-party-row,
+  .buff-memory-row {
+    grid-template-columns: 23px 1fr;
+  }
+
+  .buff-memory-row {
+    grid-template-columns: 1fr;
+  }
+
+  .buff-memory-row,
+  .buff-truth-row {
+    min-height: 22px;
+  }
+
+  .buff-job img,
+  .buff-memory-truth .icon.small {
+    width: 18px;
+    height: 18px;
+  }
+
+  .buff-memory-label,
+  .buff-job,
+  .buff-memory-truth {
+    font-size: 10px;
+  }
+
+  .buff-personal-item {
+    width: 18px;
+    font-size: 8px;
+  }
+
+  .buff-personal-item .icon.small {
+    width: 18px;
+    height: 18px;
+  }
+
+  .seq-history {
+    display: grid;
+  }
+
+  .seq-history .result-stats {
+    display: none;
+  }
+
+  .seq-history .sim-log {
+    display: none;
+  }
+
+  .seq-history.log-open .result-stats {
+    display: grid;
+  }
+
+  .seq-history .sim-log.open {
+    display: grid;
+  }
+
+  .sim-card {
+    padding: 3px;
+    gap: 3px;
+  }
+
+  .sim-head {
+    gap: 3px;
+  }
+
+  .sim-title {
+    font-size: 14px;
+  }
+
+  .sim-time {
+    font-size: 12px;
+  }
+
+  .sim-prompt {
+    font-size: 12px;
+  }
+
+  .sim-choices {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 3px;
+  }
+
+  .sim-choice {
+    min-height: 40px;
+    padding: 3px;
+    border-radius: 6px;
+    font-size: 12px;
+  }
+
+  .job-choice {
+    min-height: 42px;
+  }
+
+  .job-choice img {
+    width: 28px;
+    height: 28px;
+  }
+
+  .release-choice-row {
+    grid-template-columns: repeat(2, 42px);
+    gap: 4px;
+  }
+
+  .release-choice-label {
+    font-size: 11px;
+  }
+
+  .sim-choice-guide {
+    padding: 3px;
+    border-radius: 6px;
+  }
+
+  .sim-choice-guide img {
+    max-height: 230px;
+  }
+
+  .seq-active-panel:has(.sim-choice-guide) {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+  }
+
+  .seq-active-panel:has(.sim-choice-guide) .sim-choices {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 3px;
+    grid-column: 1;
+    grid-row: auto;
+  }
+
+  .seq-active-panel:has(.sim-choice-guide) .sim-prompt,
+  .seq-active-panel:has(.sim-choice-guide) .sim-choice-guide,
+  .seq-active-panel:has(.sim-choice-guide) .seq-choice-controls,
+  .seq-active-panel:has(.sim-choice-guide) .sim-choice-board,
+  .seq-active-panel:has(.sim-choice-guide) .sim-choice-group,
+  .seq-active-panel:has(.sim-choice-guide) .release-choice-row,
+  .seq-active-panel:has(.sim-choice-guide) .sim-choices>.sim-choice {
+    grid-column: 1;
+    grid-row: auto;
+  }
+
+  .seq-active-panel:has(.sim-choice-guide) .sim-result,
+  .seq-active-panel:has(.sim-choice-guide) .seq-inline-next {
+    grid-column: 1;
+    grid-row: auto;
+  }
+
+  .seq-active-panel:has(.sim-choice-guide) .sim-result {
+    height: auto;
+    max-height: none;
+    overflow: visible;
+  }
+
+  .seq-result-stage-scroll {
+    overflow-y: visible;
+  }
+
+  .seq-active-panel:has(.sim-choice-guide) .sim-choices>.sim-choice:nth-of-type(n) {
+    grid-row: auto;
+  }
+
+  .seq-active-panel:has(.sim-choice-guide) .seq-inline-next {
+    margin-top: 3px;
+    justify-self: stretch;
+  }
+
+  .seq-active-panel:has(.sim-choice-guide) .sim-prompt {
+    border-bottom: 0;
+    padding-bottom: 0;
+  }
+
+  .seq-active-panel:has(.sim-choice-guide) .sim-choice-guide {
+    display: block;
+  }
+
+  .seq-active-panel:has(.sim-choice-guide) .seq-choice-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .seq-active-panel:has(.sim-choice-guide) .sim-choice-group {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .seq-active-panel:has(.sim-choice-guide) .sim-choice-board {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .seq-active-panel:has(.sim-choice-guide) .sim-result .stage-images {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+  }
+
+  .seq-active-panel:has(.sim-choice-guide) .sim-result .stage {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .seq-active-panel .sim-choice {
+    min-height: 27px;
+    font-size: 11px;
+  }
+
+  .sim-result {
+    min-height: 30px;
+    padding: 3px;
+    font-size: 11px;
+    border-radius: 6px;
+  }
+}

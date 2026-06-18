@@ -1,0 +1,44 @@
+<section id="simulation" class="panel" aria-labelledby="simulation-tab">
+  <div class="seq-layout">
+    <div class="seq-top">
+      <div class="sim-side">
+        <aside class="scorebox" aria-live="polite">
+          <div>시뮬레이션</div>
+          <div class="score-line">
+            <div class="score"><span id="seqStep">0</span>/16</div>
+            <span class="role-badge" id="seqPlayerBadge">--</span>
+            <button class="secondary" type="button" id="seqResetBtn" aria-label="처음부터">↺</button>
+          </div>
+          <div class="actions">
+            <button class="primary" type="button" id="seqNextBtn">시작</button>
+          </div>
+          <div id="seqBuffs" class="sim-status-slot"></div>
+        </aside>
+      </div>
+
+      <div class="seq-history">
+        <button class="secondary log-toggle" type="button" id="seqLogToggle">기록 보기</button>
+        <div class="result-stats">
+          <button class="result-correct" type="button" id="seqCorrectFilter">맞춤 <b
+              id="seqCorrectCount">0</b></button>
+          <button class="result-wrong" type="button" id="seqWrongFilter">틀림 <b id="seqWrongCount">0</b></button>
+        </div>
+        <ul class="sim-log" id="seqLog"></ul>
+      </div>
+    </div>
+
+    <div class="seq-content">
+      <div class="seq-accordion" id="seqAccordion" aria-label="시뮬레이션 단계"></div>
+      <article class="sim-card seq-active-panel" id="seqActivePanel">
+        <div class="sim-head">
+          <h2 class="sim-title" id="seqTitle">1단계부터 순차 진행</h2>
+          <span class="sim-time" id="seqTime">00:25</span>
+        </div>
+        <p class="sim-prompt" id="seqPrompt">시작을 누르면 1단계부터 디버프가 차례대로 부여됩니다.</p>
+        <div class="sim-choices" id="seqChoices"></div>
+        <div class="sim-result" id="seqResult">부여된 디버프를 보면서 해당 처리 타이밍에 올바른 행동을 선택합니다.</div>
+        <button class="primary seq-inline-next" type="button" id="seqInlineNextBtn" disabled>다음 단계</button>
+      </article>
+    </div>
+  </div>
+</section>
