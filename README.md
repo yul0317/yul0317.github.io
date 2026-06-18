@@ -178,8 +178,9 @@ GitHub Pages와 가까운 환경으로 실행하기 위해 이 프로젝트는 `
 ├── _includes/          # 탭별 HTML
 ├── assets/
 │   ├── css/            # 공통 및 기능별 스타일
-│   └── js/             # 공통 로직과 기능별 스크립트
+│   └── js/             # 기믹, UI 공통 로직과 기능별 스크립트
 ├── img/                # 기믹, 시뮬레이션 및 직업 이미지
+├── tests/              # Node.js 기반 기믹 불변식 검사
 ├── _config.yml         # Jekyll 사이트 설정
 ├── favicon.ico         # 사이트 파비콘
 ├── Gemfile             # 로컬 빌드 의존성
@@ -192,8 +193,20 @@ GitHub Pages와 가까운 환경으로 실행하기 위해 이 프로젝트는 `
 - 랜덤 퀴즈 화면: `_includes/quiz.html`, `assets/js/quiz.js`
 - 순차 시뮬레이션: `_includes/simulation.html`, `assets/js/simulation.js`
 - 공통 기믹 판정: `assets/js/mechanics.js`
+- 공통 결과·점수 UI: `assets/js/ui.js`
 - 컨닝페이퍼: `_includes/cheatsheet.html`, `assets/js/cheatsheet.js`
 - 반응형 스타일: `assets/css/responsive.css`
+
+## 기믹 로직 검사
+
+Ruby/Jekyll과 별개로 공통 기믹 배정 규칙은 Node.js에서 빠르게 검사할 수 있습니다.
+
+```cmd
+node tests/mechanics.test.js
+node tests/browser-smoke.test.js
+```
+
+첫 번째 검사는 그랜드 크로스 분배, 회차 간 금지 조합, 가속도 대상자 수와 3회차 디버프 인원을 무작위 상황 10,000개로 확인합니다. 두 번째 검사는 브라우저 스크립트 로딩 순서와 초기화 과정에 누락된 참조가 없는지 확인합니다.
 
 ## 배포
 

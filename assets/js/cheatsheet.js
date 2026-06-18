@@ -3,12 +3,6 @@ function cheatGc2Timing() {
   return cheatState.gc1Timing === "빠른" ? "느린" : "빠른";
 }
 
-function cheatSpreadText(truth) {
-  return truth === "진짜"
-    ? "번개 산개 / 물 본대"
-    : "물 산개 / 번개 본대";
-}
-
 function cheatSpreadHtml(truth) {
   const spread = truth === "진짜" ? "번개" : "물";
   const stack = truth === "진짜" ? "물" : "번개";

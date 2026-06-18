@@ -21,8 +21,6 @@ tabs.forEach((tab) => {
   });
 });
 
-document.getElementById("gradeBtn")?.addEventListener("click", gradeQuiz);
-document.getElementById("resetBtn")?.addEventListener("click", resetQuiz);
 document.getElementById("nextSimBtn").addEventListener("click", nextSimulation);
 document.getElementById("resetSimBtn").addEventListener("click", resetSimulation);
 simCorrectFilter.addEventListener("click", () => setLogFilter("sim", "correct"));
@@ -46,7 +44,6 @@ new MutationObserver(syncSeqInlineNext).observe(seqNextBtn, {
 });
 document.getElementById("seqResetBtn").addEventListener("click", renderSeqPlayerPicker);
 bindCheatButtons();
-if (questionRoot) renderQuiz();
 nextSimulation();
 renderSeqPlayerPicker();
 renderCheatSheet();

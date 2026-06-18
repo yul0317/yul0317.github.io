@@ -1,37 +1,17 @@
 // 랜덤 퀴즈 상황 생성, 선택지 렌더링과 정답 처리를 담당합니다.
 function makeQuizScenarioState() {
-  const assignments = makeGrandCrossAssignments();
-  const player = pick(["탱커 1", "탱커 2", "힐러 1", "힐러 2", "딜러 1", "딜러 2", "딜러 3", "딜러 4"]);
-  const thirdAssignments = makeGrandCrossThirdAssignment();
-  const schedule = makeGrandCrossSchedule();
-  const gc1 = pick(["진짜", "가짜"]);
-  const gc2 = pick(["진짜", "가짜"]);
-  const chaosFirst = pick(["혼돈의 불", "혼돈의 물"]);
-  const chaos1Truth = pick(["진짜", "가짜"]);
-  const chaos2Truth = pick(["진짜", "가짜"]);
-  const chaosSecond = chaosFirst === "혼돈의 불" ? "혼돈의 물" : "혼돈의 불";
+  const encounter = makeEncounterState();
+  const player = pick(PARTY_PLAYER_NAMES);
+  const gc3Personal = encounter.gc3Assign[player];
 
   return {
+    ...encounter,
     player,
-    schedule,
-    gc1,
-    gc2,
-    gc1Personal: assignments.first[player],
-    gc2Personal: assignments.second[player],
-    gc3: pick(["진짜", "가짜"]),
-    wound: thirdAssignments[player].wound,
-    finalDebuff: thirdAssignments[player].finalDebuff,
-    flood: pick(["진짜", "가짜"]),
-    chaosFirst,
-    chaosSecond,
-    chaos1Truth,
-    chaos2Truth,
-    fireTruth: chaosFirst === "혼돈의 불" ? chaos1Truth : chaos2Truth,
-    waterTruth: chaosFirst === "혼돈의 물" ? chaos1Truth : chaos2Truth,
-    thunderMemory: pick(["진짜", "가짜"]),
-    blizzardMemory: pick(["진짜", "가짜"]),
-    releaseTop: pick(["진짜", "가짜"]),
-    releaseBottom: pick(["진짜", "가짜"])
+    schedule: encounter.gcSchedule,
+    gc1Personal: encounter.gc1Assign[player],
+    gc2Personal: encounter.gc2Assign[player],
+    wound: gc3Personal.wound,
+    finalDebuff: gc3Personal.finalDebuff
   };
 }
 
@@ -114,28 +94,6 @@ function makeSpreadSim() {
     explain: hasBlizzard
       ? `물/번개는 진짜면 번개 산개, 가짜면 물 산개. ${blizzardDisplay}는 ${state.blizzardMemory}이므로 ${state.blizzardMemory === "가짜" ? "밟기" : "피하기"}: ${blizzardGroups.blizzardMarkers.join(", ")}번. ${action.spread === "산개" ? "산개 대상자" : "본대 대상자"} 위치는 ${blizzardGroups.spreadMarkers.join(", ")}번. 최종 위치는 ${markerAnswers.join(", ")}번. 가속도 처리는 ${movement}.`
       : `물/번개는 진짜면 번개 산개, 가짜면 물 산개. ${state.player} 기준 최종 위치는 ${marker}번. 가속도 처리는 ${movement}.`
-  };
-}
-
-function makeAccelSim() {
-  const state = makeQuizScenarioState();
-  const event = state.gc1Personal.accel ? "gc1Spread" : "gc2Spread";
-  const isGc1 = event.startsWith("gc1");
-  const data = isGc1 ? state.gc1Personal : state.gc2Personal;
-  const truth = isGc1 ? state.gc1 : state.gc2;
-  const action = personalGrandCrossAction(data, truth);
-  return {
-    title: "가속도 폭탄",
-    time: state.schedule[event].time,
-    prompt: "가속도 폭탄 대상자는 어떻게 처리해야 할까?",
-    facts: [
-      fact("플레이어", state.player),
-      fact("디버프", `${icon("가속도 폭탄.webp", "가속도 폭탄")} 가속도 폭탄`),
-      fact("판정", `${quizTruthIcon(truth)} ${truth}`)
-    ],
-    choices: ["멈춤", "움직임"],
-    answer: action.accel,
-    explain: "가속도 폭탄은 진짜면 멈춤, 가짜면 움직임."
   };
 }
 

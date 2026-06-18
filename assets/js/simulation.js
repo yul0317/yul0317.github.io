@@ -47,81 +47,6 @@ function handlingDebuffLine(debuff, truth) {
   return `처리 디버프: ${debuff} (${truthIcon(truth)})`;
 }
 
-function shuffle(list) {
-  return [...list].sort(() => Math.random() - 0.5);
-}
-
-function makeGrandCrossMainAssignment() {
-  const th = ["탱커 1", "탱커 2", "힐러 1", "힐러 2"];
-  const dps = ["딜러 1", "딜러 2", "딜러 3", "딜러 4"];
-  const mechanics = ["물", "번개", "마안", "없음"];
-  const result = {};
-
-  shuffle(th).forEach((player, index) => {
-    result[player] = { main: mechanics[index], accel: false };
-  });
-  shuffle(dps).forEach((player, index) => {
-    result[player] = { main: mechanics[index], accel: false };
-  });
-
-  return result;
-}
-
-function makeNextGrandCrossMainAssignment(previous) {
-  const groups = [
-    ["탱커 1", "탱커 2", "힐러 1", "힐러 2"],
-    ["딜러 1", "딜러 2", "딜러 3", "딜러 4"]
-  ];
-  const mechanics = ["물", "번개", "마안", "없음"];
-  const result = {};
-  const conflicts = (before, after) => {
-    if (before === after) return true;
-    return (before === "물" || before === "번개") && (after === "물" || after === "번개");
-  };
-
-  groups.forEach((group) => {
-    let next = shuffle(mechanics);
-    while (next.some((mechanic, index) => conflicts(previous[group[index]].main, mechanic))) {
-      next = shuffle(mechanics);
-    }
-    group.forEach((player, index) => {
-      result[player] = { main: next[index], accel: false };
-    });
-  });
-
-  return result;
-}
-
-function makeGrandCrossAssignments() {
-  const players = ["탱커 1", "탱커 2", "힐러 1", "힐러 2", "딜러 1", "딜러 2", "딜러 3", "딜러 4"];
-  const first = makeGrandCrossMainAssignment();
-  const second = makeNextGrandCrossMainAssignment(first);
-  const firstNoMain = players.filter((player) => first[player].main === "없음");
-  const secondNoMain = players.filter((player) => second[player].main === "없음");
-  const fixedFirstAccel = new Set(firstNoMain);
-  const blockedFirstAccel = new Set(secondNoMain);
-  const extraFirstAccel = shuffle(players.filter((player) => !fixedFirstAccel.has(player) && !blockedFirstAccel.has(player))).slice(0, 4 - fixedFirstAccel.size);
-
-  extraFirstAccel.forEach((player) => fixedFirstAccel.add(player));
-  players.forEach((player) => {
-    first[player].accel = fixedFirstAccel.has(player);
-    second[player].accel = !first[player].accel;
-  });
-
-  return { first, second };
-}
-
-function makeGrandCrossThirdAssignment() {
-  const players = ["탱커 1", "탱커 2", "힐러 1", "힐러 2", "딜러 1", "딜러 2", "딜러 3", "딜러 4"];
-  const wounds = shuffle(["산자의 상처", "산자의 상처", "산자의 상처", "산자의 상처", "죽은자의 상처", "죽은자의 상처", "죽은자의 상처", "죽은자의 상처"]);
-  const finalDebuffs = shuffle(["알라그 필드", "알라그 필드", "알라그 필드", "알라그 필드", "죽음 초월", "죽음 초월", "죽음 초월", "죽음 초월"]);
-  const result = {};
-  players.forEach((player, index) => {
-    result[player] = { wound: wounds[index], finalDebuff: finalDebuffs[index] };
-  });
-  return result;
-}
-
 function addPersonalGrandCross(data, truth, spreadStep, spreadAt, gazeStep, gazeAt, source) {
   const spreadIcons = [];
   if (data.main === "물" || data.main === "번개") {
@@ -138,32 +63,6 @@ function addPersonalGrandCross(data, truth, spreadStep, spreadAt, gazeStep, gaze
   }
 }
 
-function personalGrandCrossAction(data, truth) {
-  const spread = isSpreadTarget(data.main, truth) ? "산개" : "본대";
-  let accel = "가속도 없음";
-  if (data.accel) {
-    accel = truth === "진짜" ? "멈춤" : "움직임";
-  }
-  return { spread, accel, main: data.main, hasGaze: data.main === "마안" };
-}
-
-function makeGrandCrossSchedule() {
-  const firstSpread = pick(["gc1Spread", "gc2Spread"]);
-  const secondSpread = firstSpread === "gc1Spread" ? "gc2Spread" : "gc1Spread";
-  const order = [firstSpread, "gc1Gaze", secondSpread, "gc2Gaze"];
-  const times = {
-    0: { step: 10, time: "01:21" },
-    1: { step: 11, time: "01:30" },
-    2: { step: 13, time: "01:46" },
-    3: { step: 14, time: "01:54" }
-  };
-  const schedule = {};
-  order.forEach((key, index) => {
-    schedule[key] = times[index];
-  });
-  return schedule;
-}
-
 function scheduledEvent(step) {
   return Object.entries(seq.gcSchedule).find(([, event]) => event.step === step)?.[0] || "";
 }
@@ -178,7 +77,7 @@ function eventLabel(key) {
   return labels[key] || "";
 }
 
-function renderSeqBuffs(extra = []) {
+function renderSeqBuffs() {
   const empty = `<span class="buff-personal-empty">-</span>`;
   const memoryLabels = [
     ["그랜드크로스 1", "gc1"],
@@ -901,37 +800,19 @@ function initSequential() {
     renderSeqPlayerPicker();
     return;
   }
-  const grandCrossAssignments = makeGrandCrossAssignments();
-  const grandCrossThirdAssign = makeGrandCrossThirdAssignment();
+  const encounter = makeEncounterState();
   seq = {
+    ...encounter,
     step: 0,
     completedSteps: new Set(),
     buffs: [],
-    gcSchedule: makeGrandCrossSchedule(),
-    player: selectedSeqPlayer,
-    gc1Assign: grandCrossAssignments.first,
-    gc2Assign: grandCrossAssignments.second,
-    gc3Assign: grandCrossThirdAssign,
-    gc1: pick(["진짜", "가짜"]),
-    gc2: pick(["진짜", "가짜"]),
-    gc3: pick(["진짜", "가짜"]),
-    chaosFirst: pick(["혼돈의 불", "혼돈의 물"]),
-    chaos1Truth: pick(["진짜", "가짜"]),
-    chaos2Truth: pick(["진짜", "가짜"]),
-    flood: pick(["진짜", "가짜"]),
-    thunderMemory: pick(["진짜", "가짜"]),
-    blizzardMemory: pick(["진짜", "가짜"]),
-    releaseTop: pick(["진짜", "가짜"]),
-    releaseBottom: pick(["진짜", "가짜"])
+    player: selectedSeqPlayer
   };
   seq.gc1Personal = seq.gc1Assign[seq.player];
   seq.gc2Personal = seq.gc2Assign[seq.player];
   seq.gc3Personal = seq.gc3Assign[seq.player];
   seq.wound = seq.gc3Personal.wound;
   seq.finalDebuff = seq.gc3Personal.finalDebuff;
-  seq.chaosSecond = seq.chaosFirst === "혼돈의 불" ? "혼돈의 물" : "혼돈의 불";
-  seq.fireTruth = seq.chaosFirst === "혼돈의 불" ? seq.chaos1Truth : seq.chaos2Truth;
-  seq.waterTruth = seq.chaosFirst === "혼돈의 물" ? seq.chaos1Truth : seq.chaos2Truth;
   seqLog.innerHTML = "";
   seqLog.classList.remove("open");
   seqLog.closest(".seq-history")?.classList.remove("log-open");

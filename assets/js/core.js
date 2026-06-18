@@ -1,12 +1,6 @@
-// 공통 DOM 요소, 애플리케이션 상태, 플레이어 정보와 탭 동작을 관리합니다.
-const quiz = [];
-
+// 공통 DOM 요소, 애플리케이션 상태와 플레이어 정보를 관리합니다.
 const tabs = document.querySelectorAll(".tab");
 const panels = document.querySelectorAll(".panel");
-const questionRoot = document.getElementById("questions");
-const scoreEl = document.getElementById("score");
-const totalEl = document.getElementById("total");
-const scoreText = document.getElementById("scoreText");
 const simTitle = document.getElementById("simTitle");
 const simTime = document.getElementById("simTime");
 const simPrompt = document.getElementById("simPrompt");
@@ -98,13 +92,6 @@ const seqStepMeta = [
 
 function jobIcon(key, alt = key) {
   return `<img src="img/job/${key}.png" alt="${alt}">`;
-}
-
-function roleIconForKey(key) {
-  if (key.startsWith("T")) return jobIcon("TankRole", "Tank");
-  if (key.startsWith("H")) return jobIcon("HealerRole", "Healer");
-  if (key.startsWith("D")) return jobIcon("DPSRole", "DPS");
-  return "--";
 }
 
 function playerIconForKey(key) {
