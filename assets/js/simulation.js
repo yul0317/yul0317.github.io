@@ -230,7 +230,12 @@ function seqStageGuideHtml() {
   const stages = [...document.querySelectorAll(".stage-grid .stage")];
   const stage = stages.find((item) => item.querySelector(".stage-title")?.textContent.trim().startsWith(`${seq.step}.`)) || stages[seq.step - 1];
   if (!stage) return "";
-  return stage.cloneNode(true).outerHTML;
+  const clone = stage.cloneNode(true);
+  clone.querySelectorAll("img").forEach((image) => {
+    image.loading = "eager";
+    image.decoding = "sync";
+  });
+  return clone.outerHTML;
 }
 
 function seqResultDetail(fallback, options = {}) {
@@ -246,7 +251,7 @@ function setSeqChoices(choices, answer, explain, options = {}) {
   seqNextBtn.disabled = true;
   seqNextBtn.textContent = "선택 필요";
   const guide = options.image
-    ? `<div class="sim-choice-guide"><img loading="lazy" decoding="async" src="img/${options.image}" alt="${options.imageAlt || ""}"></div>`
+    ? `<div class="sim-choice-guide"><img loading="eager" decoding="sync" src="img/${options.image}" alt="${options.imageAlt || ""}"></div>`
     : options.placeholder
       ? `<div class="sim-choice-guide"><div class="sim-choice-placeholder" aria-hidden="true"></div></div>`
       : "";
@@ -294,7 +299,7 @@ function setSeqPositionMoveChoices(config) {
   const answerMarkers = config.answerMarkers || [config.answerMarker];
   seqChoices.innerHTML = `
     <div class="sim-choice-guide">
-      <img loading="lazy" decoding="async" src="img/simul/${config.image}" alt="${config.imageAlt || ""}">
+      <img loading="eager" decoding="sync" src="img/simul/${config.image}" alt="${config.imageAlt || ""}">
     </div>
     <div class="seq-choice-controls">
     <div class="sim-choice-board">
@@ -370,7 +375,7 @@ function setSeqImageMarkerChoices(config) {
     : "";
   seqChoices.innerHTML = `
     <div class="sim-choice-guide ${config.overlay ? "layered" : ""}">
-      <img loading="lazy" decoding="async" src="img/simul/${config.image}" alt="${config.imageAlt || ""}">
+      <img loading="eager" decoding="sync" src="img/simul/${config.image}" alt="${config.imageAlt || ""}">
       ${overlay}
     </div>
     <div class="seq-choice-controls">
@@ -500,7 +505,7 @@ function setSeqThunderGazeChoices(config) {
   const gazeChoices = config.gazeChoices || ["마안 본다", "마안 안본다"];
   seqChoices.innerHTML = `
     <div class="sim-choice-guide">
-      <img loading="lazy" decoding="async" src="img/simul/${config.image}" alt="${config.imageAlt || ""}">
+      <img loading="eager" decoding="sync" src="img/simul/${config.image}" alt="${config.imageAlt || ""}">
     </div>
     <div class="seq-choice-controls">
     <div class="sim-choice-board">
@@ -579,8 +584,8 @@ function setSeqReleaseWaterChoices(config) {
   const state = { water: "", thunder: "", blizzard: "" };
   seqChoices.innerHTML = `
     <div class="sim-choice-guide release-water-image">
-      <img loading="lazy" decoding="async" src="img/simul/${config.image}" alt="마력 방출 혼돈의 물 처리 이미지">
-      <img loading="lazy" decoding="async" class="release-water-center" src="img/simul/${overlay}" alt="마력 방출 ${config.releaseTop} ${config.releaseBottom}">
+      <img loading="eager" decoding="sync" src="img/simul/${config.image}" alt="마력 방출 혼돈의 물 처리 이미지">
+      <img loading="eager" decoding="sync" class="release-water-center" src="img/simul/${overlay}" alt="마력 방출 ${config.releaseTop} ${config.releaseBottom}">
     </div>
     <div class="seq-choice-controls">
     <div class="release-choice-row" data-row="1">
@@ -735,6 +740,14 @@ function scrollSeqExpansionIntoView(item) {
     const top = Math.max(0, container.scrollTop + itemRect.top - containerRect.top - 3);
     container.scrollTo({ top, behavior: "smooth" });
   };
+
+  item.querySelectorAll("img").forEach((image) => {
+    if (image.complete || image.dataset.seqScrollBound === "true") return;
+    image.dataset.seqScrollBound = "true";
+    image.addEventListener("load", () => {
+      if (item.classList.contains("open")) scroll();
+    }, { once: true });
+  });
 
   if (typeof requestAnimationFrame === "function") requestAnimationFrame(scroll);
   else scroll();
