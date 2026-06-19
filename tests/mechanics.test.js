@@ -99,6 +99,32 @@ function verifyEncounter(encounter) {
     playerNames.filter((player) => encounter.gc2Assign[player].accel).length === 4,
     "2회차 가속도 대상자가 4명이 아님"
   );
+  [encounter.gc1Assign, encounter.gc2Assign].forEach((assignment, roundIndex) => {
+    groups.forEach((group) => {
+      const accelAssignments = group
+        .map((player) => assignment[player])
+        .filter((data) => data.accel);
+      assert(accelAssignments.length === 2, `${roundIndex + 1}회차 역할군 가속도 대상자가 2명이 아님`);
+      assert(
+        accelAssignments.filter((data) => data.accelTiming === "빠른").length === 1,
+        `${roundIndex + 1}회차 역할군 빠른 가속도 대상자가 1명이 아님`
+      );
+      assert(
+        accelAssignments.filter((data) => data.accelTiming === "느린").length === 1,
+        `${roundIndex + 1}회차 역할군 느린 가속도 대상자가 1명이 아님`
+      );
+    });
+  });
+  groups.flat().forEach((player) => {
+    const first = encounter.gc1Assign[player];
+    const second = encounter.gc2Assign[player];
+    if (first.main === "마안") {
+      assert(first.accelTiming === "빠른", `${player}: 빠른 마안에 빠른 가속도가 배정되지 않음`);
+    }
+    if (second.main === "마안") {
+      assert(second.accelTiming === "느린", `${player}: 느린 마안에 느린 가속도가 배정되지 않음`);
+    }
+  });
   const allAccelAssignments = playerNames.map((player) => (
     encounter.gc1Assign[player].accel
       ? encounter.gc1Assign[player]

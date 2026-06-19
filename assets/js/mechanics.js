@@ -175,15 +175,17 @@ function makeGrandCrossAssignments() {
     second[player].accel = second[player].main === "마안" || second[player].main === "없음";
   });
 
-  const accelAssignments = PARTY_PLAYER_NAMES.map((player) => (
-    first[player].accel ? first[player] : second[player]
-  ));
-  const timingPool = shuffle([
-    ...Array(PARTY_PLAYER_NAMES.length / 2).fill(ACCEL_TIMINGS[0]),
-    ...Array(PARTY_PLAYER_NAMES.length / 2).fill(ACCEL_TIMINGS[1])
-  ]);
-  accelAssignments.forEach((assignment, index) => {
-    assignment.accelTiming = timingPool[index];
+  GRAND_CROSS_GROUPS.forEach((group) => {
+    [first, second].forEach((assignment, roundIndex) => {
+      group.forEach((player) => {
+        const data = assignment[player];
+        if (!data.accel) return;
+        const gazeTiming = roundIndex === 0 ? ACCEL_TIMINGS[0] : ACCEL_TIMINGS[1];
+        data.accelTiming = data.main === "마안"
+          ? gazeTiming
+          : ACCEL_TIMINGS.find((timing) => timing !== gazeTiming);
+      });
+    });
   });
 
   return { first, second };
