@@ -1,10 +1,20 @@
 // 랜덤 퀴즈 상황 생성, 선택지 렌더링과 정답 처리를 담당합니다.
 const QUIZ_STAGES = Object.freeze([9, 10, 11, 12, 13, 14, 15]);
-const QUIZ_ROLE_ICONS = Object.freeze([
-  ["탱커", "TankRole", "Tank"],
-  ["힐러", "HealerRole", "Healer"],
-  ["딜러", "DPSRole", "DPS"]
-]);
+let quizDebuffDomCache = null;
+
+function getQuizDebuffDomCache() {
+  if (quizDebuffDomCache) return quizDebuffDomCache;
+  const verdicts = new Map();
+  document.querySelectorAll(".quiz-debuff-verdict[data-round]").forEach((element) => {
+    verdicts.set(Number(element.dataset.round), element);
+  });
+  const cells = new Map();
+  document.querySelectorAll(".quiz-debuff-cell[data-player][data-round]").forEach((element) => {
+    cells.set(`${element.dataset.player}:${element.dataset.round}`, element);
+  });
+  quizDebuffDomCache = { verdicts, cells };
+  return quizDebuffDomCache;
+}
 
 function makeQuizScenarioState(playerOverride = "") {
   const encounter = makeEncounterState();
@@ -20,32 +30,6 @@ function makeQuizScenarioState(playerOverride = "") {
     wound: gc3Personal.wound,
     finalDebuff: gc3Personal.finalDebuff
   };
-}
-
-function quizTruthIcon(value) {
-  return icon(value === "진짜" ? "진실.png" : "거짓.png", value);
-}
-
-function quizMainIcon(value) {
-  if (value === "물") return icon("물.webp", "물");
-  if (value === "번개") return icon("번개.webp", "번개");
-  if (value === "마안") return icon("저주의 외침.webp", "저주의 외침");
-  return "-";
-}
-
-function quizPersonalDebuffLine(data, truth, action = null) {
-  const debuffs = [];
-  if (data.main && data.main !== "없음") {
-    debuffs.push(`${quizMainIcon(data.main)} (${quizTruthIcon(truth)})`);
-  }
-  if (action?.hasAccel) {
-    debuffs.push(`${icon("가속도 폭탄.webp", "가속도 폭탄")} ${action.accelRound}회차 (${quizTruthIcon(action.accelTruth)})`);
-  }
-  return `내 디버프: ${debuffs.length ? debuffs.join(" / ") : "없음"}`;
-}
-
-function quizHandlingDebuffLine(debuff, truth) {
-  return `처리 디버프: ${debuff} (${quizTruthIcon(truth)})`;
 }
 
 function makeFloodSim(state = makeQuizScenarioState()) {
@@ -111,7 +95,7 @@ function makeSpreadSim(state = makeQuizScenarioState(), event = pick(["gc1Spread
     answerMarkers: markerAnswers,
     answerMovement: movement === "움직임 상관없음" ? "움직임" : movement,
     anyMovement: movement === "움직임 상관없음",
-    resultPrefixes: [quizPersonalDebuffLine(data, truth, action)],
+    resultPrefixes: [personalDebuffLine(data, truth, action)],
     explain: hasBlizzard
       ? `물/번개는 진짜면 번개 산개, 가짜면 물 산개. ${blizzardDisplay}는 ${state.blizzardMemory}이므로 ${state.blizzardMemory === "가짜" ? "밟기" : "피하기"}: ${blizzardGroups.blizzardMarkers.join(", ")}번. ${action.spread === "산개" ? "산개 대상자" : "본대 대상자"} 위치는 ${blizzardGroups.spreadMarkers.join(", ")}번. 최종 위치는 ${markerAnswers.join(", ")}번. ${accelAssignment ? `가속도는 ${accelAssignment.round}회차 ${accelAssignment.truth} 판정으로 ${movement}.` : "이 시간에 처리할 가속도는 없음."}`
       : `물/번개는 진짜면 번개 산개, 가짜면 물 산개. ${state.player} 기준 최종 위치는 ${marker}번. ${accelAssignment ? `가속도는 ${accelAssignment.round}회차 ${accelAssignment.truth} 판정으로 ${movement}.` : "이 시간에 처리할 가속도는 없음."}`
@@ -141,7 +125,7 @@ function makeGazeSim(state = makeQuizScenarioState(), event = pick(["gc1Gaze", "
     imageAlt: `선더가 ${state.thunderMemory} ${thunderPattern} 처리`,
     markerAnswers,
     gazeAnswer,
-    resultPrefixes: [quizHandlingDebuffLine(icon("저주의 외침.webp", "저주의 외침"), truth)],
+    resultPrefixes: [handlingDebuffLine(icon("저주의 외침.webp", "저주의 외침"), truth)],
     explain: `${thunderDisplay}는 ${state.thunderMemory}이므로 ${shouldSoakThunder ? "밟기" : "피하기"}: ${markerGroups.thunderMarkers.join(", ")}번. 마안 ${action.hasGaze ? "대상자" : "비대상자"} 위치: ${markerGroups.gazeMarkers.join(", ")}번. 마안은 ${truth}이므로 ${gazeAnswer}. 정답 위치는 ${markerAnswers.join(", ")}번.`
   };
 }
@@ -159,7 +143,7 @@ function makeChaosSim(state = makeQuizScenarioState(), chaos = pick(["혼돈의 
     type: chaos === "혼돈의 불" ? "image-marker" : "text",
     image: "혼돈의_불.webp",
     imageAlt: "혼돈의 불 처리",
-    resultPrefixes: [quizHandlingDebuffLine(icon(chaos === "혼돈의 불" ? "혼돈의 불.webp" : "혼돈의 물.webp", chaos), truth)],
+    resultPrefixes: [handlingDebuffLine(icon(chaos === "혼돈의 불" ? "혼돈의 불.webp" : "혼돈의 물.webp", chaos), truth)],
     explain: chaos === "혼돈의 불"
       ? `혼돈의 불은 진짜면 히트박스 밖, 가짜면 안쪽입니다. 1번은 안쪽, 2번은 히트박스 밖이므로 정답은 ${fireMarkerAnswer}번.`
       : "혼돈의 물은 진짜 안, 가짜 밖."
@@ -187,7 +171,7 @@ function makeReleaseSim(state = makeQuizScenarioState()) {
     correctThunder: thunder,
     correctBlizzard: blizzard,
     answer: `히트박스 ${water} / ${thunderDisplay} ${thunder} / ${blizzardDisplay} ${blizzard}`,
-    resultPrefixes: [quizHandlingDebuffLine(icon("혼돈의 물.webp", "혼돈의 물"), state.waterTruth)],
+    resultPrefixes: [handlingDebuffLine(icon("혼돈의 물.webp", "혼돈의 물"), state.waterTruth)],
     explain: `${thunderDisplay}와 위 고리가 같으면 피하고 다르면 밟는다. ${blizzardDisplay}와 밑 고리도 같은 방식으로 처리한다. 혼돈의 물은 진짜면 안, 가짜면 밖이다.`
   };
 }
@@ -218,7 +202,7 @@ function makeSlowGazeSim(state) {
     gazeLabel: "마안을?",
     markerAnswers: [markerAnswer],
     gazeAnswer,
-    resultPrefixes: [quizHandlingDebuffLine(icon("저주의 외침.webp", "저주의 외침"), truth)],
+    resultPrefixes: [handlingDebuffLine(icon("저주의 외침.webp", "저주의 외침"), truth)],
     explain: `${isSupportPlayer(state.player) ? "탱커/힐러" : "딜러"} ${action.hasGaze ? "마안 대상자" : "마안 비대상자"} 위치는 ${markerAnswer}번. ${truth} 마안이므로 ${gazeAnswer}.`
   };
 }
@@ -253,13 +237,8 @@ function makeStageQuiz(state, stage) {
   return makeReleaseSim(state);
 }
 
-function quizSeconds(time) {
-  const [minutes, seconds] = time.split(":").map(Number);
-  return (minutes * 60) + seconds;
-}
-
 function quizRemainText(grantedAt, resolveAt) {
-  const seconds = quizSeconds(resolveAt) - quizSeconds(grantedAt);
+  const seconds = timeToSeconds(resolveAt) - timeToSeconds(grantedAt);
   return seconds >= 60 ? `${Math.floor(seconds / 60)}m${seconds % 60 || ""}` : `${seconds}s`;
 }
 
@@ -331,9 +310,10 @@ function quizThirdGrandCrossEntries(state, player) {
 }
 
 function renderQuizDebuffGrid(state) {
+  const { verdicts, cells } = getQuizDebuffDomCache();
   [state.gc1, state.chaos1Truth, state.gc2, state.chaos2Truth, state.gc3].forEach((truth, index) => {
-    const verdict = document.querySelector(`.quiz-debuff-verdict[data-round="${index + 1}"]`);
-    if (verdict) verdict.innerHTML = quizTruthIcon(truth);
+    const verdict = verdicts.get(index + 1);
+    if (verdict) verdict.innerHTML = truthIcon(truth);
   });
 
   seqPlayers.forEach((player) => {
@@ -346,7 +326,7 @@ function renderQuizDebuffGrid(state) {
     ];
 
     rounds.forEach((entries, index) => {
-      const cell = document.querySelector(`.quiz-debuff-cell[data-player="${player.key}"][data-round="${index + 1}"]`);
+      const cell = cells.get(`${player.key}:${index + 1}`);
       if (!cell) return;
       cell.innerHTML = entries.length ? entries.join("") : `<span class="quiz-debuff-empty">-</span>`;
       cell.classList.toggle("selected-player", player.name === state.player);
@@ -355,28 +335,11 @@ function renderQuizDebuffGrid(state) {
 }
 
 function closeQuizQuestions() {
-  quizAccordion.querySelectorAll(".seq-expansion").forEach((item) => {
-    item.classList.remove("open");
-    item.querySelector(".seq-expansion-head")?.setAttribute("aria-expanded", "false");
-  });
+  closeExpansions(quizAccordion);
 }
 
 function scrollQuizQuestionIntoView(item) {
-  const container = item.closest(".quiz-question-scroll");
-  if (!container) return;
-  const scroll = () => {
-    const containerRect = container.getBoundingClientRect();
-    const itemRect = item.getBoundingClientRect();
-    const top = Math.max(0, container.scrollTop + itemRect.top - containerRect.top - 3);
-    container.scrollTo({ top, behavior: "smooth" });
-  };
-  item.querySelectorAll("img").forEach((image) => {
-    if (image.complete || image.dataset.quizScrollBound === "true") return;
-    image.dataset.quizScrollBound = "true";
-    image.addEventListener("load", scroll, { once: true });
-  });
-  if (typeof requestAnimationFrame === "function") requestAnimationFrame(scroll);
-  else scroll();
+  scrollExpansionIntoView(item, ".quiz-question-scroll", "quizScrollBound");
 }
 
 function openQuizQuestion(index) {
@@ -394,17 +357,7 @@ function snapshotCurrentQuizQuestion() {
   if (currentQuizIndex < 0) return;
   const item = quizAccordion.querySelector(`.seq-expansion[data-quiz-index="${currentQuizIndex}"]`);
   const body = item?.querySelector(".seq-expansion-body");
-  if (!body?.contains(quizActivePanel)) return;
-  const snapshot = quizActivePanel.cloneNode(true);
-  snapshot.removeAttribute("id");
-  snapshot.classList.add("quiz-question-snapshot");
-  snapshot.querySelectorAll("[id]").forEach((node) => node.removeAttribute("id"));
-  snapshot.querySelectorAll("button").forEach((button) => {
-    button.disabled = true;
-  });
-  snapshot.querySelector(".seq-inline-next")?.remove();
-  body.innerHTML = "";
-  body.appendChild(snapshot);
+  snapshotPanel(body, quizActivePanel, "quiz-question-snapshot");
 }
 
 function appendQuizQuestion(record) {
@@ -461,39 +414,47 @@ function nextQuizQuestion() {
 }
 
 function bindQuizPlayerPicker() {
-  const picker = document.getElementById("quizPlayerPicker");
-  const toggle = document.getElementById("quizRoleToggle");
-  if (!picker || !toggle) return;
-  const buttons = [...picker.querySelectorAll("button[data-player]")];
+  const selectedRole = document.getElementById("quizSelectedRole");
+  const desktopMenu = document.getElementById("quizDesktopRoleMenu");
+  const randomHint = document.getElementById("quizRandomHint");
+  const summary = selectedRole?.closest(".quiz-summary-main");
+  const buttons = [...document.querySelectorAll(".quiz-player-picker button[data-player]")];
+  if (!buttons.length || !selectedRole || !desktopMenu || !randomHint || !summary) return;
 
-  const roleForPlayer = (player) => {
-    const role = QUIZ_ROLE_ICONS.find(([prefix]) => player.startsWith(prefix));
-    return role ? role.slice(1) : null;
+  const closeDesktopPicker = () => {
+    desktopMenu.hidden = true;
+    summary.classList.remove("selecting-role");
+    selectedRole.setAttribute("aria-expanded", "false");
+    selectedRole.setAttribute("aria-label", "직업 선택 열기");
   };
 
   const update = () => {
     buttons.forEach((button) => {
       const active = button.dataset.player === selectedQuizPlayer;
       button.classList.toggle("active", active);
-      button.disabled = Boolean(selectedQuizPlayer) && !active;
       button.setAttribute("aria-pressed", String(active));
     });
-    const role = roleForPlayer(selectedQuizPlayer);
-    toggle.innerHTML = role ? jobIcon(role[0], role[1]) : "-";
+    const selected = buttons.find((button) => button.dataset.player === selectedQuizPlayer);
+    selectedRole.innerHTML = selectedQuizPlayer
+      ? `<img src="img/job/${selected?.dataset.key}.png" alt="${selected?.dataset.key}">`
+      : `<span class="quiz-random-role" aria-hidden="true">?</span>`;
+    randomHint.hidden = Boolean(selectedQuizPlayer);
   };
 
-  toggle.addEventListener("click", () => {
-    const opened = picker.hidden;
-    picker.hidden = !opened;
-    toggle.setAttribute("aria-expanded", String(opened));
-    toggle.setAttribute("aria-label", opened ? "직업 선택 닫기" : "직업 선택 열기");
+  selectedRole.addEventListener("click", () => {
+    desktopMenu.hidden = false;
+    summary.classList.add("selecting-role");
+    selectedRole.setAttribute("aria-expanded", "true");
+    selectedRole.setAttribute("aria-label", "직업 선택 닫기");
   });
 
   buttons.forEach((button) => {
     button.addEventListener("click", () => {
-      selectedQuizPlayer = selectedQuizPlayer === button.dataset.player
-        ? ""
-        : button.dataset.player;
+      closeDesktopPicker();
+      if (selectedQuizPlayer === button.dataset.player) {
+        return;
+      }
+      selectedQuizPlayer = button.dataset.player;
       update();
       resetQuiz();
     });
@@ -506,7 +467,6 @@ function finishQuizAnswer(selected, correct) {
   simStats.total += 1;
   if (correct) simStats.correct += 1;
   updateSimStats();
-  simScoreText.textContent = correct ? "좋아요. 다음 상황으로 넘어가도 됩니다." : "틀린 판정을 바로 다시 보면 좋아요.";
   const step = Number.parseInt(currentQuiz.title, 10);
   setResultState(
     simResult,
@@ -566,6 +526,9 @@ function bindQuizPartAnswer(config) {
 }
 
 function renderQuizChoices() {
+  const hasChoiceGuide = ["release-water", "image-marker", "position-move", "thunder-gaze"].includes(currentQuiz.type);
+  quizActivePanel.classList.toggle("has-choice-guide", hasChoiceGuide);
+
   if (currentQuiz.type === "release-water") {
     simChoices.innerHTML = `
       <div class="sim-choice-guide release-water-image">
@@ -575,9 +538,9 @@ function renderQuizChoices() {
       <div class="seq-choice-controls">
         <div class="quiz-memory-row">
           <span class="quiz-memory-item">저장</span>
-          <span class="quiz-memory-item">${thunderDisplay} ${quizTruthIcon(currentQuiz.thunderMemory)}</span>
+          <span class="quiz-memory-item">${thunderDisplay} ${truthIcon(currentQuiz.thunderMemory)}</span>
           <span class="quiz-memory-divider">|</span>
-          <span class="quiz-memory-item">${blizzardDisplay} ${quizTruthIcon(currentQuiz.blizzardMemory)}</span>
+          <span class="quiz-memory-item">${blizzardDisplay} ${truthIcon(currentQuiz.blizzardMemory)}</span>
         </div>
         <div class="release-choice-row">
           <div class="sim-choice-label release-choice-label">히트박스?</div>
@@ -725,11 +688,11 @@ function resetQuiz() {
   simCorrectFilter.classList.remove("active");
   simWrongFilter.classList.remove("active");
   updateSimStats();
-  simScoreText.textContent = "랜덤 상황을 빠르게 판단해 보세요.";
   simLog.innerHTML = "";
   simLog.classList.remove("open");
   simLog.closest(".quiz-history")?.classList.remove("log-open");
-  simLogToggle.textContent = "기록 보기";
+  const mobileLogLabel = simLogToggle.querySelector(".quiz-log-mobile-label");
+  if (mobileLogLabel) mobileLogLabel.textContent = "기록 보기";
   quizQuestions = [];
   currentQuizIndex = -1;
   currentQuiz = null;

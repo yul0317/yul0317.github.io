@@ -50,11 +50,8 @@
     font-size: 12px;
   }
 
-  .topbar,
   .seq-top,
   .seq-content,
-  .summary-grid,
-  .flow,
   .legend,
   .stage-grid,
   .rule-list,
@@ -124,10 +121,6 @@
 
   .score {
     font-size: 28px;
-  }
-
-  .meta {
-    justify-content: flex-start;
   }
 
   .tabs {
@@ -208,25 +201,21 @@
 
   .rule-list,
   .legend,
-  .flow,
   .callouts {
     gap: 3px;
   }
 
   .rule,
   .legend-row,
-  .flow-item,
   .callout,
   .sim-card,
   .stage,
-  .timeline,
-  .timeline-panel {
+  .timeline {
     border-radius: 6px;
     box-shadow: none;
   }
 
   .rule,
-  .flow-item,
   .callout,
   .stage {
     padding: 3px;
@@ -246,7 +235,6 @@
   .legend-item b,
   .legend-item>div>span,
   .rule span,
-  .flow-copy,
   .stage p {
     font-size: 11px;
   }
@@ -491,12 +479,12 @@
     max-height: 230px;
   }
 
-  .seq-active-panel:has(.sim-choice-guide) {
+  .seq-active-panel.has-choice-guide {
     grid-template-columns: 1fr;
     grid-template-rows: auto;
   }
 
-  .seq-active-panel:has(.sim-choice-guide) .sim-choices {
+  .seq-active-panel.has-choice-guide .sim-choices {
     display: grid;
     grid-template-columns: 1fr;
     gap: 3px;
@@ -504,24 +492,24 @@
     grid-row: auto;
   }
 
-  .seq-active-panel:has(.sim-choice-guide) .sim-prompt,
-  .seq-active-panel:has(.sim-choice-guide) .sim-choice-guide,
-  .seq-active-panel:has(.sim-choice-guide) .seq-choice-controls,
-  .seq-active-panel:has(.sim-choice-guide) .sim-choice-board,
-  .seq-active-panel:has(.sim-choice-guide) .sim-choice-group,
-  .seq-active-panel:has(.sim-choice-guide) .release-choice-row,
-  .seq-active-panel:has(.sim-choice-guide) .sim-choices>.sim-choice {
+  .seq-active-panel.has-choice-guide .sim-prompt,
+  .seq-active-panel.has-choice-guide .sim-choice-guide,
+  .seq-active-panel.has-choice-guide .seq-choice-controls,
+  .seq-active-panel.has-choice-guide .sim-choice-board,
+  .seq-active-panel.has-choice-guide .sim-choice-group,
+  .seq-active-panel.has-choice-guide .release-choice-row,
+  .seq-active-panel.has-choice-guide .sim-choices>.sim-choice {
     grid-column: 1;
     grid-row: auto;
   }
 
-  .seq-active-panel:has(.sim-choice-guide) .sim-result,
-  .seq-active-panel:has(.sim-choice-guide) .seq-inline-next {
+  .seq-active-panel.has-choice-guide .sim-result,
+  .seq-active-panel.has-choice-guide .seq-inline-next {
     grid-column: 1;
     grid-row: auto;
   }
 
-  .seq-active-panel:has(.sim-choice-guide) .sim-result {
+  .seq-active-panel.has-choice-guide .sim-result {
     height: auto;
     max-height: none;
     overflow: visible;
@@ -531,47 +519,47 @@
     overflow-y: visible;
   }
 
-  .seq-active-panel:has(.sim-choice-guide) .sim-choices>.sim-choice:nth-of-type(n) {
+  .seq-active-panel.has-choice-guide .sim-choices>.sim-choice:nth-of-type(n) {
     grid-row: auto;
   }
 
-  .seq-active-panel:has(.sim-choice-guide) .seq-inline-next {
+  .seq-active-panel.has-choice-guide .seq-inline-next {
     margin-top: 3px;
     justify-self: stretch;
   }
 
-  .seq-active-panel:has(.sim-choice-guide) .sim-prompt {
+  .seq-active-panel.has-choice-guide .sim-prompt {
     border-bottom: 0;
     padding-bottom: 0;
   }
 
-  .seq-active-panel:has(.sim-choice-guide) .sim-choice-guide {
+  .seq-active-panel.has-choice-guide .sim-choice-guide {
     display: block;
   }
 
-  .seq-active-panel:has(.sim-choice-guide) .seq-choice-controls {
+  .seq-active-panel.has-choice-guide .seq-choice-controls {
     display: flex;
     flex-direction: column;
     gap: 4px;
   }
 
-  .seq-active-panel:has(.sim-choice-guide) .sim-choice-group {
+  .seq-active-panel.has-choice-guide .sim-choice-group {
     display: flex;
     flex-wrap: wrap;
   }
 
-  .seq-active-panel:has(.sim-choice-guide) .sim-choice-board {
+  .seq-active-panel.has-choice-guide .sim-choice-board {
     display: flex;
     flex-direction: column;
   }
 
-  .seq-active-panel:has(.sim-choice-guide) .sim-result .stage-images {
+  .seq-active-panel.has-choice-guide .sim-result .stage-images {
     display: flex;
     flex-wrap: nowrap;
     overflow-x: auto;
   }
 
-  .seq-active-panel:has(.sim-choice-guide) .sim-result .stage {
+  .seq-active-panel.has-choice-guide .sim-result .stage {
     min-width: 0;
     width: 100%;
   }

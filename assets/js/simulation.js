@@ -1,17 +1,7 @@
 // 16단계 순차 시뮬레이션의 상태 생성, 화면 표시와 진행을 담당합니다.
-function truthIcon(value) {
-  return icon(value === "진짜" ? "진실.png" : "거짓.png", value);
-}
-
-function parseSeconds(time) {
-  time = String(time).split("~")[0];
-  const [m, s] = time.split(":").map(Number);
-  return (m * 60) + s;
-}
-
 function remainText(resolveAt) {
   if (!resolveAt || !seq?.timePoint) return "";
-  const diff = parseSeconds(resolveAt) - parseSeconds(seq.timePoint);
+  const diff = timeToSeconds(resolveAt) - timeToSeconds(seq.timePoint);
   if (diff <= 0) return "";
   if (diff >= 60) return `${Math.floor(diff / 60)}m`;
   return `${diff}s`;
@@ -19,36 +9,6 @@ function remainText(resolveAt) {
 
 function addSeqBuff(truth, debuff, resolveStep = null, resolveAt = "", source = "") {
   seq.buffs.push({ truth, debuff, resolveStep, resolveAt, source });
-}
-
-function mechanicIcon(name) {
-  const map = {
-    "물/번개": `${icon("물.webp", "물")} ${icon("번개.webp", "번개")}`,
-    "물": `${icon("물.webp", "물")}`,
-    "번개": `${icon("번개.webp", "번개")}`,
-    "가속도": `${icon("가속도 폭탄.webp", "가속도 폭탄")}`,
-    "마안": `${icon("저주의 외침.webp", "저주의 외침")}`,
-    "혼돈의 불": `${icon("혼돈의 불.webp", "혼돈의 불")}`,
-    "혼돈의 물": `${icon("혼돈의 물.webp", "혼돈의 물")}`,
-    "없음": "-"
-  };
-  return map[name] || name;
-}
-
-function personalDebuffLine(data, truth, action = null) {
-  const debuffs = [];
-  if (data.main && data.main !== "없음") {
-    debuffs.push(`${mechanicIcon(data.main)} (${truthIcon(truth)})`);
-  }
-  if (action?.hasAccel) {
-    debuffs.push(`${mechanicIcon("가속도")} ${action.accelRound}회차 (${truthIcon(action.accelTruth)})`);
-  }
-  const value = debuffs.length ? debuffs.join(" / ") : "없음";
-  return `내 디버프: ${value}`;
-}
-
-function handlingDebuffLine(debuff, truth) {
-  return `처리 디버프: ${debuff} (${truthIcon(truth)})`;
 }
 
 function addPersonalGrandCross(data, truth, spreadStep, spreadAt, gazeStep, gazeAt, source) {
@@ -230,6 +190,14 @@ function seqResultDetail(fallback, options = {}) {
   return resultDetailForStep(seq.step, fallback, [options.myDebuff, options.handlingDebuff]);
 }
 
+function seqChoiceButtons(selector = ".sim-choice") {
+  return seqChoices.querySelectorAll(selector);
+}
+
+function setSeqChoiceGuideState(enabled) {
+  seqActivePanel.classList.toggle("has-choice-guide", enabled);
+}
+
 function setSeqChoices(choices, answer, explain, options = {}) {
   seqChoiceHandler = null;
   seqNextBtn.disabled = true;
@@ -239,6 +207,7 @@ function setSeqChoices(choices, answer, explain, options = {}) {
     : options.placeholder
       ? `<div class="sim-choice-guide"><div class="sim-choice-placeholder" aria-hidden="true"></div></div>`
       : "";
+  setSeqChoiceGuideState(Boolean(guide));
   seqChoices.innerHTML = guide + `
     <div class="seq-choice-controls seq-choice-list">
       <div class="sim-choice-label">${options.choiceLabel || "어떻게 처리할까요?"}</div>
@@ -248,7 +217,7 @@ function setSeqChoices(choices, answer, explain, options = {}) {
   const handleChoice = (button) => {
     const selected = button.dataset.answer;
     const correct = selected === answer;
-    document.querySelectorAll("#seqChoices .sim-choice").forEach((choice) => {
+    seqChoiceButtons().forEach((choice) => {
       choice.disabled = true;
       if (choice.dataset.answer === answer) choice.classList.add("correct");
     });
@@ -268,11 +237,6 @@ function setSeqChoices(choices, answer, explain, options = {}) {
     syncSeqInlineNext();
   };
   seqChoiceHandler = handleChoice;
-  document.querySelectorAll("#seqChoices .sim-choice").forEach((button) => {
-    button.addEventListener("click", () => {
-      handleChoice(button);
-    });
-  });
 }
 
 function setSeqPositionMoveChoices(config) {
@@ -281,6 +245,7 @@ function setSeqPositionMoveChoices(config) {
   seqNextBtn.textContent = "선택 필요";
   const state = { marker: "", movement: "" };
   const answerMarkers = config.answerMarkers || [config.answerMarker];
+  setSeqChoiceGuideState(true);
   seqChoices.innerHTML = `
     <div class="sim-choice-guide">
       <img loading="eager" decoding="sync" src="img/simul/${config.image}" alt="${config.imageAlt || ""}">
@@ -302,7 +267,7 @@ function setSeqPositionMoveChoices(config) {
   const handleChoice = (button) => {
     const part = button.dataset.part;
     state[part] = button.dataset.answer;
-    document.querySelectorAll(`#seqChoices .sim-choice[data-part="${part}"]`).forEach((choice) => {
+    seqChoiceButtons(`.sim-choice[data-part="${part}"]`).forEach((choice) => {
       choice.classList.remove("selected");
     });
     button.classList.add("selected");
@@ -311,7 +276,7 @@ function setSeqPositionMoveChoices(config) {
 
     const movementCorrect = config.anyMovement || state.movement === config.answerMovement;
     const correct = answerMarkers.includes(state.marker) && movementCorrect;
-    document.querySelectorAll("#seqChoices .sim-choice").forEach((choice) => {
+    seqChoiceButtons().forEach((choice) => {
       choice.disabled = true;
       if (
         (choice.dataset.part === "marker" && answerMarkers.includes(choice.dataset.answer)) ||
@@ -320,7 +285,7 @@ function setSeqPositionMoveChoices(config) {
         choice.classList.add("correct");
       }
     });
-    document.querySelectorAll("#seqChoices .sim-choice.selected").forEach((choice) => {
+    seqChoiceButtons(".sim-choice.selected").forEach((choice) => {
       const isCorrect =
         (choice.dataset.part === "marker" && answerMarkers.includes(choice.dataset.answer)) ||
         (choice.dataset.part === "movement" && (config.anyMovement || choice.dataset.answer === config.answerMovement));
@@ -343,20 +308,16 @@ function setSeqPositionMoveChoices(config) {
     addResultLog(seqLog, `${seq.time} ${seq.title}`, selected, answer, correct);
   };
   seqChoiceHandler = handleChoice;
-
-  document.querySelectorAll("#seqChoices .sim-choice").forEach((button) => {
-    button.addEventListener("click", () => {
-      handleChoice(button);
-    });
-  });
 }
 
 function setSeqImageMarkerChoices(config) {
+  seqChoiceHandler = null;
   seqNextBtn.disabled = true;
   seqNextBtn.textContent = "선택 필요";
   const overlay = config.overlay
     ? `<span class="sim-overlay-icon">${config.overlay}</span>`
     : "";
+  setSeqChoiceGuideState(true);
   seqChoices.innerHTML = `
     <div class="sim-choice-guide ${config.overlay ? "layered" : ""}">
       <img loading="eager" decoding="sync" src="img/simul/${config.image}" alt="${config.imageAlt || ""}">
@@ -373,7 +334,7 @@ function setSeqImageMarkerChoices(config) {
   const handleChoice = (button) => {
     const selected = button.dataset.answer;
     const correct = selected === config.answer;
-    document.querySelectorAll("#seqChoices .sim-choice").forEach((choice) => {
+    seqChoiceButtons().forEach((choice) => {
       choice.disabled = true;
       if (choice.dataset.answer === config.answer) choice.classList.add("correct");
     });
@@ -393,12 +354,6 @@ function setSeqImageMarkerChoices(config) {
     addResultLog(seqLog, `${seq.time} ${seq.title}`, selected, config.answer, correct);
   };
   seqChoiceHandler = handleChoice;
-
-  document.querySelectorAll("#seqChoices .sim-choice").forEach((button) => {
-    button.addEventListener("click", () => {
-      handleChoice(button);
-    });
-  });
 }
 
 function setSeqSpreadChoices(event, action, options = {}) {
@@ -487,6 +442,7 @@ function setSeqThunderGazeChoices(config) {
   const state = { marker: "", gaze: "" };
   const markerChoices = config.markerChoices || ["1", "2", "3", "4", "5", "6", "7", "8"];
   const gazeChoices = config.gazeChoices || ["마안 본다", "마안 안본다"];
+  setSeqChoiceGuideState(true);
   seqChoices.innerHTML = `
     <div class="sim-choice-guide">
       <img loading="eager" decoding="sync" src="img/simul/${config.image}" alt="${config.imageAlt || ""}">
@@ -508,7 +464,7 @@ function setSeqThunderGazeChoices(config) {
   const handleChoice = (button) => {
     const part = button.dataset.part;
     state[part] = button.dataset.answer;
-    document.querySelectorAll(`#seqChoices .sim-choice[data-part="${part}"]`).forEach((choice) => {
+    seqChoiceButtons(`.sim-choice[data-part="${part}"]`).forEach((choice) => {
       choice.classList.remove("selected");
     });
     button.classList.add("selected");
@@ -518,7 +474,7 @@ function setSeqThunderGazeChoices(config) {
     const markerCorrect = config.markerAnswers.includes(state.marker);
     const gazeCorrect = state.gaze === config.gazeAnswer;
     const correct = markerCorrect && gazeCorrect;
-    document.querySelectorAll("#seqChoices .sim-choice").forEach((choice) => {
+    seqChoiceButtons().forEach((choice) => {
       choice.disabled = true;
       if (
         (choice.dataset.part === "marker" && config.markerAnswers.includes(choice.dataset.answer)) ||
@@ -527,7 +483,7 @@ function setSeqThunderGazeChoices(config) {
         choice.classList.add("correct");
       }
     });
-    document.querySelectorAll("#seqChoices .sim-choice.selected").forEach((choice) => {
+    seqChoiceButtons(".sim-choice.selected").forEach((choice) => {
       const isCorrect =
         (choice.dataset.part === "marker" && config.markerAnswers.includes(choice.dataset.answer)) ||
         (choice.dataset.part === "gaze" && choice.dataset.answer === config.gazeAnswer);
@@ -548,12 +504,6 @@ function setSeqThunderGazeChoices(config) {
     addResultLog(seqLog, `${seq.time} ${seq.title}`, `${state.marker}번 / ${state.gaze}`, `${config.markerAnswers.join(", ")}번 / ${config.gazeAnswer}`, correct);
   };
   seqChoiceHandler = handleChoice;
-
-  document.querySelectorAll("#seqChoices .sim-choice").forEach((button) => {
-    button.addEventListener("click", () => {
-      handleChoice(button);
-    });
-  });
 }
 
 function setSeqReleaseWaterChoices(config) {
@@ -566,6 +516,7 @@ function setSeqReleaseWaterChoices(config) {
   const correctBlizzard = releaseActionShortLabel(config.blizzardLabel);
   const answer = `히트박스 ${correctWater} / ${thunderDisplay} ${correctThunder} / ${blizzardDisplay} ${correctBlizzard}`;
   const state = { water: "", thunder: "", blizzard: "" };
+  setSeqChoiceGuideState(true);
   seqChoices.innerHTML = `
     <div class="sim-choice-guide release-water-image">
       <img loading="eager" decoding="sync" src="img/simul/${config.image}" alt="마력 방출 혼돈의 물 처리 이미지">
@@ -632,12 +583,6 @@ function setSeqReleaseWaterChoices(config) {
     addResultLog(seqLog, `${seq.time} ${seq.title}`, `히트박스 ${state.water} / ${thunderDisplay} ${state.thunder} / ${blizzardDisplay} ${state.blizzard}`, answer, correct);
   };
   seqChoiceHandler = handleChoice;
-
-  seqChoices.querySelectorAll(".sim-choice").forEach((choice) => {
-    choice.addEventListener("click", () => {
-      handleChoice(choice);
-    });
-  });
 }
 
 function releaseActionShortLabel(label) {
@@ -685,10 +630,7 @@ function renderSeqAccordion() {
 }
 
 function closeSeqExpansions() {
-  seqAccordion.querySelectorAll(".seq-expansion").forEach((item) => {
-    item.classList.remove("open");
-    item.querySelector(".seq-expansion-head")?.setAttribute("aria-expanded", "false");
-  });
+  closeExpansions(seqAccordion);
 }
 
 function mountSeqPanel(step) {
@@ -701,40 +643,16 @@ function mountSeqPanel(step) {
 
 function snapshotSeqStep(step) {
   const body = seqAccordion.querySelector(`.seq-expansion[data-step="${step}"] .seq-expansion-body`);
-  if (!body || !body.contains(seqActivePanel)) return;
-  const snapshot = seqActivePanel.cloneNode(true);
-  snapshot.removeAttribute("id");
-  snapshot.classList.add("seq-step-snapshot");
-  snapshot.querySelectorAll("[id]").forEach((node) => node.removeAttribute("id"));
-  snapshot.querySelectorAll("button").forEach((button) => {
-    button.disabled = true;
-  });
-  snapshot.querySelector(".seq-inline-next")?.remove();
-  body.innerHTML = "";
-  body.appendChild(snapshot);
+  snapshotPanel(body, seqActivePanel, "seq-step-snapshot");
 }
 
 function scrollSeqExpansionIntoView(item) {
-  const container = item.closest(".seq-content");
-  if (!container) return;
-
-  const scroll = () => {
-    const containerRect = container.getBoundingClientRect();
-    const itemRect = item.getBoundingClientRect();
-    const top = Math.max(0, container.scrollTop + itemRect.top - containerRect.top - 3);
-    container.scrollTo({ top, behavior: "smooth" });
-  };
-
-  item.querySelectorAll("img").forEach((image) => {
-    if (image.complete || image.dataset.seqScrollBound === "true") return;
-    image.dataset.seqScrollBound = "true";
-    image.addEventListener("load", () => {
-      if (item.classList.contains("open")) scroll();
-    }, { once: true });
-  });
-
-  if (typeof requestAnimationFrame === "function") requestAnimationFrame(scroll);
-  else scroll();
+  scrollExpansionIntoView(
+    item,
+    ".seq-content",
+    "seqScrollBound",
+    () => item.classList.contains("open")
+  );
 }
 
 function openSeqExpansion(step, options = {}) {
@@ -792,6 +710,7 @@ function renderSeqPlayerPicker() {
   seqCorrectFilter.classList.remove("active");
   seqWrongFilter.classList.remove("active");
   updateSeqStats();
+  setSeqChoiceGuideState(false);
   seqChoices.innerHTML = seqPlayers.map((player) => (
     `<button class="sim-choice job-choice" type="button" data-player="${player.name}" data-key="${player.key}" aria-label="${player.key}">${jobIcon(player.key, player.key)} ${player.name}</button>`
   )).join("");
@@ -821,6 +740,7 @@ function renderSeqPlayerPicker() {
 
 function noSeqChoice(message) {
   seqChoiceHandler = null;
+  setSeqChoiceGuideState(false);
   seqChoices.innerHTML = "";
   clearResultState(seqResult, message);
   seqNextBtn.disabled = false;
@@ -867,6 +787,7 @@ function advanceSequential() {
   seq.step += 1;
   seqStep.textContent = seq.step;
   seqChoiceHandler = null;
+  setSeqChoiceGuideState(false);
   seqChoices.innerHTML = "";
   clearResultState(seqResult);
 

@@ -3,24 +3,37 @@
     <section class="quiz-dashboard" aria-label="퀴즈 상태">
       <div class="quiz-status">
         <div class="quiz-summary">
-          <strong>퀴즈</strong>
-          <div class="quiz-score" aria-live="polite">
-            <span id="simScore">0</span>/<span id="simCount">0</span>
+          <div class="quiz-summary-main">
+            <strong>퀴즈</strong>
+            <div class="quiz-desktop-role">
+              <strong>직업</strong>
+              <span class="quiz-role-divider">|</span>
+              <button class="quiz-selected-role" type="button" id="quizSelectedRole"
+                aria-expanded="false" aria-controls="quizDesktopRoleMenu" aria-label="직업 선택 열기">
+                <span class="quiz-random-role" aria-hidden="true">?</span>
+              </button>
+              <div class="quiz-player-picker quiz-desktop-role-menu" id="quizDesktopRoleMenu" hidden>
+                <button type="button" data-player="" data-key="" aria-label="랜덤 역할" aria-pressed="true">
+                  <span class="quiz-random-role" aria-hidden="true">?</span>
+                </button>
+                <button type="button" data-player="탱커 1" data-key="T1" aria-pressed="false"><img src="img/job/T1.png" alt="T1"></button>
+                <button type="button" data-player="탱커 2" data-key="T2" aria-pressed="false"><img src="img/job/T2.png" alt="T2"></button>
+                <button type="button" data-player="힐러 1" data-key="H1" aria-pressed="false"><img src="img/job/H1.png" alt="H1"></button>
+                <button type="button" data-player="힐러 2" data-key="H2" aria-pressed="false"><img src="img/job/H2.png" alt="H2"></button>
+                <button type="button" data-player="딜러 1" data-key="D1" aria-pressed="false"><img src="img/job/D1.png" alt="D1"></button>
+                <button type="button" data-player="딜러 2" data-key="D2" aria-pressed="false"><img src="img/job/D2.png" alt="D2"></button>
+                <button type="button" data-player="딜러 3" data-key="D3" aria-pressed="false"><img src="img/job/D3.png" alt="D3"></button>
+                <button type="button" data-player="딜러 4" data-key="D4" aria-pressed="false"><img src="img/job/D4.png" alt="D4"></button>
+              </div>
+            </div>
+            <span class="quiz-random-hint" id="quizRandomHint">직업을 선택하지 않으시면 랜덤역할이 부여됩니다.</span>
           </div>
-          <button class="secondary quiz-reset" type="button" id="resetSimBtn" aria-label="처음부터">↺</button>
-          <span class="quiz-role-label">직업</span>
-          <button class="quiz-role-toggle" type="button" id="quizRoleToggle" aria-expanded="false" aria-controls="quizPlayerPicker" aria-label="직업 선택 열기">-</button>
-        </div>
-
-        <div class="quiz-player-picker" id="quizPlayerPicker" aria-label="퀴즈 직업 선택" hidden>
-          <button type="button" data-player="탱커 1" data-key="T1" aria-pressed="false"><img src="img/job/T1.png" alt="T1"></button>
-          <button type="button" data-player="탱커 2" data-key="T2" aria-pressed="false"><img src="img/job/T2.png" alt="T2"></button>
-          <button type="button" data-player="힐러 1" data-key="H1" aria-pressed="false"><img src="img/job/H1.png" alt="H1"></button>
-          <button type="button" data-player="힐러 2" data-key="H2" aria-pressed="false"><img src="img/job/H2.png" alt="H2"></button>
-          <button type="button" data-player="딜러 1" data-key="D1" aria-pressed="false"><img src="img/job/D1.png" alt="D1"></button>
-          <button type="button" data-player="딜러 2" data-key="D2" aria-pressed="false"><img src="img/job/D2.png" alt="D2"></button>
-          <button type="button" data-player="딜러 3" data-key="D3" aria-pressed="false"><img src="img/job/D3.png" alt="D3"></button>
-          <button type="button" data-player="딜러 4" data-key="D4" aria-pressed="false"><img src="img/job/D4.png" alt="D4"></button>
+          <div class="quiz-summary-actions">
+            <div class="quiz-score" aria-live="polite">
+              <span id="simScore">0</span>/<span id="simCount">0</span>
+            </div>
+            <button class="secondary quiz-reset" type="button" id="resetSimBtn" aria-label="처음부터">↺</button>
+          </div>
         </div>
 
         <div class="quiz-debuff-scroll">
@@ -49,17 +62,17 @@
       </div>
 
       <div class="quiz-history">
-        <button class="secondary log-toggle" type="button" id="simLogToggle">기록 보기</button>
-        <div class="result-stats">
+        <div class="quiz-history-controls">
+          <button class="secondary log-toggle" type="button" id="simLogToggle">
+            <span class="quiz-log-desktop-label">기록</span>
+            <span class="quiz-log-mobile-label">기록 보기</span>
+          </button>
           <button class="result-correct" type="button" id="simCorrectFilter">맞춤 <b id="simCorrectCount">0</b></button>
           <button class="result-wrong" type="button" id="simWrongFilter">틀림 <b id="simWrongCount">0</b></button>
         </div>
         <ul class="sim-log" id="simLog"></ul>
       </div>
 
-      <div class="quiz-hidden-controls" hidden>
-        <p id="simScoreText">랜덤 상황을 빠르게 판단해 보세요.</p>
-      </div>
     </section>
 
     <section class="quiz-question-scroll" aria-label="퀴즈 문제">

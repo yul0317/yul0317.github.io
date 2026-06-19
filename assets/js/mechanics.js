@@ -12,9 +12,15 @@ const GRAND_CROSS_GROUPS = Object.freeze([
   Object.freeze(PARTY_PLAYER_NAMES.slice(0, 4)),
   Object.freeze(PARTY_PLAYER_NAMES.slice(4))
 ]);
+const SUPPORT_PLAYER_NAMES = new Set(GRAND_CROSS_GROUPS[0]);
 
 function pick(list) {
   return list[Math.floor(Math.random() * list.length)];
+}
+
+function timeToSeconds(time) {
+  const [minutes, seconds] = String(time).split("~")[0].split(":").map(Number);
+  return (minutes * 60) + seconds;
 }
 
 function shuffle(list) {
@@ -39,7 +45,7 @@ const GRAND_CROSS_ASSIGNMENT_OPTIONS = Object.freeze(
 );
 
 function isSupportPlayer(player) {
-  return player.startsWith("탱커") || player.startsWith("힐러");
+  return SUPPORT_PLAYER_NAMES.has(player);
 }
 
 function isSpreadTarget(main, truth) {
@@ -148,15 +154,21 @@ function hasGrandCrossConflict(before, after) {
   return (before === "물" || before === "번개") && (after === "물" || after === "번개");
 }
 
+const GRAND_CROSS_NEXT_OPTIONS = new Map(
+  GRAND_CROSS_ASSIGNMENT_OPTIONS.map((previous) => [
+    previous.join("|"),
+    GRAND_CROSS_ASSIGNMENT_OPTIONS.filter((assignment) => (
+      assignment.every((mechanic, index) => !hasGrandCrossConflict(previous[index], mechanic))
+    ))
+  ])
+);
+
 function makeNextGrandCrossMainAssignment(previous) {
   const result = {};
 
   GRAND_CROSS_GROUPS.forEach((group) => {
-    const validAssignments = GRAND_CROSS_ASSIGNMENT_OPTIONS.filter((assignment) => (
-      assignment.every((mechanic, index) => (
-        !hasGrandCrossConflict(previous[group[index]].main, mechanic)
-      ))
-    ));
+    const previousKey = group.map((player) => previous[player].main).join("|");
+    const validAssignments = GRAND_CROSS_NEXT_OPTIONS.get(previousKey);
     const next = pick(validAssignments);
 
     group.forEach((player, index) => {
@@ -183,7 +195,7 @@ function makeGrandCrossAssignments() {
         const gazeTiming = roundIndex === 0 ? ACCEL_TIMINGS[0] : ACCEL_TIMINGS[1];
         data.accelTiming = data.main === "마안"
           ? gazeTiming
-          : ACCEL_TIMINGS.find((timing) => timing !== gazeTiming);
+          : ACCEL_TIMINGS[1 - roundIndex];
       });
     });
   });

@@ -1,30 +1,4 @@
 /* 설명 탭의 기믹 카드, 처리 규칙과 타임라인을 정의합니다. */
-.summary-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 3px;
-  margin-bottom: 3px;
-}
-
-.summary {
-  background: var(--panel);
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  padding: 3px;
-  box-shadow: var(--shadow);
-}
-
-.summary b {
-  display: block;
-  font-size: 14px;
-  margin-bottom: 3px;
-}
-
-.summary span {
-  color: var(--muted);
-  font-size: 12px;
-}
-
 .icon-strip {
   display: flex;
   flex-wrap: wrap;
@@ -121,44 +95,6 @@ h2 {
   margin: 0 0 3px;
   font-size: 18px;
   letter-spacing: 0;
-}
-
-.flow {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 3px;
-}
-
-.flow-item {
-  background: var(--panel);
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  padding: 3px;
-}
-
-.flow-time {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 68px;
-  height: 24px;
-  border-radius: 999px;
-  background: #eef5f5;
-  color: var(--accent);
-  font-weight: 700;
-  font-size: 12px;
-  margin-bottom: 3px;
-}
-
-.flow-title {
-  margin: 0 0 3px;
-  font-weight: 700;
-}
-
-.flow-copy {
-  margin: 0;
-  color: var(--muted);
-  font-size: 12px;
 }
 
 .stage-grid {

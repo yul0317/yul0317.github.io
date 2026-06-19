@@ -14,11 +14,17 @@ const scriptOrder = [
 ];
 
 function makeClassList() {
+  const values = new Set();
   return {
-    add() {},
-    remove() {},
-    toggle() { return false; },
-    contains() { return false; }
+    add(...names) { names.forEach((name) => values.add(name)); },
+    remove(...names) { names.forEach((name) => values.delete(name)); },
+    toggle(name, force) {
+      const active = force === undefined ? !values.has(name) : Boolean(force);
+      if (active) values.add(name);
+      else values.delete(name);
+      return active;
+    },
+    contains(name) { return values.has(name); }
   };
 }
 
@@ -73,5 +79,33 @@ scriptOrder.forEach((fileName) => {
   );
   vm.runInContext(source, context, { filename: fileName });
 });
+
+vm.runInContext(`
+  initializePanel("quiz");
+  initializePanel("simulation");
+  initializePanel("cheatsheet");
+
+  const correctLog = document.createElement("li");
+  const wrongLog = document.createElement("li");
+  correctLog.classList.add("correct");
+  wrongLog.classList.add("wrong");
+  simLog.children = [correctLog, wrongLog];
+  setLogFilter("sim", "correct");
+  if (correctLog.classList.contains("hidden") || !wrongLog.classList.contains("hidden")) {
+    throw new Error("퀴즈 맞춤 필터가 기록을 올바르게 숨기지 못했습니다.");
+  }
+  setLogFilter("sim", "wrong");
+  if (!correctLog.classList.contains("hidden") || wrongLog.classList.contains("hidden")) {
+    throw new Error("퀴즈 틀림 필터가 기록을 올바르게 숨기지 못했습니다.");
+  }
+`, context);
+
+const simulationCss = fs.readFileSync(
+  path.join(projectRoot, "assets", "css", "simulation.css"),
+  "utf8"
+);
+if (!/\.sim-log\s+li\.hidden\s*\{\s*display:\s*none;?\s*\}/.test(simulationCss)) {
+  throw new Error("필터링된 기록을 숨기는 CSS가 없습니다.");
+}
 
 console.log("browser-smoke.test.js: 스크립트 로드 및 초기화 통과");

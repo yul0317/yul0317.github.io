@@ -51,26 +51,96 @@ body.quiz-active #quiz.active {
 
 .quiz-status {
   display: grid;
+  grid-column: 1;
   gap: 2px;
   width: 560px;
   min-width: 0;
 }
 
 .quiz-summary {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto 30px auto 30px;
-  gap: 6px;
+  display: flex;
   align-items: center;
+  justify-content: space-between;
   min-height: 28px;
 }
 
-.quiz-summary strong {
+.quiz-summary-main {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  gap: 0;
+  min-width: 0;
+}
+
+.quiz-summary-main > strong {
+  flex: 0 0 auto;
   font-size: 14px;
   margin-left: 4px;
 }
 
+.quiz-desktop-role {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-left: 20px;
+}
+
+.quiz-desktop-role > strong,
+.quiz-role-divider {
+  font-size: 12px;
+}
+
+.quiz-selected-role {
+  width: 28px;
+  min-width: 28px;
+  height: 28px;
+  padding: 1px;
+  border: 1px solid #f4c542;
+  border-radius: 6px;
+  background: #28313a;
+  cursor: pointer;
+}
+
+.quiz-selected-role img {
+  display: block;
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
+
+.quiz-desktop-role-menu {
+  display: flex;
+}
+
+.quiz-desktop-role-menu[hidden] {
+  display: none;
+}
+
+.quiz-summary-main.selecting-role .quiz-selected-role,
+.quiz-summary-main.selecting-role .quiz-random-hint {
+  display: none;
+}
+
+.quiz-random-hint {
+  margin-left: 8px;
+  color: #dce5ec;
+  font-size: 10px;
+  white-space: nowrap;
+}
+
+.quiz-random-hint[hidden] {
+  display: none;
+}
+
+.quiz-summary-actions {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 3px;
+}
+
 .quiz-score {
-  min-width: 64px;
+  min-width: 48px;
   font-size: 18px;
   font-weight: 900;
   text-align: center;
@@ -78,6 +148,7 @@ body.quiz-active #quiz.active {
 }
 
 .quiz-summary .quiz-reset {
+  flex: 0 0 30px;
   width: 30px;
   min-width: 30px;
   height: 30px;
@@ -92,48 +163,25 @@ body.quiz-active #quiz.active {
   border-color: rgba(255, 255, 255, .24);
 }
 
-.quiz-role-label {
-  color: #fff;
-  font-size: 12px;
-  font-weight: 800;
+.quiz-player-picker {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  min-width: 0;
   white-space: nowrap;
 }
 
-.quiz-role-toggle {
-  width: 30px;
-  height: 27px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1px;
-  border: 1px solid rgba(255, 255, 255, .24);
-  border-radius: 6px;
-  background: #28313a;
-  color: #fff;
-  font-weight: 900;
-  cursor: pointer;
-}
-
-.quiz-role-toggle img {
-  display: block;
-  width: 23px;
-  height: 23px;
-  object-fit: contain;
-}
-
-.quiz-player-picker {
-  display: grid;
-  grid-template-columns: repeat(8, minmax(36px, 1fr));
-  gap: 2px;
-}
-
-.quiz-player-picker[hidden] {
-  display: none;
+.quiz-player-picker strong {
+  flex: 0 0 auto;
+  padding: 0 2px;
+  font-size: 12px;
 }
 
 .quiz-player-picker button {
-  min-width: 0;
-  min-height: 32px;
+  width: 28px;
+  min-width: 28px;
+  height: 28px;
+  min-height: 28px;
   padding: 1px;
   border: 1px solid rgba(255, 255, 255, .22);
   border-radius: 6px;
@@ -143,20 +191,27 @@ body.quiz-active #quiz.active {
 
 .quiz-player-picker button img {
   display: block;
-  width: 26px;
-  height: 26px;
+  width: 24px;
+  height: 24px;
   margin: 0 auto;
   object-fit: contain;
 }
 
-.quiz-player-picker button.active {
-  border-color: #71c5bf;
-  background: #e7f5f4;
+.quiz-random-role {
+  display: flex;
+  width: 24px;
+  height: 24px;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 17px;
+  font-weight: 900;
 }
 
-.quiz-player-picker button:disabled {
-  opacity: .32;
-  cursor: default;
+.quiz-player-picker button.active {
+  border-color: #f4c542;
+  background: #28313a;
+  box-shadow: none;
 }
 
 .quiz-debuff-scroll {
@@ -276,12 +331,19 @@ body.quiz-active #quiz.active {
 
 .quiz-history {
   display: grid;
-  grid-template-rows: auto auto minmax(0, 1fr);
+  grid-column: 2;
+  grid-template-rows: auto minmax(0, 1fr);
   gap: 3px;
   width: 100%;
   min-height: 0;
   height: 100%;
   align-content: stretch;
+}
+
+.quiz-history-controls {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 3px;
 }
 
 .quiz-history .log-toggle {
@@ -299,6 +361,31 @@ body.quiz-active #quiz.active {
   text-align: left;
 }
 
+.quiz-log-mobile-label {
+  display: none;
+}
+
+.quiz-history-controls .result-correct,
+.quiz-history-controls .result-wrong {
+  display: block;
+  min-width: 0;
+  padding: 3px;
+  border: 1px solid rgba(255, 255, 255, .16);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, .06);
+  cursor: pointer;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 800;
+  text-align: left;
+}
+
+.quiz-history-controls .result-correct.active,
+.quiz-history-controls .result-wrong.active {
+  border-color: currentColor;
+  background: rgba(255, 255, 255, .14);
+}
+
 .quiz-history .sim-log {
   display: grid;
   min-height: 0;
@@ -307,18 +394,94 @@ body.quiz-active #quiz.active {
   overflow-y: auto;
 }
 
-.quiz-history .result-stats {
-  display: grid;
-  margin: 0;
-}
-
 @media (max-width: 860px) {
   .quiz-dashboard {
     grid-template-columns: 1fr;
   }
 
   .quiz-status {
+    grid-column: 1;
     width: 100%;
+    order: 1;
+  }
+
+  .quiz-history {
+    display: contents;
+    grid-column: 1;
+  }
+
+  .quiz-history-controls {
+    display: grid;
+    order: 2;
+  }
+
+  .quiz-log-desktop-label {
+    display: none;
+  }
+
+  .quiz-log-mobile-label {
+    display: inline;
+  }
+
+  .quiz-history .sim-log {
+    order: 3;
+  }
+
+  .quiz-player-picker button {
+    width: 22px;
+    min-width: 22px;
+    height: 22px;
+    min-height: 22px;
+  }
+
+  .quiz-player-picker button img,
+  .quiz-random-role {
+    width: 18px;
+    height: 18px;
+  }
+
+  .quiz-random-role {
+    font-size: 13px;
+  }
+
+  .quiz-summary-main {
+    gap: 0;
+    white-space: nowrap;
+  }
+
+  .quiz-summary-main > strong {
+    margin-left: 1px;
+    font-size: 12px;
+  }
+
+  .quiz-desktop-role {
+    gap: 2px;
+    margin-left: 8px;
+  }
+
+  .quiz-desktop-role > strong,
+  .quiz-role-divider {
+    font-size: 10px;
+  }
+
+  .quiz-selected-role {
+    width: 22px;
+    min-width: 22px;
+    height: 22px;
+  }
+
+  .quiz-selected-role img {
+    width: 18px;
+    height: 18px;
+  }
+
+  .quiz-desktop-role-menu {
+    gap: 1px;
+  }
+
+  .quiz-random-hint {
+    margin-left: 3px;
+    font-size: 8px;
   }
 
   .quiz-debuff-grid {
@@ -375,14 +538,20 @@ body.quiz-active #quiz.active {
     line-height: 1.2;
   }
 
-  .quiz-history .result-stats,
+  .quiz-history:not(.log-open) .quiz-history-controls .result-correct,
+  .quiz-history:not(.log-open) .quiz-history-controls .result-wrong {
+    border-color: transparent;
+    background: transparent;
+    cursor: default;
+    pointer-events: none;
+  }
+
   .quiz-history .sim-log {
     display: none;
   }
 
-  .quiz-history.log-open .result-stats,
   .quiz-history .sim-log.open {
-    display: grid;
+    display: block;
   }
 }
 
@@ -433,197 +602,4 @@ body.quiz-active #quiz.active {
 
 .quiz-memory-divider {
   color: var(--muted);
-}
-
-.scorebox {
-  position: sticky;
-  top: 132px;
-  max-height: calc(100vh - 150px);
-  background: #222a32;
-  color: #fff;
-  border-radius: 8px;
-  padding: 3px;
-  box-shadow: var(--shadow);
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  justify-content: flex-start;
-  min-height: calc(100vh - 150px);
-}
-
-.score {
-  font-size: 34px;
-  font-weight: 800;
-  line-height: 1;
-  margin: 3px 0;
-  font-variant-numeric: tabular-nums;
-}
-
-.score-line {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 3px;
-}
-
-.role-badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 30px;
-  height: 30px;
-  border: 1px solid rgba(255, 255, 255, .25);
-  border-radius: 6px;
-  padding: 3px;
-  color: #fff;
-  font-size: 13px;
-  font-weight: 800;
-}
-
-.role-badge img {
-  width: 26px;
-  height: 26px;
-  object-fit: contain;
-}
-
-.job-choice {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 54px;
-  padding: 3px;
-  gap: 3px;
-  white-space: nowrap;
-}
-
-.job-choice img {
-  width: 36px;
-  height: 36px;
-  object-fit: contain;
-  display: block;
-}
-
-.result-stats {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 3px;
-  margin: 3px 0 0;
-  font-size: 12px;
-  font-weight: 800;
-}
-
-.result-stats button {
-  display: block;
-  border: 1px solid rgba(255, 255, 255, .16);
-  border-radius: 8px;
-  padding: 3px;
-  background: rgba(255, 255, 255, .06);
-  color: inherit;
-  cursor: pointer;
-  font: inherit;
-  text-align: left;
-}
-
-.result-stats button.active {
-  border-color: currentColor;
-  background: rgba(255, 255, 255, .14);
-}
-
-.result-correct {
-  color: #69a7ff !important;
-}
-
-.result-wrong {
-  color: #ff6b6b !important;
-}
-
-.scorebox p {
-  margin: 0 0 3px;
-  color: #cbd3dc;
-  font-size: 12px;
-}
-
-.actions {
-  display: grid;
-  gap: 3px;
-}
-
-.primary {
-  border: 0;
-  border-radius: 8px;
-  background: #71c5bf;
-  color: #102226;
-  font-weight: 800;
-  padding: 3px;
-  cursor: pointer;
-}
-
-.secondary {
-  border: 1px solid rgba(255, 255, 255, .24);
-  border-radius: 8px;
-  background: transparent;
-  color: #fff;
-  padding: 3px;
-  cursor: pointer;
-}
-
-.mini-list {
-  margin: 3px 0 0;
-  padding: 0;
-  list-style: none;
-  display: grid;
-  gap: 3px;
-  color: #dce5ec;
-  font-size: 12px;
-}
-
-.red {
-  color: var(--bad) !important;
-}
-
-.mini {
-  font-size: 10px;
-}
-
-.sim-card {
-  background: var(--panel);
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  padding: 3px;
-  box-shadow: var(--shadow);
-  display: grid;
-  gap: 3px;
-}
-
-.sim-head {
-  display: flex;
-  justify-content: space-between;
-  gap: 3px;
-  align-items: center;
-  flex-wrap: wrap;
-}
-
-.sim-title {
-  margin: 0;
-  font-size: 17px;
-  font-weight: 800;
-}
-
-.sim-time {
-  color: var(--accent);
-  font-weight: 800;
-  font-variant-numeric: tabular-nums;
-}
-
-.sim-prompt {
-  margin: 0;
-  color: var(--ink);
-  font-size: 15px;
-  font-weight: 700;
-}
-
-.sim-side {
-  display: grid;
-  gap: 3px;
-  align-items: start;
 }

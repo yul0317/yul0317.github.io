@@ -131,8 +131,7 @@ body.cheatsheet-active #cheatsheet.active {
   font-weight: 900;
 }
 
-.cheat-subtitle,
-.cheat-auto {
+.cheat-subtitle {
   color: var(--muted);
   font-size: 12px;
   font-weight: 800;

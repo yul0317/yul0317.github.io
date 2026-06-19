@@ -11,7 +11,6 @@ const simWrongCount = document.getElementById("simWrongCount");
 const simCorrectFilter = document.getElementById("simCorrectFilter");
 const simWrongFilter = document.getElementById("simWrongFilter");
 const simLogToggle = document.getElementById("simLogToggle");
-const simScoreText = document.getElementById("simScoreText");
 const simLog = document.getElementById("simLog");
 const quizAccordion = document.getElementById("quizAccordion");
 const quizActivePanel = document.getElementById("quizActivePanel");
@@ -72,6 +71,7 @@ const seqPlayers = [
   { key: "D3", name: "딜러 3" },
   { key: "D4", name: "딜러 4" }
 ];
+const PLAYER_KEY_BY_NAME = new Map(seqPlayers.map((player) => [player.name, player.key]));
 const thunderDisplay = "썬더가(직선)";
 const blizzardDisplay = "블리자가(부채꼴)";
 const seqStepMeta = [

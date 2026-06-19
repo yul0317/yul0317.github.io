@@ -25,6 +25,10 @@ const mechanicsSource = fs.readFileSync(
   path.join(projectRoot, "assets", "js", "mechanics.js"),
   "utf8"
 );
+const uiSource = fs.readFileSync(
+  path.join(projectRoot, "assets", "js", "ui.js"),
+  "utf8"
+);
 const quizSource = fs.readFileSync(
   path.join(projectRoot, "assets", "js", "quiz.js"),
   "utf8"
@@ -47,6 +51,7 @@ vm.runInContext(`
   const blizzardDisplay = "블리자가(부채꼴)";
   function icon(name) { return name; }
   ${mechanicsSource}
+  ${uiSource}
   ${quizSource}
   globalThis.quizApi = {
     makeQuizScenarioState,
