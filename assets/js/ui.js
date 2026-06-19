@@ -3,12 +3,6 @@ function icon(name, alt = name) {
   return `<img class="icon small" src="img/${name}" alt="${alt}">`;
 }
 
-function fact(label, value, options = {}) {
-  const cls = options.resolved ? "sim-fact resolved" : "sim-fact";
-  const remain = options.remain ? `<small>${options.remain}</small>` : "";
-  return `<div class="${cls}"><span>${label}</span><b>${value}${remain}</b></div>`;
-}
-
 function setResultState(target, correct, html) {
   const labelClass = correct ? "result-correct" : "result-wrong";
   const label = correct ? "정답입니다." : "오답입니다.";
@@ -19,6 +13,27 @@ function setResultState(target, correct, html) {
 function clearResultState(target, text = "") {
   target.classList.remove("result-correct", "result-wrong");
   target.textContent = text;
+}
+
+function stageGuideHtmlForStep(step) {
+  if (!step || step < 1) return "";
+  const stages = [...document.querySelectorAll(".stage-grid .stage")];
+  const stage = stages.find((item) => item.querySelector(".stage-title")?.textContent.trim().startsWith(`${step}.`)) || stages[step - 1];
+  if (!stage) return "";
+  const clone = stage.cloneNode(true);
+  clone.querySelectorAll("img").forEach((image) => {
+    image.loading = "eager";
+    image.decoding = "sync";
+  });
+  return clone.outerHTML;
+}
+
+function resultDetailForStep(step, fallback, prefixLines = []) {
+  const guide = stageGuideHtmlForStep(step);
+  if (!guide) return fallback;
+  const lines = prefixLines.filter(Boolean);
+  const prefix = lines.length ? `<div class="seq-result-fixed">${lines.join("<br>")}</div>` : "";
+  return `${prefix}<div class="seq-result-stage-scroll">${guide}</div>`;
 }
 
 function applyLogFilter(target, filter) {
@@ -55,7 +70,7 @@ function setLogFilter(kind, filter) {
 
 function toggleLog(target, button) {
   const opened = target.classList.toggle("open");
-  target.closest(".seq-history")?.classList.toggle("log-open", opened);
+  target.closest(".seq-history, .quiz-history")?.classList.toggle("log-open", opened);
   button.textContent = opened ? "기록 숨기기" : "기록 보기";
 }
 

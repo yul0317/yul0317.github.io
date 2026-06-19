@@ -76,6 +76,14 @@ function verifyEncounter(encounter) {
     assert(first.main !== second.main, `${player}: 같은 디버프가 연속 배정됨`);
     assert(!bothWaterOrThunder, `${player}: 물/번개가 연속 배정됨`);
     assert(first.accel !== second.accel, `${player}: 가속도 처리 횟수가 잘못됨`);
+    assert(
+      !first.accel || !["물", "번개"].includes(first.main),
+      `${player}: 1회차 물/번개와 가속도가 동시에 부여됨`
+    );
+    assert(
+      !second.accel || !["물", "번개"].includes(second.main),
+      `${player}: 2회차 물/번개와 가속도가 동시에 부여됨`
+    );
     const accelData = first.accel ? first : second;
     assert(
       ["빠른", "느린"].includes(accelData.accelTiming),

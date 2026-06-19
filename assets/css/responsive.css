@@ -36,7 +36,7 @@
 
   .buff-personal-item {
     width: 20px;
-    font-size: 9px;
+    font-size: 10px;
   }
 
   .buff-personal-item .icon.small {
@@ -51,8 +51,6 @@
   }
 
   .topbar,
-  .quiz-layout,
-  .sim-layout,
   .seq-top,
   .seq-content,
   .summary-grid,
@@ -62,10 +60,6 @@
   .rule-list,
   .callouts {
     grid-template-columns: 1fr;
-  }
-
-  .sim-layout {
-    gap: 3px;
   }
 
   .seq-layout .scorebox {
@@ -130,11 +124,6 @@
 
   .score {
     font-size: 28px;
-  }
-
-  #quiz .scorebox,
-  .sim-side {
-    order: -1;
   }
 
   .meta {
@@ -334,7 +323,6 @@
     padding: 2px 3px;
   }
 
-  .sim-layout,
   .seq-layout {
     gap: 3px;
   }
@@ -415,7 +403,7 @@
 
   .buff-personal-item {
     width: 18px;
-    font-size: 8px;
+    font-size: 9px;
   }
 
   .buff-personal-item .icon.small {

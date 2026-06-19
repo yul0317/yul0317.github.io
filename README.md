@@ -203,6 +203,7 @@ Ruby/Jekyll과 별개로 공통 기믹 배정 규칙은 Node.js에서 빠르게 
 
 ```cmd
 node tests/mechanics.test.js
+node tests/quiz.test.js
 node tests/browser-smoke.test.js
 ```
 

@@ -13,6 +13,7 @@ tabs.forEach((tab) => {
     const id = tab.dataset.tab;
     tabs.forEach((item) => item.setAttribute("aria-selected", String(item === tab)));
     panels.forEach((panel) => panel.classList.toggle("active", panel.id === id));
+    document.body.classList.toggle("quiz-active", id === "quiz");
     document.body.classList.toggle("simulation-active", id === "simulation");
     document.body.classList.toggle("cheatsheet-active", id === "cheatsheet");
     if (id === "simulation") {
@@ -22,8 +23,8 @@ tabs.forEach((tab) => {
   });
 });
 
-document.getElementById("nextSimBtn").addEventListener("click", nextSimulation);
-document.getElementById("resetSimBtn").addEventListener("click", resetSimulation);
+document.getElementById("resetSimBtn").addEventListener("click", resetQuiz);
+quizNextBtn.addEventListener("click", nextQuizQuestion);
 simCorrectFilter.addEventListener("click", () => setLogFilter("sim", "correct"));
 simWrongFilter.addEventListener("click", () => setLogFilter("sim", "wrong"));
 seqCorrectFilter.addEventListener("click", () => setLogFilter("seq", "correct"));
@@ -46,6 +47,7 @@ new MutationObserver(syncSeqInlineNext).observe(seqNextBtn, {
 document.getElementById("seqResetBtn").addEventListener("click", renderSeqPlayerPicker);
 bindCheatButtons();
 bindCheatPager();
-nextSimulation();
+bindQuizPlayerPicker();
+resetQuiz();
 renderSeqPlayerPicker();
 renderCheatSheet();

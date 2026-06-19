@@ -225,25 +225,9 @@ function renderSeqBuffs() {
   `;
 }
 
-function seqStageGuideHtml() {
-  if (!seq || seq.step < 9) return "";
-  const stages = [...document.querySelectorAll(".stage-grid .stage")];
-  const stage = stages.find((item) => item.querySelector(".stage-title")?.textContent.trim().startsWith(`${seq.step}.`)) || stages[seq.step - 1];
-  if (!stage) return "";
-  const clone = stage.cloneNode(true);
-  clone.querySelectorAll("img").forEach((image) => {
-    image.loading = "eager";
-    image.decoding = "sync";
-  });
-  return clone.outerHTML;
-}
-
 function seqResultDetail(fallback, options = {}) {
-  const guide = seqStageGuideHtml();
-  if (!guide) return fallback;
-  const prefixLines = [options.myDebuff, options.handlingDebuff].filter(Boolean);
-  const prefix = prefixLines.length ? `<div class="seq-result-fixed">${prefixLines.join("<br>")}</div>` : "";
-  return `${prefix}<div class="seq-result-stage-scroll">${guide}</div>`;
+  if (!seq || seq.step < 9) return fallback;
+  return resultDetailForStep(seq.step, fallback, [options.myDebuff, options.handlingDebuff]);
 }
 
 function setSeqChoices(choices, answer, explain, options = {}) {

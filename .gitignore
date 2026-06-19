@@ -4,3 +4,8 @@ _site/
 .sass-cache/
 .bundle/
 vendor/bundle/
+.vscode
+디버프 예시.webp
+제목 없는 스프레드시트.xlsx
+타임라인.txt
+test.html

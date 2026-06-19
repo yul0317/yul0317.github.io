@@ -170,21 +170,9 @@ function makeNextGrandCrossMainAssignment(previous) {
 function makeGrandCrossAssignments() {
   const first = makeGrandCrossMainAssignment();
   const second = makeNextGrandCrossMainAssignment(first);
-  const firstNoMain = PARTY_PLAYER_NAMES.filter((player) => first[player].main === "없음");
-  const secondNoMain = PARTY_PLAYER_NAMES.filter((player) => second[player].main === "없음");
-  const firstAccel = new Set(firstNoMain);
-  const blockedFirstAccel = new Set(secondNoMain);
-  const candidates = PARTY_PLAYER_NAMES.filter((player) => (
-    !firstAccel.has(player) && !blockedFirstAccel.has(player)
-  ));
-  const accelTargetCount = PARTY_PLAYER_NAMES.length / 2;
-
-  shuffle(candidates)
-    .slice(0, accelTargetCount - firstAccel.size)
-    .forEach((player) => firstAccel.add(player));
   PARTY_PLAYER_NAMES.forEach((player) => {
-    first[player].accel = firstAccel.has(player);
-    second[player].accel = !first[player].accel;
+    first[player].accel = first[player].main === "마안" || first[player].main === "없음";
+    second[player].accel = second[player].main === "마안" || second[player].main === "없음";
   });
 
   const accelAssignments = PARTY_PLAYER_NAMES.map((player) => (

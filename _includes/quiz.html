@@ -1,31 +1,75 @@
 <section id="quiz" class="panel" aria-labelledby="quiz-tab">
-  <div class="sim-layout">
-    <article class="sim-card">
-      <div class="sim-head">
-        <h2 class="sim-title" id="simTitle">상황 생성</h2>
-        <span class="sim-time" id="simTime">--:--</span>
-      </div>
-      <p class="sim-prompt" id="simPrompt">시작을 누르면 랜덤 처리 상황이 나옵니다.</p>
-      <div class="sim-facts" id="simFacts"></div>
-      <div class="sim-choices" id="simChoices"></div>
-      <div class="sim-result" id="simResult">무의 범람, 물/번개, 가속도, 마안, 혼돈 장판, 마력 방출 중 하나가 출제됩니다.</div>
-    </article>
+  <div class="quiz-workspace">
+    <section class="quiz-dashboard" aria-label="퀴즈 상태">
+      <div class="quiz-status">
+        <div class="quiz-summary">
+          <strong>퀴즈</strong>
+          <div class="quiz-score" aria-live="polite">
+            <span id="simScore">0</span>/<span id="simCount">0</span>
+          </div>
+          <button class="secondary quiz-reset" type="button" id="resetSimBtn" aria-label="처음부터">↺</button>
+          <span class="quiz-role-label">직업</span>
+          <button class="quiz-role-toggle" type="button" id="quizRoleToggle" aria-expanded="false" aria-controls="quizPlayerPicker" aria-label="직업 선택 열기">-</button>
+        </div>
 
-    <aside class="scorebox" aria-live="polite">
-      <div>퀴즈</div>
-      <div class="score"><span id="simScore">0</span>/<span id="simCount">0</span></div>
-      <p id="simScoreText">랜덤 상황을 빠르게 판단해 보세요.</p>
-      <div class="actions">
-        <button class="primary" type="button" id="nextSimBtn">새 문제</button>
-        <button class="secondary" type="button" id="resetSimBtn">기록 초기화</button>
+        <div class="quiz-player-picker" id="quizPlayerPicker" aria-label="퀴즈 직업 선택" hidden>
+          <button type="button" data-player="탱커 1" data-key="T1" aria-pressed="false"><img src="img/job/T1.png" alt="T1"></button>
+          <button type="button" data-player="탱커 2" data-key="T2" aria-pressed="false"><img src="img/job/T2.png" alt="T2"></button>
+          <button type="button" data-player="힐러 1" data-key="H1" aria-pressed="false"><img src="img/job/H1.png" alt="H1"></button>
+          <button type="button" data-player="힐러 2" data-key="H2" aria-pressed="false"><img src="img/job/H2.png" alt="H2"></button>
+          <button type="button" data-player="딜러 1" data-key="D1" aria-pressed="false"><img src="img/job/D1.png" alt="D1"></button>
+          <button type="button" data-player="딜러 2" data-key="D2" aria-pressed="false"><img src="img/job/D2.png" alt="D2"></button>
+          <button type="button" data-player="딜러 3" data-key="D3" aria-pressed="false"><img src="img/job/D3.png" alt="D3"></button>
+          <button type="button" data-player="딜러 4" data-key="D4" aria-pressed="false"><img src="img/job/D4.png" alt="D4"></button>
+        </div>
+
+        <div class="quiz-debuff-scroll">
+          <div class="quiz-debuff-grid" id="quizDebuffGrid" aria-label="퀴즈 디버프 현황">
+            <div class="quiz-debuff-head quiz-debuff-corner"></div>
+            <div class="quiz-debuff-head">그랜드크로스<br>1회차</div>
+            <div class="quiz-debuff-head">카오스<br>1회차</div>
+            <div class="quiz-debuff-head">그랜드크로스<br>2회차</div>
+            <div class="quiz-debuff-head">카오스<br>2회차</div>
+            <div class="quiz-debuff-head">그랜드크로스<br>3회차</div>
+
+            <div class="quiz-debuff-verdict-label">판정</div>
+            {% for round in (1..5) %}
+              <div class="quiz-debuff-verdict" data-round="{{ round }}">-</div>
+            {% endfor %}
+
+            {% assign quiz_jobs = "T1,T2,H1,H2,D1,D2,D3,D4" | split: "," %}
+            {% for job in quiz_jobs %}
+              <div class="quiz-debuff-job"><img src="img/job/{{ job }}.png" alt="{{ job }}"></div>
+              {% for round in (1..5) %}
+                <div class="quiz-debuff-cell" data-player="{{ job }}" data-round="{{ round }}">-</div>
+              {% endfor %}
+            {% endfor %}
+          </div>
+        </div>
       </div>
-      <div class="result-stats">
-        <button class="result-correct" type="button" id="simCorrectFilter">맞춤 <b
-            id="simCorrectCount">0</b></button>
-        <button class="result-wrong" type="button" id="simWrongFilter">틀림 <b id="simWrongCount">0</b></button>
+
+      <div class="quiz-history">
+        <button class="secondary log-toggle" type="button" id="simLogToggle">기록 보기</button>
+        <div class="result-stats">
+          <button class="result-correct" type="button" id="simCorrectFilter">맞춤 <b id="simCorrectCount">0</b></button>
+          <button class="result-wrong" type="button" id="simWrongFilter">틀림 <b id="simWrongCount">0</b></button>
+        </div>
+        <ul class="sim-log" id="simLog"></ul>
       </div>
-      <button class="secondary log-toggle" type="button" id="simLogToggle">기록 보기</button>
-      <ul class="sim-log" id="simLog"></ul>
-    </aside>
+
+      <div class="quiz-hidden-controls" hidden>
+        <p id="simScoreText">랜덤 상황을 빠르게 판단해 보세요.</p>
+      </div>
+    </section>
+
+    <section class="quiz-question-scroll" aria-label="퀴즈 문제">
+      <div class="seq-accordion" id="quizAccordion" aria-label="퀴즈 문제 기록"></div>
+      <article class="sim-card seq-active-panel" id="quizActivePanel">
+        <p class="sim-prompt" id="simPrompt">문제의 정답을 선택하세요.</p>
+        <div class="sim-choices" id="simChoices"></div>
+        <div class="sim-result" id="simResult">선택지를 고르면 판정이 표시됩니다.</div>
+        <button class="primary seq-inline-next" type="button" id="quizNextBtn" disabled>다음 문제</button>
+      </article>
+    </section>
   </div>
 </section>
